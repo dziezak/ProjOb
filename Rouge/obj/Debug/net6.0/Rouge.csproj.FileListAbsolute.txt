@@ -1,0 +1,14 @@
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\bin\Debug\net6.0\Rouge.exe
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\bin\Debug\net6.0\Rouge.deps.json
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\bin\Debug\net6.0\Rouge.runtimeconfig.json
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\bin\Debug\net6.0\Rouge.dll
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\bin\Debug\net6.0\Rouge.pdb
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.AssemblyInfoInputs.cache
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.AssemblyInfo.cs
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.csproj.CoreCompileInputs.cache
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.dll
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\refint\Rouge.dll
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.pdb
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.genruntimeconfig.cache
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\ref\Rouge.dll
