@@ -9,7 +9,7 @@
         public Game()
         {
             room = new Room(20, 40);
-            player = new Player(0, 0);
+            player = new Player(0, 0, 0, 0, 0, 0, 0, 0);
         }
         public void Start()
         {
