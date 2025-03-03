@@ -12,3 +12,4 @@ C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\refint\Rouge.dll
 C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.pdb
 C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.genruntimeconfig.cache
 C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\ref\Rouge.dll
+C:\dev\GitHub\CPP\Politechnika\ProjOb\Rouge\obj\Debug\net6.0\Rouge.sourcelink.json
