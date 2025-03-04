@@ -16,7 +16,8 @@ namespace Rouge
 
         public override void ApplyEffect(Player player)
         {
-            // W przypadku broni przypisać obrażenia graczowi
+            player.Attack += Damage;
+            //player.DisplayStats();
         }
 
     }

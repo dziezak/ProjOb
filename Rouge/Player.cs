@@ -11,11 +11,7 @@ namespace Rouge
     {
         public int X {  get; set; }
         public int Y {  get; set; }
-
-        //TODO
-        //public Inventory Inventory { get; set; }
-
-
+        public Inventory inventory { get; set; }
         //Staty gracza
         public int Power { get; set; }  // Siła
         public int Agility { get; set; }  // Zręczność
@@ -23,12 +19,13 @@ namespace Rouge
         public int Luck { get; set; }  // Szczęście
         public int Attack { get; set; }  // Atak
         public int Wisdom { get; set; }  // Madrosc
-        public Player(int x, int y, int p, int a, int h, int l, int attack, int w)
+        public int Coins { get; set; } // Kasa
+        public int Gold { get; set; } // Zloto
+        public Player(int x, int y, int p, int a, int h, int l, int attack, int w, int coins, int gold)
         {
             X = x;
             Y = y;
-            //TODO:
-            //Inventory = new Inventory();
+            inventory = new Inventory();
 
             // Inicjalizacja statystyk
             Power = p;
@@ -37,6 +34,8 @@ namespace Rouge
             Luck = l;
             Attack = attack;
             Wisdom = w;
+            Coins = coins;
+            Gold = gold;
         }
         public void Move(ConsoleKeyInfo key, Room room)
         {
@@ -72,14 +71,61 @@ namespace Rouge
         {
             item.ApplyEffect(this);
         }
-        public void DisplayStats()
+        public void DisplayStats(int mapWidth)
         {
-            Console.WriteLine("Statystyki Wiedzmina:");
-            foreach(var property in typeof(Player).GetProperties())
+            int infoWidth = mapWidth + 40;
+            int infoHeight = 100;
+            char[,] infoGrid = new char[infoHeight, infoWidth];
+
+            for(int y = 0; y < infoHeight; y++)
             {
-                if(property.PropertyType == typeof(int))
+                for(int x = 0; x < infoWidth; x++)
                 {
-                    Console.WriteLine($"{property.Name}: {property.GetValue(this)}");
+                    infoGrid[y, x] = ' ';
+                }
+            }
+
+            int row = 0;
+            void AddText(string text)
+            {
+                for(int i=0; i<text.Length; i++)
+                {
+                    if(i< infoWidth) infoGrid[row, i] = text[i];
+                }
+                row++;
+            }
+            AddText($"Action Counter: {0}");
+            AddText("=========================");
+            AddText("Witchers Attributes:");
+            AddText($"Power: {Power}");
+            AddText($"Agility: {Agility}");
+            AddText($"Health: {Health}");
+            AddText($"Luck: {Luck}");
+            AddText($"Aggression: {Attack}");
+            AddText($"Wisdom: {Wisdom}");
+            AddText("=========================");
+            AddText($"Coins: {Coins}");
+            AddText($"Gold: {Gold}");
+            AddText("=========================");
+            AddText($"Right Hand: {(inventory?.RightHand != null ? inventory.RightHand.Name : "None")}");
+            AddText($"Left Hand: {(inventory?.LeftHand != null ? inventory.LeftHand.Name : "None")}");
+            AddText("=========================");
+            AddText("Inventory:");
+
+            Console.SetCursorPosition(mapWidth + 5, 0);
+            for(int y=0;  y<infoHeight; y++)
+            {
+                for(int x = 0; x<infoWidth; x++)
+                {
+                    Console.Write(infoGrid[y, x] );
+                }
+                if (mapWidth + 5 < Console.BufferWidth && Console.CursorTop + 1 < Console.BufferHeight)
+                {
+                    Console.SetCursorPosition(mapWidth + 5, Console.CursorTop + 1);
+                }
+                else
+                {
+                    Console.SetCursorPosition(0, Console.BufferHeight - 1);
                 }
             }
         }

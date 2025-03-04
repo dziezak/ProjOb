@@ -8,7 +8,7 @@ namespace Rouge
 {
     class Room
     {
-        private int width, height;
+        public int width, height;
         private char[,] grid;
         private Dictionary<(int, int), List<IItem>> itemMap;
 
@@ -31,8 +31,9 @@ namespace Rouge
                     if ((x % 3 == 0 && y % 3 == 0) || (y==1 && x == 10) ||
                         (y==height-1 ) || (x==1 && y == 4) || (x==0 && y==4)) 
                         grid[y, x] = '█';
-                    else
+                    else 
                         grid[y, x] = ' ';
+                    itemMap[(x, y)] = new List<IItem>();
                 }
             }
             grid[0, 0] = ' ';
@@ -42,22 +43,32 @@ namespace Rouge
         {
             if(x < 0 || y < 0 || x >= width || y >= height)
             {
-                //Console.WriteLine("Chcial wyjsc poza plansze");
-                //Console.ReadKey();
                 return false;
             }
             if (grid[y, x] == '█')
             {
-                //Console.WriteLine("Gracz nie moze wchodzic w sciane!");
-                //Console.ReadKey();
                 return false;
             }
             return true;
         }
 
+        public void DropItem(int x, int y, Item item)
+        {
+            if(!itemMap.ContainsKey((x, y)))
+            {
+                itemMap[(x, y)] = new List<IItem> ();
+            }
+            itemMap[(x, y)].Add (item);
+        }
+
+        public List<IItem> GetItemsAt(int x, int y)
+        {
+            return itemMap.ContainsKey((x, y)) ? itemMap[(x, y)] : new List<IItem>();
+        }
+
         public void Render(Player player)
         {
-            Console.WriteLine($"Player position: {player.X}, {player.Y}");
+            //Console.WriteLine($"Player position: {player.X}, {player.Y}");
             for(int y = 0; y < height; y++)
             {
                 for(int x = 0; x < width; x++)
@@ -65,6 +76,10 @@ namespace Rouge
                     if(x == player.X && y == player.Y)
                     {
                         Console.Write('¶');
+                    }
+                    else if (itemMap[(x, y)].Count > 0)
+                    {
+                        Console.Write('*');
                     }
                     else
                     {
