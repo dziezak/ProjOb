@@ -15,6 +15,7 @@
         {
             while (true)
             {
+                //Console.Clear();
                 Console.SetCursorPosition(0, 0);
                 room.Render(player);
                 player.DisplayStats(room.width);

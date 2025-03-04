@@ -21,7 +21,7 @@ namespace Rouge
             GenerateRoom();
         }
 
-        // TODO: ( obcenie jest Hard-Code:
+        // TODO: ( obcenie jest Hard-Code) :
         private void GenerateRoom()
         {
             for (int y = 0; y < height; y++)
