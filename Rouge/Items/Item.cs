@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,5 +19,14 @@ namespace Rouge
         {
             // klasa jest jako wyjsciowa bez imprementacji
         }
+        public virtual string GetName()
+        {
+            return Name;
+        }
+        public virtual int GetAttack()
+        {
+            return 0;
+        }
+        public virtual int GetLuck() => 0;
     }
 }

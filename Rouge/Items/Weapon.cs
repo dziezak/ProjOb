@@ -16,9 +16,9 @@ namespace Rouge
 
         public override void ApplyEffect(Player player)
         {
-            player.Attack += Damage;
             //player.DisplayStats();
         }
 
+        public override int GetAttack() => Damage;
     }
 }

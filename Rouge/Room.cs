@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rouge.Items;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace Rouge
         public int width, height;
         private char[,] grid;
         private Dictionary<(int, int), List<IItem>> itemMap;
+        private Random Random = new Random();  
 
         public Room(int width, int height)
         {
@@ -19,6 +21,41 @@ namespace Rouge
             grid = new char[height, width];
             itemMap = new Dictionary<(int, int), List<IItem>>();
             GenerateRoom();
+            GenerateItems();
+        }
+
+        private IItem CreateRandomItem()
+        {
+            int itemType = Random.Next(0, 6);
+            switch (itemType)
+            {
+                case 0:
+                    return new Weapon("Sword", 10);
+                case 1:
+                    return new Weapon("Knife", 5);
+                case 2:
+                    return new Weapon("Bow", 7);
+                case 3:
+                    return new HeavyWeapon("Axe", 15);
+                case 4:
+                    return new NonUsableItem("Stick");
+                case 5:
+                    return new NonUsableItem("Scroll");
+                default:
+                    return null;
+            }
+        }
+
+        public void GenerateItems()
+        {
+            int count = 50;
+            for (int i = 0; i < count; i++)
+            {
+                int x = Random.Next(0, width);
+                int y = Random.Next(0, height);
+                if(grid[y, x] == ' ')
+                    DropItem(x, y, CreateRandomItem());
+            }
         }
 
         // TODO: ( obcenie jest Hard-Code) :
@@ -52,7 +89,7 @@ namespace Rouge
             return true;
         }
 
-        public void DropItem(int x, int y, Item item)
+        public void DropItem(int x, int y, IItem item)
         {
             if(!itemMap.ContainsKey((x, y)))
             {
@@ -79,7 +116,8 @@ namespace Rouge
                     }
                     else if (itemMap[(x, y)].Count > 0)
                     {
-                        Console.Write('*');
+                        //Console.Write('*');
+                        Console.Write(itemMap[(x, y)][0].GetName()[0]);
                     }
                     else
                     {
