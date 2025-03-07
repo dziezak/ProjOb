@@ -14,10 +14,5 @@ namespace Rouge
         {
             Value = value;
         }
-
-        public override void ApplyEffect(Player player)
-        {
-            // Możemy dodać mechanikę dodawania monet do ekwipunku gracza.
-        }
     }
 }

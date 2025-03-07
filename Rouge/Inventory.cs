@@ -8,9 +8,9 @@ namespace Rouge
 {
     internal class Inventory
     {
-        private List<IItem> items;
-        public Item LeftHand { get; set; }
-        public Item RightHand { get; set; }
+        public List<IItem> items;
+        public IItem? LeftHand { get; set; }
+        public IItem? RightHand { get; set; }
 
         public Inventory()
         {
@@ -19,19 +19,62 @@ namespace Rouge
             RightHand = null;
         }
 
-        public void EquipItem(Item item, Room room, int x, int y)
+        public void EquipItemLeftHand(int i, Player player)
         {
-            if (RightHand == null)
+            if(i >= 0 && i < items.Count)
             {
-                RightHand = item;
-            }
-            else if (LeftHand == null)
-            {
-                LeftHand = item;
+                if (items[i].TwoHanded() == true)
+                {
+                    if (LeftHand == null && RightHand == null)
+                    {
+                        LeftHand = items[i];
+                        RightHand = items[i];
+                        items.RemoveAt(i);
+                    }
+                    else
+                    {
+                        player.warningMessage += "Nie mozna trzymac dwurecznej broni w jednej rece\n";
+                    }
+                }
+                else if (items[i].TwoHanded() == false)
+                if (LeftHand == null)
+                {
+                    LeftHand = items[i];
+                    items.RemoveAt(i);
+                }
             }
             else
             {
-                room.DropItem(x, y, item);
+                player.warningMessage += "Nie ma przedmiotu w inventory na miejscu i\n";
+            }
+        }
+        public void EquipItemRightHand(int i, Player player)
+        {
+            if(i >= 0 && i < items.Count)
+            {
+                if (items[i].TwoHanded() == true)
+                {
+                    if (LeftHand == null && RightHand == null)
+                    {
+                        LeftHand = items[i];
+                        RightHand = items[i];
+                        items.RemoveAt(i);
+                    }
+                    else
+                    {
+                        player.warningMessage += "Nie mozna trzymac dwurecznej broni w jednej rece\n";
+                    }
+                }
+                else if (items[i].TwoHanded() == false)
+                if (RightHand == null)
+                {
+                    RightHand = items[i];
+                    items.RemoveAt(i);
+                }
+            }
+            else
+            {
+                player.warningMessage += "Nie ma przedmiotu w inventory na miejscu i\n";
             }
         }
 

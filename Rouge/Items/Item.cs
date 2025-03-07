@@ -11,6 +11,9 @@ namespace Rouge
     class Item : IItem
     {
         public string Name { get; set; }
+        public virtual bool TwoHanded() => false;
+        public virtual bool Equipable() => true;
+
         public Item(string name)
         {
             Name = name;

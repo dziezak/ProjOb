@@ -1,4 +1,5 @@
 ﻿using Rouge.Items;
+using Rouge.Items.Bronie;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,35 +28,64 @@ namespace Rouge
         private IItem CreateRandomItem()
         {
             int itemType = Random.Next(0, 6);
+            IItem item;
             switch (itemType)
             {
                 case 0:
-                    return new Weapon("Sword", 10);
+                    item = new Sword("Sword", 10);
+                    return item;
                 case 1:
-                    return new Weapon("Knife", 5);
+                    item = new Knife("Knife", 5);
+                    return item;
                 case 2:
-                    return new Weapon("Bow", 7);
+                    item = new Bow("Bow", 7);
+                    return item;
                 case 3:
-                    return new HeavyWeapon("Axe", 15);
+                    item = new Item("Stick");
+                    return item;
                 case 4:
-                    return new NonUsableItem("Stick");
+                    item = new Item("Mug");
+                    return item;
                 case 5:
-                    return new NonUsableItem("Scroll");
+                    item = new Item("Fork");
+                    return item;
                 default:
                     return null;
+            }
+        }
+        
+        private IItem GetRandomDecorator(IItem przedmiot)
+        {
+            int itemType = Random.Next(0, 5);
+            switch (itemType)
+            {
+            case 0:
+                return new LuckyItemDecorator(przedmiot);
+            case 1:
+                return new PowerfulItemDecorator(przedmiot);
+            case 2:
+                return new PitifulItemDecorator(przedmiot);
+            case 3:
+                return new HeavyItemDecorator(przedmiot);
+            case 4: 
+                return new UselessItemDecorator(przedmiot);
+            default:
+                return null;
             }
         }
 
         public void GenerateItems()
         {
-            int count = 50;
+            int count = 50;// TODO
             for (int i = 0; i < count; i++)
             {
                 int x = Random.Next(0, width);
                 int y = Random.Next(0, height);
                 if(grid[y, x] == ' ')
-                    DropItem(x, y, CreateRandomItem());
+                    DropItem(x, y, GetRandomDecorator(CreateRandomItem()));
             }
+            DropItem(1, 1, GetRandomDecorator(CreateRandomItem()));
+            DropItem(1, 1, GetRandomDecorator(CreateRandomItem()));
         }
 
         // TODO: ( obcenie jest Hard-Code) :
@@ -89,6 +119,7 @@ namespace Rouge
             return true;
         }
 
+        //funkcja uzywana do rozmieszczania przedmiotow
         public void DropItem(int x, int y, IItem item)
         {
             if(!itemMap.ContainsKey((x, y)))
@@ -105,7 +136,6 @@ namespace Rouge
 
         public void Render(Player player)
         {
-            //Console.WriteLine($"Player position: {player.X}, {player.Y}");
             for(int y = 0; y < height; y++)
             {
                 for(int x = 0; x < width; x++)
@@ -116,12 +146,10 @@ namespace Rouge
                     }
                     else if (itemMap[(x, y)].Count > 0)
                     {
-                        //Console.Write('*');
                         Console.Write(itemMap[(x, y)][0].GetName()[0]);
                     }
                     else
                     {
-                        //if(y == 0) Console.WriteLine(" ");
                         Console.Write(grid[y, x]);
                     }
                 } 
