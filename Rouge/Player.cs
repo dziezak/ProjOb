@@ -157,10 +157,31 @@ namespace Rouge
 
         void PickUpItem(int n)
         {
+            
             if (n >= 0 && n <items_to_get_from_room.Count )
             {
-                inventory.AddItem(items_to_get_from_room[n]);
-                items_to_get_from_room.RemoveAt(n);
+                if (!items_to_get_from_room[n].Equipable() )
+                {
+                    if (!items_to_get_from_room[n].isCurrency())
+                    {
+                        warningMessage = "You can't equip this item, cause it's Unusable!\n";
+                    }
+                    else if (items_to_get_from_room[n].GetName() == "Gold")
+                    {
+                        Gold += items_to_get_from_room[n].GetValue();
+                        items_to_get_from_room.RemoveAt(n);
+                    }
+                    else
+                    {
+                        Coins += items_to_get_from_room[n].GetValue();
+                        items_to_get_from_room.RemoveAt(n);
+                    }
+                }
+                else
+                {
+                    inventory.AddItem(items_to_get_from_room[n]);
+                    items_to_get_from_room.RemoveAt(n);
+                }
             }
         }
 
@@ -218,7 +239,10 @@ namespace Rouge
                 AddText("Items on tile:");
                 for (int i = 0; i < items_to_get_from_room.Count; i++)
                 {
-                    AddText($"Item {i}: {items_to_get_from_room[i].GetName()}");
+                    if(items_to_get_from_room[i].isCurrency())
+                        AddText($"Item {i}: {items_to_get_from_room[i].GetValue()}x {items_to_get_from_room[i].GetName()}");
+                    else
+                        AddText($"Item {i}: {items_to_get_from_room[i].GetName()}");
                 }
             }
             AddText("=========================");
@@ -250,5 +274,41 @@ namespace Rouge
             //maxRows = Math.Max(maxRows, infoLines.Count);
 
         }
+
+        public void DisplayAvailableKeys()
+        {
+            int startColumn = 0;
+            int cursorTop = 41;
+
+
+            // Lista dostępnych klawiszy
+            string[] keyDescriptions = new string[]
+            {
+                "[W] - Move Up",
+                "[A] - Move Left",
+                "[S] - Move Down",
+                "[D] - Move Right",
+                "[P] - Pick Up Item (then pick number from 0-9) ",
+                "[R] - Equip Item in Right Hand (then pick number from 0-9)",
+                "[L] - Equip Item in Left Hand (then pick numer from 0-9)",
+                "[O] - Drop Item (choose hand: 'r' or 'l')",
+                "[M] - Drop All Items"
+            };
+
+            // Wyświetlanie opcji
+            Console.SetCursorPosition(startColumn, cursorTop);
+            foreach (var description in keyDescriptions)
+            {
+                // Ustawienie kursora na odpowiedniej pozycji
+
+                // Wyczyszczenie linii (opcjonalne)
+
+                // Ponownie ustaw pozycję kursora i wyświetl opis klawisza
+                //Console.SetCursorPosition(startColumn, cursorTop++);
+                Console.Write(description + " ");
+            }
+        }
+
     }
+
 }

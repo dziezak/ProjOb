@@ -9,6 +9,8 @@
         string GetName();
         int GetAttack();
         int GetLuck();
+        bool isCurrency();
+        int GetValue();
 
     }
 }

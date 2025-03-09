@@ -12,16 +12,14 @@
             player = new Player(0, 0, 10, 10, 10, 10, 10, 10, 0, 0);
         }
         public void Start()
-        {
+        { 
+            player.DisplayAvailableKeys();
             while (true)
             {
-                //Console.Clear();
-                Console.SetCursorPosition(0, 0);
                 room.Render(player);
                 ConsoleKeyInfo key = Console.ReadKey();
                 
                 player.GetKey(key, room);
-                //player.DisplayStats(room.width);
             }
         }
     }

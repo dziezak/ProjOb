@@ -23,6 +23,8 @@ namespace Rouge
         public virtual int GetAttack() => DecoratedItem.GetAttack();
         public virtual int GetLuck() => DecoratedItem.GetLuck();
         public virtual string GetName() => DecoratedItem.GetName();
+        public virtual bool isCurrency() => DecoratedItem.isCurrency();
+        public virtual int GetValue() => DecoratedItem.GetValue();
     }
 
     //Dekorator dla przedmiotów zwiększających szczescie:
@@ -32,6 +34,7 @@ namespace Rouge
         public override void ApplyEffect(Player player) => DecoratedItem.ApplyEffect(player);
 
         public override string GetName() => "Lucky_" + DecoratedItem.GetName();
+        public override int GetLuck() => DecoratedItem.GetLuck() + 5;
     }
 
     // Dekorator dla przedmiotów zwiększających atak:

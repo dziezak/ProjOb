@@ -22,14 +22,10 @@ namespace Rouge
         {
             // klasa jest jako wyjsciowa bez imprementacji
         }
-        public virtual string GetName()
-        {
-            return Name;
-        }
-        public virtual int GetAttack()
-        {
-            return 0;
-        }
+        public virtual string GetName() => Name;
+        public virtual int GetAttack() => 0;
         public virtual int GetLuck() => 0;
+        public virtual bool isCurrency() => false;
+        public virtual int GetValue() => 0;
     }
 }

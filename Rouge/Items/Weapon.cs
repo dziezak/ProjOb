@@ -19,6 +19,7 @@ namespace Rouge
             //player.DisplayStats();
         }
 
-        public override int GetAttack() => Damage;
+        public override int GetAttack() => 0;
+        public override int GetLuck() => 0; 
     }
 }

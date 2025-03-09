@@ -23,6 +23,33 @@ namespace Rouge
             itemMap = new Dictionary<(int, int), List<IItem>>();
             GenerateRoom();
             GenerateItems();
+            GenerateMONEY();
+        }
+
+        private void GenerateMONEY()
+        {
+            int count = 10;
+            for (int i = 0; i < count; i++)
+            {
+                int itemType = Random.Next(0, 2);
+                int randomValue = Random.Next(1, 10);
+                int x = Random.Next(0, width);
+                int y = Random.Next(0, height);
+                IItem item;
+                
+                if(itemType == 0)
+                {
+                    item = new Currency("Gold", randomValue);
+                }
+                else
+                {
+                    item = new Currency("Coin", randomValue);
+                }
+                if (grid[y, x] == ' ')
+                {
+                    DropItem(x, y, item);
+                }
+            }
         }
 
         private IItem CreateRandomItem()
@@ -86,6 +113,7 @@ namespace Rouge
             }
             DropItem(1, 1, GetRandomDecorator(CreateRandomItem()));
             DropItem(1, 1, GetRandomDecorator(CreateRandomItem()));
+            DropItem(1, 1, GetRandomDecorator(GetRandomDecorator( CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
         }
 
         // TODO: ( obcenie jest Hard-Code) :
@@ -136,7 +164,8 @@ namespace Rouge
 
         public void Render(Player player)
         {
-            for(int y = 0; y < height; y++)
+            Console.SetCursorPosition(0, 0);
+            for (int y = 0; y < height; y++)
             {
                 for(int x = 0; x < width; x++)
                 {
