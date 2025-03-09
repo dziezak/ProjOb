@@ -88,6 +88,10 @@ namespace Rouge
                     {
                         if(inventory.RightHand != null)
                         {
+                            if(inventory.RightHand.TwoHanded())
+                            {
+                                inventory.LeftHand = null;
+                            }
                             room.DropItem(X, Y, inventory.RightHand);
                             inventory.RightHand = null;
                         }
@@ -99,6 +103,10 @@ namespace Rouge
                     {
                         if (inventory.LeftHand != null)
                         {
+                            if(inventory.LeftHand.TwoHanded())
+                            {
+                                inventory.RightHand = null;
+                            }
                             room.DropItem(X, Y, inventory.LeftHand);
                             inventory.LeftHand = null;
                         }
@@ -234,6 +242,7 @@ namespace Rouge
                     Console.SetCursorPosition(0, Console.BufferHeight - 1);
                 }
             }
+
         }
     }
 }
