@@ -21,7 +21,7 @@
                 ConsoleKeyInfo key = Console.ReadKey();
                 
                 player.GetKey(key, room);
-                player.DisplayStats(room.width);
+                //player.DisplayStats(room.width);
             }
         }
     }

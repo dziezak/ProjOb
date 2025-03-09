@@ -51,19 +51,30 @@ namespace Rouge
             {
                 case ConsoleKey.W:
                     newY--;
+                    DisplayStats(room.width);
                     break;
                 case ConsoleKey.A:
                     newX--;
+                    DisplayStats(room.width);
                     break;
                 case ConsoleKey.S:
+                    DisplayStats(room.width);
                     newY++;
                     break;
                 case ConsoleKey.D:
+                    DisplayStats(room.width);
                     newX++;
                     break;
                 case ConsoleKey.P:
                     Item_to_pick_up = Console.ReadKey();
-                    PickUpItem(int.Parse(Item_to_pick_up.KeyChar.ToString()));
+                    if (char.IsDigit(Item_to_pick_up.KeyChar))
+                    {
+                        PickUpItem(int.Parse(Item_to_pick_up.KeyChar.ToString()));
+                    }
+                    else
+                    {
+                        warningMessage += "Invalid input. Please enter a digit.\n";
+                    }
                     DisplayStats(room.width);
                     break;
                 case ConsoleKey.R:
@@ -73,6 +84,7 @@ namespace Rouge
                         hand_item = int.Parse(Item_to_pick_up.KeyChar.ToString());
                         inventory.EquipItemRightHand(hand_item, this);
                     }
+                    DisplayStats(room.width);
                     break;
                 case ConsoleKey.L:
                     Item_to_pick_up = Console.ReadKey();
@@ -81,6 +93,7 @@ namespace Rouge
                         hand_item = int.Parse(Item_to_pick_up.KeyChar.ToString());
                         inventory.EquipItemLeftHand(hand_item, this);
                     }
+                    DisplayStats(room.width);
                     break;
                 case ConsoleKey.O:
                     Item_to_drop = Console.ReadKey();
@@ -115,21 +128,25 @@ namespace Rouge
                             warningMessage += "Nie trzymasz nic w lewej rece\n";
                         }
                     }
-
+                    DisplayStats(room.width);
                     break;
-
+                case ConsoleKey.M:
+                    var itemsToRemove = inventory.GetItems().ToList();
+                    foreach (var item in itemsToRemove)
+                    {
+                        room.DropItem(X, Y, item);
+                        inventory.RemoveItem(item);
+                    }
+                    break;
             }
             if(room.IsWalkable(newX, newY))
             {
                 X = newX;
                 Y = newY;
             }
-            if(key.Key == ConsoleKey.E)
-            {
-                //TODO
-                //room.PuckUpItem(this);
-            }
             items_to_get_from_room = room.GetItemsAt(X, Y);
+            DisplayStats(room.width);
+            warningMessage = "";
         }
 
         // przyszlosciowa funkcja dla efektow
@@ -147,41 +164,26 @@ namespace Rouge
             }
         }
 
+
+        int maxRows = 0;
         public void DisplayStats(int mapWidth)
         {
             int infoWidth = mapWidth + 40;
             int infoHeight = 100;
             char[,] infoGrid = new char[infoHeight, infoWidth];
-
-            for(int y = 0; y < infoHeight; y++)
-            {
-                for(int x = 0; x < infoWidth; x++)
-                {
-                    infoGrid[y, x] = ' ';
-                }
-            }
+            List<string> infoLines = new List<string>();
 
             int row = 0;
-            int maxRows = 0;
             void AddText(string text)
             {
-                for(int i=0; i<text.Length; i++)
-                {
-                    if(i< infoWidth) infoGrid[row, i] = text[i];
-                }
-                row++;
-                maxRows = Math.Max(maxRows, row);
+                text = text.PadRight(infoWidth);
+                infoLines.Add(text);
             }
-            int attackCounter = 0;
-            if(inventory.LeftHand != null)
-                attackCounter = inventory.LeftHand.GetAttack();
-            if(inventory.RightHand != null)
-                attackCounter += inventory.RightHand.GetAttack();
-            int luckCounter = 0;
-            if(inventory.LeftHand != null)
-                luckCounter = inventory.LeftHand.GetLuck();
-            if(inventory.RightHand != null)
-                luckCounter += inventory.RightHand.GetLuck();
+           
+            var leftHand = inventory?.LeftHand;
+            var rightHand = inventory?.RightHand;
+            int attackCounter = (leftHand?.GetAttack() ?? 0) + (rightHand?.GetAttack() ?? 0);
+            int luckCounter = (leftHand?.GetLuck() ?? 0) + (rightHand?.GetLuck() ?? 0);
             AddText($"Action Counter: {0}");
             AddText("=========================");
             AddText("Witchers Attributes:");
@@ -200,13 +202,15 @@ namespace Rouge
             AddText("=========================");
             AddText("Inventory:");
 
-            if(inventory.items.Count == 0)
+            if(inventory.items.Count == 0 || inventory == null)
             {
                 AddText("Empty");
             }
+            int index = 0;
             foreach (var item in inventory.GetItems())
             {
-                AddText(item.GetName());
+                AddText($"item {index}: " + item.GetName());
+                index++;
             }
             AddText("=========================");
             if(items_to_get_from_room != null)
@@ -218,30 +222,32 @@ namespace Rouge
                 }
             }
             AddText("=========================");
-            AddText(warningMessage);
+            if (!string.IsNullOrEmpty(warningMessage))
+            {
+                AddText(warningMessage);
+            }
 
-            for(int i=row; i<maxRows; i++)
+            /*
+            for (int i=infoLines.Count; i<=maxRows; i++)
             {
                 AddText("");
             }
-
-
-            Console.SetCursorPosition(mapWidth + 5, 0);
-            for(int y=0;  y<infoHeight; y++)
+            */
+            while(infoLines.Count < maxRows)
             {
-                for(int x = 0; x<infoWidth; x++)
-                {
-                    Console.Write(infoGrid[y, x] );
-                }
-                if (mapWidth + 5 < Console.BufferWidth && Console.CursorTop + 1 < Console.BufferHeight)
-                {
-                    Console.SetCursorPosition(mapWidth + 5, Console.CursorTop + 1);
-                }
-                else
-                {
-                    Console.SetCursorPosition(0, Console.BufferHeight - 1);
-                }
+                infoLines.Add(new string(' ', infoWidth));
             }
+            maxRows = infoLines.Count;
+
+
+            int cursorTop = 0;
+            Console.SetCursorPosition(mapWidth + 5, cursorTop);
+            foreach(var line in infoLines)
+            {
+                Console.SetCursorPosition(mapWidth + 5, cursorTop++);
+                Console.Write(line);
+            }
+            //maxRows = Math.Max(maxRows, infoLines.Count);
 
         }
     }

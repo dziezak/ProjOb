@@ -7,8 +7,12 @@
       "RelativeMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|solutionrelative:player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|c:\\dev\\github\\cpp\\politechnika\\projob\\rouge\\items\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|solutionrelative:items\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|c:\\dev\\github\\cpp\\politechnika\\projob\\rouge\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|solutionrelative:game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|c:\\dev\\github\\cpp\\politechnika\\projob\\rouge\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|c:\\dev\\github\\cpp\\politechnika\\projob\\rouge\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,12 +23,8 @@
       "RelativeMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|solutionrelative:inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|c:\\dev\\github\\cpp\\politechnika\\projob\\rouge\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|c:\\dev\\github\\cpp\\politechnika\\projob\\rouge\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|solutionrelative:game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|c:\\dev\\github\\cpp\\politechnika\\projob\\rouge\\items\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|solutionrelative:items\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{63AE4BF0-961F-48F5-93DF-533347F2C4A6}|Rouge.csproj|c:\\dev\\github\\cpp\\politechnika\\projob\\rouge\\items\\itemdecorator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -53,6 +53,20 @@
           "SelectedChildIndex": 8,
           "Children": [
             {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-06T16:44:06.424Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
@@ -78,28 +92,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "Game.cs",
               "DocumentMoniker": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Game.cs",
               "RelativeDocumentMoniker": "Game.cs",
               "ToolTip": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Game.cs",
               "RelativeToolTip": "Game.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAPAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-07T19:47:38.958Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-06T16:44:06.424Z",
               "EditorCaption": ""
             },
             {
@@ -110,33 +111,33 @@
               "RelativeDocumentMoniker": "Player.cs",
               "ToolTip": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Player.cs",
               "RelativeToolTip": "Player.cs",
-              "ViewState": "AgIAAEIAAAAAAAAAAADwv2wAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAHcAAAAAAAAAAAAuwJQAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-05T23:49:45.384Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Room.cs",
               "DocumentMoniker": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Room.cs",
               "RelativeDocumentMoniker": "Room.cs",
               "ToolTip": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Room.cs",
               "RelativeToolTip": "Room.cs",
-              "ViewState": "AgIAAGMAAAAAAAAAAAAwwHoAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAwwHoAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-05T23:21:37.877Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Inventory.cs",
               "DocumentMoniker": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Inventory.cs",
               "RelativeDocumentMoniker": "Inventory.cs",
               "ToolTip": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Inventory.cs",
               "RelativeToolTip": "Inventory.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADIAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-07T19:50:19.813Z",
               "EditorCaption": ""
@@ -155,7 +156,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "Item.cs",
               "DocumentMoniker": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Items\\Item.cs",
               "RelativeDocumentMoniker": "Items\\Item.cs",
@@ -163,8 +164,7 @@
               "RelativeToolTip": "Items\\Item.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-05T22:39:36.55Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-05T22:39:36.55Z"
             },
             {
               "$type": "Document",
