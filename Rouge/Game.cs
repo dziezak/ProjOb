@@ -13,9 +13,9 @@
         }
         public void Start()
         { 
-            player.DisplayAvailableKeys();
             while (true)
             {
+                player.DisplayAvailableKeys(room.width);
                 room.Render(player);
                 ConsoleKeyInfo key = Console.ReadKey();
                 

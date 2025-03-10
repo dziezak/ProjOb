@@ -114,6 +114,8 @@ namespace Rouge
             DropItem(1, 1, GetRandomDecorator(CreateRandomItem()));
             DropItem(1, 1, GetRandomDecorator(CreateRandomItem()));
             DropItem(1, 1, GetRandomDecorator(GetRandomDecorator( CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
+            //DropItem(1, 1, LuckyItemDecorator(PowerfulItemDecorator(CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
+            DropItem(1, 1, new LuckyItemDecorator(new PowerfulItemDecorator(CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
         }
 
         // TODO: ( obcenie jest Hard-Code) :

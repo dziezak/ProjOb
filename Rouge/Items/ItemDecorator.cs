@@ -72,7 +72,6 @@ namespace Rouge
         public UselessItemDecorator(IItem item) : base(item) { }
         public override bool Equipable() => false;
         public override void ApplyEffect(Player player) => DecoratedItem.ApplyEffect(player);
-        public override int GetAttack() => 0;
         public override string GetName() => "Useless_" + DecoratedItem.GetName();
     }
 }

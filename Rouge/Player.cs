@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -189,7 +190,7 @@ namespace Rouge
         int maxRows = 0;
         public void DisplayStats(int mapWidth)
         {
-            int infoWidth = mapWidth + 40;
+            int infoWidth = mapWidth + 30;
             int infoHeight = 100;
             char[,] infoGrid = new char[infoHeight, infoWidth];
             List<string> infoLines = new List<string>();
@@ -198,15 +199,24 @@ namespace Rouge
             void AddText(string text)
             {
                 text = text.PadRight(infoWidth);
+                text = text.Substring(0, text.Length -1) + "|";
                 infoLines.Add(text);
             }
            
             var leftHand = inventory?.LeftHand;
             var rightHand = inventory?.RightHand;
             int attackCounter = (leftHand?.GetAttack() ?? 0) + (rightHand?.GetAttack() ?? 0);
+            if (leftHand != null && leftHand.TwoHanded())
+            {
+                attackCounter = leftHand.GetAttack();
+            }
             int luckCounter = (leftHand?.GetLuck() ?? 0) + (rightHand?.GetLuck() ?? 0);
+            if(leftHand != null && leftHand.TwoHanded())
+            {
+                luckCounter = leftHand.GetLuck();
+            }
             AddText($"Action Counter: {0}");
-            AddText("=========================");
+            AddText("================================");
             AddText("Witchers Attributes:");
             AddText($"Power: {Power} + {attackCounter}");
             AddText($"Agility: {Agility}");
@@ -214,13 +224,13 @@ namespace Rouge
             AddText($"Luck: {Luck} + {luckCounter}");
             AddText($"Aggression: {Attack}");
             AddText($"Wisdom: {Wisdom}");
-            AddText("=========================");
+            AddText("================================");
             AddText($"Coins: {Coins}");
             AddText($"Gold: {Gold}");
-            AddText("=========================");
+            AddText("================================");
             AddText($"Right Hand: {(inventory?.RightHand != null ? inventory.RightHand.GetName() : "None")}");
             AddText($"Left Hand: {(inventory?.LeftHand != null ? inventory.LeftHand.GetName() : "None")}");
-            AddText("=========================");
+            AddText("================================");
             AddText("Inventory:");
 
             if(inventory.items.Count == 0 || inventory == null)
@@ -233,8 +243,8 @@ namespace Rouge
                 AddText($"item {index}: " + item.GetName());
                 index++;
             }
-            AddText("=========================");
-            if(items_to_get_from_room != null)
+            AddText("================================");
+            if (items_to_get_from_room != null)
             {
                 AddText("Items on tile:");
                 for (int i = 0; i < items_to_get_from_room.Count; i++)
@@ -245,7 +255,7 @@ namespace Rouge
                         AddText($"Item {i}: {items_to_get_from_room[i].GetName()}");
                 }
             }
-            AddText("=========================");
+            AddText("================================");
             if (!string.IsNullOrEmpty(warningMessage))
             {
                 AddText(warningMessage);
@@ -275,15 +285,23 @@ namespace Rouge
 
         }
 
-        public void DisplayAvailableKeys()
+        public void DisplayAvailableKeys(int mapWidth)
         {
-            int startColumn = 0;
-            int cursorTop = 41;
+            int startColumn = mapWidth + 65;
+            int cursorTop = 0;
+            /*
+            if (Console.WindowHeight < cursorTop + 10)
+            {
+                Console.WindowHeight = cursorTop + 10;
+            }
+            */
+
 
 
             // Lista dostępnych klawiszy
             string[] keyDescriptions = new string[]
             {
+                "Available keys:A",
                 "[W] - Move Up",
                 "[A] - Move Left",
                 "[S] - Move Down",
@@ -304,8 +322,8 @@ namespace Rouge
                 // Wyczyszczenie linii (opcjonalne)
 
                 // Ponownie ustaw pozycję kursora i wyświetl opis klawisza
-                //Console.SetCursorPosition(startColumn, cursorTop++);
-                Console.Write(description + " ");
+                Console.SetCursorPosition(startColumn, cursorTop++);
+                Console.Write(description);
             }
         }
 

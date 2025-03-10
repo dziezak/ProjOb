@@ -31,7 +31,7 @@ namespace Rouge
                         RightHand = items[i];
                         items.RemoveAt(i);
                     }
-                    else
+                    else 
                     {
                         player.warningMessage += "Nie mozna trzymac dwurecznej broni w jednej rece\n";
                     }
