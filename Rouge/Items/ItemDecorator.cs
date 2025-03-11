@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Rouge
+﻿namespace Rouge.Items
 {
     class ItemDecorator : IItem
     {
@@ -23,7 +17,7 @@ namespace Rouge
         public virtual int GetAttack() => DecoratedItem.GetAttack();
         public virtual int GetLuck() => DecoratedItem.GetLuck();
         public virtual string GetName() => DecoratedItem.GetName();
-        public virtual bool isCurrency() => DecoratedItem.isCurrency();
+        public virtual bool IsCurrency() => DecoratedItem.IsCurrency();
         public virtual int GetValue() => DecoratedItem.GetValue();
     }
 

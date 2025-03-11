@@ -2,24 +2,24 @@
 {
     internal class Game
     {
-        private Room room;
-        private Player player;
+        private Room _room;
+        private Player _player;
         
         //Hard-Code wielkosc tablicy
         public Game()
         {
-            room = new Room(20, 40);
-            player = new Player(0, 0, 10, 10, 10, 10, 10, 10, 0, 0);
+            _room = new Room(40, 20);
+            _player = new Player(0, 0, 10, 10, 10, 10, 10, 10, 0, 0);
         }
         public void Start()
         { 
             while (true)
             {
-                player.DisplayAvailableKeys(room.width);
-                room.Render(player);
-                ConsoleKeyInfo key = Console.ReadKey();
+                _player.DisplayAvailableKeys(_room.Width);
+                _room.Render(_player);
+                var key = Console.ReadKey();
                 
-                player.GetKey(key, room);
+                _player.GetKey(key, _room);
             }
         }
     }

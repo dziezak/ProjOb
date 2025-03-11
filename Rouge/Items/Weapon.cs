@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Rouge
+﻿namespace Rouge.Items
 {
     internal class Weapon : Item
     {
         public int Damage { get; set; }
-        public Weapon(string name, int damage) : base(name)
+
+        protected Weapon(string name, int damage) : base(name)
         {
             Damage = damage;
         }

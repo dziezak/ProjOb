@@ -1,4 +1,4 @@
-﻿namespace Rouge
+﻿namespace Rouge.Items
 {
     internal interface IItem
     {
@@ -9,7 +9,7 @@
         string GetName();
         int GetAttack();
         int GetLuck();
-        bool isCurrency();
+        bool IsCurrency();
         int GetValue();
 
     }

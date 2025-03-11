@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Rouge
+﻿namespace Rouge.Items
 {
-    class Currency : Item
+    internal class Currency : Item
     {
         public int Value { get; set; }
 
@@ -14,7 +8,7 @@ namespace Rouge
         {
             Value = value;
         }
-        public override bool isCurrency() => true;
+        public override bool IsCurrency() => true;
         public override bool Equipable() => false;
         public override int GetValue() => Value;
     }

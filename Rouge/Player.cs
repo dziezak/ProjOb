@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Rouge.Items;
 
 namespace Rouge
 {
@@ -12,7 +13,7 @@ namespace Rouge
     {
         public int X {  get; set; }
         public int Y {  get; set; }
-        public Inventory inventory { get; set; }
+        public Inventory Inventory { get; set; }
         //Staty gracza
         public int Power { get; set; }  // Siła
         public int Agility { get; set; }  // Zręczność
@@ -22,18 +23,18 @@ namespace Rouge
         public int Wisdom { get; set; }  // Madrosc
         public int Coins { get; set; } // Kasa
         public int Gold { get; set; } // Zloto
-        List<IItem> items_to_get_from_room = new List<IItem>();
-        ConsoleKeyInfo Item_to_pick_up;
-        ConsoleKeyInfo Item_to_drop;
-        int hand_item;
-        public string warningMessage = "";
+        List<IItem> _itemsToGetFromRoom = new List<IItem>();
+        ConsoleKeyInfo _itemToPickUp;
+        ConsoleKeyInfo _itemToDrop;
+        int _handItem;
+        public string WarningMessage = "";
 
 
         public Player(int x, int y, int p, int a, int h, int l, int attack, int w, int coins, int gold)
         {
             X = x;
             Y = y;
-            inventory = new Inventory();
+            Inventory = new Inventory();
 
             // Inicjalizacja statystyk
             Power = p;
@@ -52,91 +53,91 @@ namespace Rouge
             {
                 case ConsoleKey.W:
                     newY--;
-                    DisplayStats(room.width);
+                    DisplayStats(room.Width);
                     break;
                 case ConsoleKey.A:
                     newX--;
-                    DisplayStats(room.width);
+                    DisplayStats(room.Width);
                     break;
                 case ConsoleKey.S:
-                    DisplayStats(room.width);
+                    DisplayStats(room.Width);
                     newY++;
                     break;
                 case ConsoleKey.D:
-                    DisplayStats(room.width);
+                    DisplayStats(room.Width);
                     newX++;
                     break;
                 case ConsoleKey.P:
-                    Item_to_pick_up = Console.ReadKey();
-                    if (char.IsDigit(Item_to_pick_up.KeyChar))
+                    _itemToPickUp = Console.ReadKey();
+                    if (char.IsDigit(_itemToPickUp.KeyChar))
                     {
-                        PickUpItem(int.Parse(Item_to_pick_up.KeyChar.ToString()));
+                        PickUpItem(int.Parse(_itemToPickUp.KeyChar.ToString()));
                     }
                     else
                     {
-                        warningMessage += "Invalid input. Please enter a digit.\n";
+                        WarningMessage += "Invalid input. Please enter a digit.\n";
                     }
-                    DisplayStats(room.width);
+                    DisplayStats(room.Width);
                     break;
                 case ConsoleKey.R:
-                    Item_to_pick_up = Console.ReadKey();
-                    if(char.IsDigit(Item_to_pick_up.KeyChar))
+                    _itemToPickUp = Console.ReadKey();
+                    if(char.IsDigit(_itemToPickUp.KeyChar))
                     {
-                        hand_item = int.Parse(Item_to_pick_up.KeyChar.ToString());
-                        inventory.EquipItemRightHand(hand_item, this);
+                        _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
+                        Inventory.EquipItemRightHand(_handItem, this);
                     }
-                    DisplayStats(room.width);
+                    DisplayStats(room.Width);
                     break;
                 case ConsoleKey.L:
-                    Item_to_pick_up = Console.ReadKey();
-                    if (char.IsDigit(Item_to_pick_up.KeyChar))
+                    _itemToPickUp = Console.ReadKey();
+                    if (char.IsDigit(_itemToPickUp.KeyChar))
                     {
-                        hand_item = int.Parse(Item_to_pick_up.KeyChar.ToString());
-                        inventory.EquipItemLeftHand(hand_item, this);
+                        _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
+                        Inventory.EquipItemLeftHand(_handItem, this);
                     }
-                    DisplayStats(room.width);
+                    DisplayStats(room.Width);
                     break;
                 case ConsoleKey.O:
-                    Item_to_drop = Console.ReadKey();
-                    if (Item_to_drop.KeyChar == 'r')
+                    _itemToDrop = Console.ReadKey();
+                    if (_itemToDrop.KeyChar == 'r')
                     {
-                        if(inventory.RightHand != null)
+                        if(Inventory.RightHand != null)
                         {
-                            if(inventory.RightHand.TwoHanded())
+                            if(Inventory.RightHand.TwoHanded())
                             {
-                                inventory.LeftHand = null;
+                                Inventory.LeftHand = null;
                             }
-                            room.DropItem(X, Y, inventory.RightHand);
-                            inventory.RightHand = null;
+                            room.DropItem(X, Y, Inventory.RightHand);
+                            Inventory.RightHand = null;
                         }
                         else
                         {
-                            warningMessage += "Nie trzymasz nic w prawej rece\n";
+                            WarningMessage += "Nie trzymasz nic w prawej rece\n";
                         }
-                    }else if(Item_to_drop.KeyChar == 'l')
+                    }else if(_itemToDrop.KeyChar == 'l')
                     {
-                        if (inventory.LeftHand != null)
+                        if (Inventory.LeftHand != null)
                         {
-                            if(inventory.LeftHand.TwoHanded())
+                            if(Inventory.LeftHand.TwoHanded())
                             {
-                                inventory.RightHand = null;
+                                Inventory.RightHand = null;
                             }
-                            room.DropItem(X, Y, inventory.LeftHand);
-                            inventory.LeftHand = null;
+                            room.DropItem(X, Y, Inventory.LeftHand);
+                            Inventory.LeftHand = null;
                         }
                         else
                         {
-                            warningMessage += "Nie trzymasz nic w lewej rece\n";
+                            WarningMessage += "Nie trzymasz nic w lewej rece\n";
                         }
                     }
-                    DisplayStats(room.width);
+                    DisplayStats(room.Width);
                     break;
                 case ConsoleKey.M:
-                    var itemsToRemove = inventory.GetItems().ToList();
+                    var itemsToRemove = Inventory.GetItems().ToList();
                     foreach (var item in itemsToRemove)
                     {
                         room.DropItem(X, Y, item);
-                        inventory.RemoveItem(item);
+                        Inventory.RemoveItem(item);
                     }
                     break;
             }
@@ -145,9 +146,9 @@ namespace Rouge
                 X = newX;
                 Y = newY;
             }
-            items_to_get_from_room = room.GetItemsAt(X, Y);
-            DisplayStats(room.width);
-            warningMessage = "";
+            _itemsToGetFromRoom = room.GetItemsAt(X, Y);
+            DisplayStats(room.Width);
+            WarningMessage = "";
         }
 
         // przyszlosciowa funkcja dla efektow
@@ -159,38 +160,38 @@ namespace Rouge
         void PickUpItem(int n)
         {
             
-            if (n >= 0 && n <items_to_get_from_room.Count )
+            if (n >= 0 && n <_itemsToGetFromRoom.Count )
             {
-                if (!items_to_get_from_room[n].Equipable() )
+                if (!_itemsToGetFromRoom[n].Equipable() )
                 {
-                    if (!items_to_get_from_room[n].isCurrency())
+                    if (!_itemsToGetFromRoom[n].IsCurrency())
                     {
-                        warningMessage = "You can't equip this item, cause it's Unusable!\n";
+                        WarningMessage = "You can't equip this item, cause it's Unusable!\n";
                     }
-                    else if (items_to_get_from_room[n].GetName() == "Gold")
+                    else if (_itemsToGetFromRoom[n].GetName() == "Gold")
                     {
-                        Gold += items_to_get_from_room[n].GetValue();
-                        items_to_get_from_room.RemoveAt(n);
+                        Gold += _itemsToGetFromRoom[n].GetValue();
+                        _itemsToGetFromRoom.RemoveAt(n);
                     }
                     else
                     {
-                        Coins += items_to_get_from_room[n].GetValue();
-                        items_to_get_from_room.RemoveAt(n);
+                        Coins += _itemsToGetFromRoom[n].GetValue();
+                        _itemsToGetFromRoom.RemoveAt(n);
                     }
                 }
                 else
                 {
-                    inventory.AddItem(items_to_get_from_room[n]);
-                    items_to_get_from_room.RemoveAt(n);
+                    Inventory.AddItem(_itemsToGetFromRoom[n]);
+                    _itemsToGetFromRoom.RemoveAt(n);
                 }
             }
         }
 
 
-        int maxRows = 0;
+        int _maxRows = 0;
         public void DisplayStats(int mapWidth)
         {
-            int infoWidth = mapWidth + 30;
+            int infoWidth = 55;
             int infoHeight = 100;
             char[,] infoGrid = new char[infoHeight, infoWidth];
             List<string> infoLines = new List<string>();
@@ -203,8 +204,8 @@ namespace Rouge
                 infoLines.Add(text);
             }
            
-            var leftHand = inventory?.LeftHand;
-            var rightHand = inventory?.RightHand;
+            var leftHand = Inventory?.LeftHand;
+            var rightHand = Inventory?.RightHand;
             int attackCounter = (leftHand?.GetAttack() ?? 0) + (rightHand?.GetAttack() ?? 0);
             if (leftHand != null && leftHand.TwoHanded())
             {
@@ -228,37 +229,37 @@ namespace Rouge
             AddText($"Coins: {Coins}");
             AddText($"Gold: {Gold}");
             AddText("================================");
-            AddText($"Right Hand: {(inventory?.RightHand != null ? inventory.RightHand.GetName() : "None")}");
-            AddText($"Left Hand: {(inventory?.LeftHand != null ? inventory.LeftHand.GetName() : "None")}");
+            AddText($"Right Hand: {(Inventory?.RightHand != null ? Inventory.RightHand.GetName() : "None")}");
+            AddText($"Left Hand: {(Inventory?.LeftHand != null ? Inventory.LeftHand.GetName() : "None")}");
             AddText("================================");
             AddText("Inventory:");
 
-            if(inventory.items.Count == 0 || inventory == null)
+            if(Inventory.Items.Count == 0 || Inventory == null)
             {
                 AddText("Empty");
             }
             int index = 0;
-            foreach (var item in inventory.GetItems())
+            foreach (var item in Inventory.GetItems())
             {
                 AddText($"item {index}: " + item.GetName());
                 index++;
             }
             AddText("================================");
-            if (items_to_get_from_room != null)
+            if (_itemsToGetFromRoom != null)
             {
                 AddText("Items on tile:");
-                for (int i = 0; i < items_to_get_from_room.Count; i++)
+                for (int i = 0; i < _itemsToGetFromRoom.Count; i++)
                 {
-                    if(items_to_get_from_room[i].isCurrency())
-                        AddText($"Item {i}: {items_to_get_from_room[i].GetValue()}x {items_to_get_from_room[i].GetName()}");
+                    if(_itemsToGetFromRoom[i].IsCurrency())
+                        AddText($"Item {i}: {_itemsToGetFromRoom[i].GetValue()}x {_itemsToGetFromRoom[i].GetName()}");
                     else
-                        AddText($"Item {i}: {items_to_get_from_room[i].GetName()}");
+                        AddText($"Item {i}: {_itemsToGetFromRoom[i].GetName()}");
                 }
             }
             AddText("================================");
-            if (!string.IsNullOrEmpty(warningMessage))
+            if (!string.IsNullOrEmpty(WarningMessage))
             {
-                AddText(warningMessage);
+                AddText(WarningMessage);
             }
 
             /*
@@ -267,11 +268,11 @@ namespace Rouge
                 AddText("");
             }
             */
-            while(infoLines.Count < maxRows)
+            while(infoLines.Count < _maxRows)
             {
                 infoLines.Add(new string(' ', infoWidth));
             }
-            maxRows = infoLines.Count;
+            _maxRows = infoLines.Count;
 
 
             int cursorTop = 0;

@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Rouge
+﻿namespace Rouge.Items
 {
-    class Item : IItem
+    internal class Item : IItem
     {
         public string Name { get; set; }
         public virtual bool TwoHanded() => false;
@@ -25,7 +17,7 @@ namespace Rouge
         public virtual string GetName() => Name;
         public virtual int GetAttack() => 0;
         public virtual int GetLuck() => 0;
-        public virtual bool isCurrency() => false;
+        public virtual bool IsCurrency() => false;
         public virtual int GetValue() => 0;
     }
 }

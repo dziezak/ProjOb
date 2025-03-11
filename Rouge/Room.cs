@@ -10,31 +10,31 @@ namespace Rouge
 {
     class Room
     {
-        public int width, height;
-        private char[,] grid;
-        private Dictionary<(int, int), List<IItem>> itemMap;
-        private Random Random = new Random();  
+        public int Width, Height;
+        private char[,] _grid;
+        private Dictionary<(int, int), List<IItem>> _itemMap;
+        private Random _random = new Random();  
 
         public Room(int width, int height)
         {
-            this.width = width;
-            this.height = height;
-            grid = new char[height, width];
-            itemMap = new Dictionary<(int, int), List<IItem>>();
+            this.Width = width;
+            this.Height = height;
+            _grid = new char[height, width];
+            _itemMap = new Dictionary<(int, int), List<IItem>>();
             GenerateRoom();
             GenerateItems();
-            GenerateMONEY();
+            GenerateMoney();
         }
 
-        private void GenerateMONEY()
+        private void GenerateMoney()
         {
             int count = 10;
             for (int i = 0; i < count; i++)
             {
-                int itemType = Random.Next(0, 2);
-                int randomValue = Random.Next(1, 10);
-                int x = Random.Next(0, width);
-                int y = Random.Next(0, height);
+                int itemType = _random.Next(0, 2);
+                int randomValue = _random.Next(1, 10);
+                int x = _random.Next(0, Width);
+                int y = _random.Next(0, Height);
                 IItem item;
                 
                 if(itemType == 0)
@@ -45,7 +45,7 @@ namespace Rouge
                 {
                     item = new Currency("Coin", randomValue);
                 }
-                if (grid[y, x] == ' ')
+                if (_grid[y, x] == ' ')
                 {
                     DropItem(x, y, item);
                 }
@@ -54,7 +54,7 @@ namespace Rouge
 
         private IItem CreateRandomItem()
         {
-            int itemType = Random.Next(0, 6);
+            int itemType = _random.Next(0, 6);
             IItem item;
             switch (itemType)
             {
@@ -83,7 +83,7 @@ namespace Rouge
         
         private IItem GetRandomDecorator(IItem przedmiot)
         {
-            int itemType = Random.Next(0, 5);
+            int itemType = _random.Next(0, 5);
             switch (itemType)
             {
             case 0:
@@ -106,9 +106,9 @@ namespace Rouge
             int count = 50;// TODO
             for (int i = 0; i < count; i++)
             {
-                int x = Random.Next(0, width);
-                int y = Random.Next(0, height);
-                if(grid[y, x] == ' ')
+                int x = _random.Next(0, Width);
+                int y = _random.Next(0, Height);
+                if(_grid[y, x] == ' ')
                     DropItem(x, y, GetRandomDecorator(CreateRandomItem()));
             }
             DropItem(1, 1, GetRandomDecorator(CreateRandomItem()));
@@ -121,28 +121,28 @@ namespace Rouge
         // TODO: ( obcenie jest Hard-Code) :
         private void GenerateRoom()
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     if ((x % 3 == 0 && y % 3 == 0) || (y==1 && x == 10) ||
-                        (y==height-1 ) || (x==1 && y == 4) || (x==0 && y==4)) 
-                        grid[y, x] = '█';
+                        (y==Height-1 ) || (x==1 && y == 4) || (x==0 && y==4)) 
+                        _grid[y, x] = '█';
                     else 
-                        grid[y, x] = ' ';
-                    itemMap[(x, y)] = new List<IItem>();
+                        _grid[y, x] = ' ';
+                    _itemMap[(x, y)] = new List<IItem>();
                 }
             }
-            grid[0, 0] = ' ';
+            _grid[0, 0] = ' ';
         }
 
         public bool IsWalkable(int x, int y)
         {
-            if(x < 0 || y < 0 || x >= width || y >= height)
+            if(x < 0 || y < 0 || x >= Width || y >= Height)
             {
                 return false;
             }
-            if (grid[y, x] == '█')
+            if (_grid[y, x] == '█')
             {
                 return false;
             }
@@ -152,36 +152,36 @@ namespace Rouge
         //funkcja uzywana do rozmieszczania przedmiotow
         public void DropItem(int x, int y, IItem item)
         {
-            if(!itemMap.ContainsKey((x, y)))
+            if(!_itemMap.ContainsKey((x, y)))
             {
-                itemMap[(x, y)] = new List<IItem> ();
+                _itemMap[(x, y)] = new List<IItem> ();
             }
-            itemMap[(x, y)].Add (item);
+            _itemMap[(x, y)].Add (item);
         }
 
         public List<IItem> GetItemsAt(int x, int y)
         {
-            return itemMap.ContainsKey((x, y)) ? itemMap[(x, y)] : new List<IItem>();
+            return _itemMap.ContainsKey((x, y)) ? _itemMap[(x, y)] : new List<IItem>();
         }
 
         public void Render(Player player)
         {
             Console.SetCursorPosition(0, 0);
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for(int x = 0; x < width; x++)
+                for(int x = 0; x < Width; x++)
                 {
                     if(x == player.X && y == player.Y)
                     {
                         Console.Write('¶');
                     }
-                    else if (itemMap[(x, y)].Count > 0)
+                    else if (_itemMap[(x, y)].Count > 0)
                     {
-                        Console.Write(itemMap[(x, y)][0].GetName()[0]);
+                        Console.Write(_itemMap[(x, y)][0].GetName()[0]);
                     }
                     else
                     {
-                        Console.Write(grid[y, x]);
+                        Console.Write(_grid[y, x]);
                     }
                 } 
                 Console.WriteLine();
