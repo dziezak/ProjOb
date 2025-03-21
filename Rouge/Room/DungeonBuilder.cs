@@ -79,24 +79,25 @@ public class DungeonBuilder : IDungeonBuilder
    {
       //Na razie dodaje pokój w randomowym miejscu i w randomowym miejscu
       Random random = new Random();
-      int randomWidth = random.Next(2, 5);
-      int randomHeight = random.Next(2, 5);
+      int randomWidth = 3;//random.Next(2, 5);
+      int randomHeight = 3;//random.Next(2, 5);
       int startX = random.Next(2, _room.Width - randomWidth);
       int startY = random.Next(2, _room.Height - randomHeight);
-      for (int y = startY; y < randomHeight; y++)
+      for (int y = startY; y < startY+randomHeight; y++)
       {
-         for (int x = startX; x < randomWidth; x++)
+         for (int x = startX; x < startX+randomWidth; x++)
          {
             _room.SetGridElement(y, x, ' ');
          }
       }
+      //_room.SetGridElement(startY, startX + randomWidth, '?');
    }
 
    public void AddCentralRoom()
    {
       int centerX = _room.Width / 2;
       int centerY = _room.Height / 2;
-      int roomWidth = _room.Width / 4;
+      int roomWidth = _room.Width / 4 +2;
       int roomHeight = _room.Height / 4;
 
       for (int y = centerY - roomHeight / 2; y < centerY + roomHeight / 2; y++)
