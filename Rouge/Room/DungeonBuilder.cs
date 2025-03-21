@@ -32,6 +32,7 @@ public class DungeonBuilder : IDungeonBuilder
             _room.SetGridElement(y, x, '█');
          }
       }
+      _room.SetGridElement(0, 0, ' ');
    }
 
    public void AddPaths()
@@ -41,13 +42,16 @@ public class DungeonBuilder : IDungeonBuilder
       GenerateMazeDFS(0, 0);
       void GenerateMazeDFS(int startX, int startY)
       {
+         _room.SetGridElement(startY, startX,  ' ');
          var directions = new List<(int, int)>
          {
             (0, 1), (0, -1), (1, 0), (-1, 0)
          };
          //directions = directions.OrderBy(x => Guid.NewGuid()).ToList();
-         
-         _room.SetGridElement(startY, startX,  ' ');
+         Random rng = new Random();
+         directions = directions.OrderBy(x => rng.Next()).ToList();
+
+            
          foreach (var direction in directions)
          {
             int newX = startX + direction.Item1*2;
@@ -59,8 +63,8 @@ public class DungeonBuilder : IDungeonBuilder
                {
                   return;
                }
-               //_room.SetGridElement(startX + direction.Item1, startY + direction.Item2, ' ');
-               _room.SetGridElement(newX, newY, ' ');
+               _room.SetGridElement(startY+direction.Item2,startX + direction.Item1, ' ');
+               _room.SetGridElement(newY, newX, ' ');
                GenerateMazeDFS(newX, newY);
             }
          }

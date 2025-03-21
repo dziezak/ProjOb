@@ -12,8 +12,8 @@ public class DungeonDirector
     public void BuildBasicDungeon()
     {
         _builder.BuildEmptyDungeon();
-        //_builder.BuildFilledDungeon();
-        //_builder.AddPaths();
+        _builder.BuildFilledDungeon();
+        _builder.AddPaths();
         //_builder.AddCentralRoom();
         //_builder.AddRooms();
         //_builder.AddItems();
