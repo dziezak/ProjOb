@@ -1,6 +1,6 @@
 ﻿namespace Rouge.Items
 {
-    internal interface IItem
+    public interface IItem
     {
         string Name { get; }
         bool TwoHanded();

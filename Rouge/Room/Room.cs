@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Rouge
 {
-    class Room
+    public class Room
     {
         public int Width, Height;
         private char[,] _grid;
-        private Dictionary<(int, int), List<IItem>> _itemMap;
+        public Dictionary<(int, int), List<IItem>> _itemMap;
         private Random _random = new Random();  
 
         public Room(int width, int height)
@@ -21,14 +21,30 @@ namespace Rouge
             this.Height = height;
             _grid = new char[height, width];
             _itemMap = new Dictionary<(int, int), List<IItem>>();
-            GenerateRoom();
-            GenerateItems();
-            GenerateMoney();
+            //GenerateRoom();
+            //GenerateItems();
+            //GenerateMoney();
         }
 
-        private void GenerateMoney()
+        public void SetGridElement(int y, int x, char value)
         {
-            int count = 10;
+            if (x >= 0 && y >= 0 && x < Width && y < Height)
+            {
+                _grid[y, x] = value;
+            }
+        }
+
+        public char GetGridElement(int y, int x)
+        {
+            if (x >= 0 && y >= 0 && x < Width && y < Height)
+            {
+                return  _grid[y, x];
+            }
+            return '█';
+        }
+
+        public void GenerateMoney(int count)
+        {
             for (int i = 0; i < count; i++)
             {
                 int itemType = _random.Next(0, 2);
@@ -101,9 +117,19 @@ namespace Rouge
             }
         }
 
-        public void GenerateItems()
+        public void GenerateBoringWeapons(int count)
         {
-            int count = 50;// TODO
+            for (int i = 0; i < count; i++)
+            {
+                int x = _random.Next(0, Width);
+                int y = _random.Next(0, Height);
+                if(_grid[y, x] == ' ')
+                    DropItem(x, y, CreateRandomItem());
+            }
+        }
+
+        public void GenerateFunWeapons(int count)
+        {
             for (int i = 0; i < count; i++)
             {
                 int x = _random.Next(0, Width);
@@ -111,14 +137,14 @@ namespace Rouge
                 if(_grid[y, x] == ' ')
                     DropItem(x, y, GetRandomDecorator(CreateRandomItem()));
             }
-            DropItem(1, 1, GetRandomDecorator(CreateRandomItem()));
-            DropItem(1, 1, GetRandomDecorator(CreateRandomItem()));
-            DropItem(1, 1, GetRandomDecorator(GetRandomDecorator( CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
-            //DropItem(1, 1, LuckyItemDecorator(PowerfulItemDecorator(CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
-            DropItem(1, 1, new LuckyItemDecorator(new PowerfulItemDecorator(CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
+            //HardCode to help Player
+            DropItem(0, 0, GetRandomDecorator(CreateRandomItem()));
+            DropItem(0, 0, GetRandomDecorator(CreateRandomItem()));
+            DropItem(0, 0, GetRandomDecorator(GetRandomDecorator( CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
+            DropItem(0, 0, new LuckyItemDecorator(new PowerfulItemDecorator(CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
         }
 
-        // TODO: ( obcenie jest Hard-Code) :
+        /*
         private void GenerateRoom()
         {
             for (int y = 0; y < Height; y++)
@@ -135,6 +161,7 @@ namespace Rouge
             }
             _grid[0, 0] = ' ';
         }
+        */
 
         public bool IsWalkable(int x, int y)
         {

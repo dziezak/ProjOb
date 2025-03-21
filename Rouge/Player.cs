@@ -9,7 +9,7 @@ using Rouge.Items;
 
 namespace Rouge
 {
-    class Player
+    public class Player
     {
         public int X {  get; set; }
         public int Y {  get; set; }
@@ -290,12 +290,6 @@ namespace Rouge
         {
             int startColumn = mapWidth + 65;
             int cursorTop = 0;
-            /*
-            if (Console.WindowHeight < cursorTop + 10)
-            {
-                Console.WindowHeight = cursorTop + 10;
-            }
-            */
 
 
 

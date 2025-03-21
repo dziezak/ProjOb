@@ -7,7 +7,7 @@ using Rouge.Items;
 
 namespace Rouge
 {
-    internal class Inventory
+    public class Inventory
     {
         public List<IItem> Items;
         public IItem? LeftHand { get; set; }
