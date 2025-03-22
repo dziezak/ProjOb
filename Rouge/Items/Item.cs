@@ -19,5 +19,7 @@
         public virtual int GetLuck() => 0;
         public virtual bool IsCurrency() => false;
         public virtual int GetValue() => 0;
+        public virtual Stats GetBuff() => new Stats(0, 0, 0, 0, 0, 0);
+        public virtual bool IsConsumable() => false;
     }
 }

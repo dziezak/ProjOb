@@ -19,6 +19,15 @@
         public virtual string GetName() => DecoratedItem.GetName();
         public virtual bool IsCurrency() => DecoratedItem.IsCurrency();
         public virtual int GetValue() => DecoratedItem.GetValue();
+        public Stats GetBuff()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsConsumable()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     //Dekorator dla przedmiotów zwiększających szczescie:

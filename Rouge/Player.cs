@@ -15,14 +15,13 @@ namespace Rouge
         public int Y {  get; set; }
         public Inventory Inventory { get; set; }
         //Staty gracza
-        public int Power { get; set; }  // Siła
-        public int Agility { get; set; }  // Zręczność
-        public int Health { get; set; }  // Wytrzymałość
-        public int Luck { get; set; }  // Szczęście
-        public int Attack { get; set; }  // Atak
-        public int Wisdom { get; set; }  // Madrosc
-        public int Coins { get; set; } // Kasa
-        public int Gold { get; set; } // Zloto
+
+        public int ActionCounter;
+        public Stats BaseStats { get; set; }
+        public Stats AppliedStats { get; set; }
+        public List<IItem> AppliedPotions = new List<IItem>();
+        public int Coins {  get; set; }
+        public int Gold { get; set; } 
         List<IItem> _itemsToGetFromRoom = new List<IItem>();
         ConsoleKeyInfo _itemToPickUp;
         ConsoleKeyInfo _itemToDrop;
@@ -35,14 +34,10 @@ namespace Rouge
             X = x;
             Y = y;
             Inventory = new Inventory();
+            ActionCounter = 0;
 
             // Inicjalizacja statystyk
-            Power = p;
-            Agility = a;
-            Health = h;
-            Luck = l;
-            Attack = attack;
-            Wisdom = w;
+            BaseStats = new Stats(p, a, h, l, attack, w);
             Coins = coins;
             Gold = gold;
         }
@@ -53,18 +48,22 @@ namespace Rouge
             {
                 case ConsoleKey.W:
                     newY--;
+                    NextTurn();
                     DisplayStats(room.Width);
                     break;
                 case ConsoleKey.A:
                     newX--;
+                    NextTurn();
                     DisplayStats(room.Width);
                     break;
                 case ConsoleKey.S:
                     DisplayStats(room.Width);
+                    NextTurn();
                     newY++;
                     break;
                 case ConsoleKey.D:
                     DisplayStats(room.Width);
+                    NextTurn();
                     newX++;
                     break;
                 case ConsoleKey.P:
@@ -140,6 +139,33 @@ namespace Rouge
                         Inventory.RemoveItem(item);
                     }
                     break;
+                case ConsoleKey.E:
+                    _itemToDrop = Console.ReadKey();
+                    if (_itemToDrop.KeyChar == 'r')
+                    {
+                        if(Inventory.RightHand != null && Inventory.RightHand.IsConsumable())
+                        {
+                           ApplyEffect(Inventory.RightHand); 
+                           Inventory.RightHand = null;
+                        }
+                        else
+                        {
+                            WarningMessage += "nie ma w prawej recej nic uzywalnego\n";
+                        }
+                    }else if(_itemToDrop.KeyChar == 'l')
+                    {
+                        if (Inventory.LeftHand != null && Inventory.LeftHand.IsConsumable())
+                        {
+                            ApplyEffect(Inventory.LeftHand);
+                            Inventory.LeftHand = null;
+                        }
+                        else
+                        {
+                            WarningMessage += "nie ma w lewej recej nic uzywalnego\n";
+                        }
+                    }
+                    DisplayStats(room.Width);
+                    break;
             }
             if(room.IsWalkable(newX, newY))
             {
@@ -187,6 +213,33 @@ namespace Rouge
             }
         }
 
+        public void DrinkPotion(IItem potion)
+        {
+            AppliedPotions.Add(potion);
+        }
+
+        public Stats GetCurrentStats()
+        {
+            Stats currentStats = BaseStats;
+            foreach (var potion in AppliedPotions)
+            {
+                if (potion.IsActive())
+                {
+                    currentStats += potion.GetBuff();
+                }
+            }
+            return currentStats;
+        }
+
+        public void NextTurn()
+        {
+            ActionCounter++;
+            AppliedPotions.RemoveAll(potion => !potion.IsActive());
+        }
+        
+        
+        
+
 
         int _maxRows = 0;
         public void DisplayStats(int mapWidth)
@@ -216,15 +269,16 @@ namespace Rouge
             {
                 luckCounter = leftHand.GetLuck();
             }
-            AddText($"Action Counter: {0}");
+            Stats DisplatyStats = GetCurrentStats();
+            AddText($"Action Counter: {ActionCounter}");
             AddText("================================");
             AddText("Witchers Attributes:");
-            AddText($"Power: {Power} + {attackCounter}");
-            AddText($"Agility: {Agility}");
-            AddText($"Health: {Health}");
-            AddText($"Luck: {Luck} + {luckCounter}");
-            AddText($"Aggression: {Attack}");
-            AddText($"Wisdom: {Wisdom}");
+            AddText($"Power: {DisplatyStats.Power + attackCounter}");
+            AddText($"Agility: {DisplatyStats.Agility}");
+            AddText($"Health: {DisplatyStats.Health}");
+            AddText($"Luck: {DisplatyStats.Luck + luckCounter}");
+            AddText($"Aggression: {DisplatyStats.Attack}");
+            AddText($"Wisdom: {DisplatyStats.Wisdom}");
             AddText("================================");
             AddText($"Coins: {Coins}");
             AddText($"Gold: {Gold}");

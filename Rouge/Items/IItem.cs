@@ -11,6 +11,8 @@
         int GetLuck();
         bool IsCurrency();
         int GetValue();
-
+        Stats GetBuff();
+        bool IsActive() => false; 
+        bool IsConsumable();
     }
 }

@@ -14,17 +14,20 @@ public class DungeonDirector
         _builder.BuildEmptyDungeon();
         _builder.BuildFilledDungeon();
         _builder.AddPaths();
-        //_builder.AddCentralRoom();
+        _builder.AddCentralRoom();
         _builder.AddRooms();
-        //_builder.AddItems();
-        //_builder.AddEnemies();
     }
 
     public void BuildFilledDungeonWithRooms()
     {
+        _builder.BuildEmptyDungeon();
         _builder.BuildFilledDungeon();
-        //_builder.AddWeapons();
-        //_builder.AddModifiedWeapons();
-        //_builder.AddPotions();
+        _builder.AddPaths();
+        _builder.AddCentralRoom();
+        _builder.AddRooms();
+        _builder.AddItems();
+        _builder.AddModifiedWeapons();
+        _builder.AddPotions();
+        //_builder.AddEnemies();
     }
 }

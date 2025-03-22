@@ -143,6 +143,41 @@ namespace Rouge
             DropItem(0, 0, GetRandomDecorator(GetRandomDecorator( CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
             DropItem(0, 0, new LuckyItemDecorator(new PowerfulItemDecorator(CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
         }
+        
+        Random rng = new Random();
+        IItem CreateRandomPotion()
+        {
+            int itemType = rng.Next(0, 4);
+            IItem item;
+            switch (itemType)
+            {
+                case 0:
+                    item = new LuckyPotion();
+                    return item;
+                case 1:
+                    item = new PowerPotion();
+                    return item;
+                case 2:
+                    item = new WisdomPotion();
+                    return item;
+                case 3:
+                    item = new AttackPotion();
+                    return item;
+                default:
+                    return null;
+            }
+        }
+
+        public void GeneratePotions(int count)
+       {
+          for (int i = 0; i < count; i++)
+          {
+             int x = _random.Next(0, Width);
+             int y = _random.Next(0, Height);
+             if(_grid[y, x] == ' ')
+                DropItem(x, y, CreateRandomPotion());
+          }
+       }
 
         /*
         private void GenerateRoom()

@@ -47,7 +47,6 @@ public class DungeonBuilder : IDungeonBuilder
          {
             (0, 1), (0, -1), (1, 0), (-1, 0)
          };
-         //directions = directions.OrderBy(x => Guid.NewGuid()).ToList();
          Random rng = new Random();
          directions = directions.OrderBy(x => rng.Next()).ToList();
 
@@ -75,23 +74,90 @@ public class DungeonBuilder : IDungeonBuilder
       }
    }
 
+
    public void AddRooms()
-   {
-      //Na razie dodaje pokój w randomowym miejscu i w randomowym miejscu
-      Random random = new Random();
-      int randomWidth = 3;//random.Next(2, 5);
-      int randomHeight = 3;//random.Next(2, 5);
-      int startX = random.Next(2, _room.Width - randomWidth);
-      int startY = random.Next(2, _room.Height - randomHeight);
-      for (int y = startY; y < startY+randomHeight; y++)
+   { 
+      Random rng = new Random();
+      List<(int, int)> deadEnds = FindDeadEnds();
+     
+      int maxRooms = Math.Min(deadEnds.Count, 5); // dodajmy maksymalnie 5 pokoi
+
+      foreach (var (startY, startX) in deadEnds.OrderBy(x => rng.Next()).Take(maxRooms))
       {
-         for (int x = startX; x < startX+randomWidth; x++)
+         int roomWidth = 3;
+         int roomHeight = 3;
+
+         (int dy, int dx) = FindExpansionDirection(startY, startX);
+
+         for (int y = 0; y <= roomHeight; y++)
          {
-            _room.SetGridElement(y, x, ' ');
+            for (int x = 0; x <= roomWidth; x++)
+            {
+               int newX = startX + x + - dx;
+               int newY = startY + y - dy;
+               if (IsInsideBounds(newY, newX) )
+               {
+                  _room.SetGridElement(newY, newX, ' ');
+                  //_room.SetGridElement(newY, newX, 'R');
+               }
+            }
          }
       }
-      //_room.SetGridElement(startY, startX + randomWidth, '?');
    }
+
+ 
+
+   //Znajduje miejsca idealne na pokoj ( dziala idealnie)
+   private List<(int, int)> FindDeadEnds()
+   {
+      List<(int, int)> deadEnds = new List<(int, int)>();
+      for (int y = 1; y < _room.Height - 1; y++)
+      {
+         for (int x = 1; x < _room.Width - 1; x++)
+         {
+            if (_room.GetGridElement(y, x) == ' ')
+            {
+               int openNeighbors = 0;
+               foreach (var (dy, dx) in new List<(int, int)> { (0, 1), (0, -1), (1, 0), (-1, 0) })
+               {
+                  if (_room.GetGridElement(y + dy, x + dx) == ' ')
+                  {
+                     openNeighbors++;
+                  }
+               }
+
+               if (openNeighbors == 1) 
+               {
+                  deadEnds.Add((y, x));
+               }
+            }
+         }
+      }
+      return deadEnds;
+   }
+ 
+
+   // Szukamy kierunek w ktorym rozszerzamy pokoj
+   private (int, int) FindExpansionDirection(int y, int x)
+   {
+      foreach (var (dy, dx) in new List<(int, int)> { (0, 1), (0, -1), (1, 0), (-1, 0) })
+      {
+         int newX = x + dx;
+         int newY = y + dy;
+         if (IsInsideBounds(newY, newX) && _room.GetGridElement(newY, newX) == ' ')
+         {
+            return (dy, dx);
+         }
+      }
+      return (0, 0);
+   }
+
+   public bool IsInsideBounds(int y, int x)
+   {
+      return x >= 0 && x < _room.Width && y >= 0 && y < _room.Height;   
+   }
+   
+   
 
    public void AddCentralRoom()
    {
@@ -126,7 +192,7 @@ public class DungeonBuilder : IDungeonBuilder
 
    public void AddPotions()
    {
-      //throw new NotImplementedException();
+      _room.GeneratePotions(15);
    }
 
    public void AddEnemies()
