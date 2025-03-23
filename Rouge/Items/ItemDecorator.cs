@@ -24,10 +24,21 @@
             throw new NotImplementedException();
         }
 
+        public bool IsActive(int currentActionCounter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsActive()
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsConsumable()
         {
             throw new NotImplementedException();
         }
+        
     }
 
     //Dekorator dla przedmiotów zwiększających szczescie:

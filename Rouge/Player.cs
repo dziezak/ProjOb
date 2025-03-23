@@ -223,9 +223,10 @@ namespace Rouge
             Stats currentStats = BaseStats;
             foreach (var potion in AppliedPotions)
             {
-                if (potion.IsActive())
+                if (potion.IsActive(ActionCounter))
                 {
                     currentStats += potion.GetBuff();
+                    //WarningMessage += potion.GetName();
                 }
             }
             return currentStats;
@@ -234,8 +235,9 @@ namespace Rouge
         public void NextTurn()
         {
             ActionCounter++;
-            AppliedPotions.RemoveAll(potion => !potion.IsActive());
+            AppliedPotions.RemoveAll(potion => !potion.IsActive(ActionCounter));
         }
+
         
         
         
@@ -269,22 +271,24 @@ namespace Rouge
             {
                 luckCounter = leftHand.GetLuck();
             }
-            Stats DisplatyStats = GetCurrentStats();
+            Stats displatyStats = GetCurrentStats();
             AddText($"Action Counter: {ActionCounter}");
             AddText("================================");
             AddText("Witchers Attributes:");
-            AddText($"Power: {DisplatyStats.Power + attackCounter}");
-            AddText($"Agility: {DisplatyStats.Agility}");
-            AddText($"Health: {DisplatyStats.Health}");
-            AddText($"Luck: {DisplatyStats.Luck + luckCounter}");
-            AddText($"Aggression: {DisplatyStats.Attack}");
-            AddText($"Wisdom: {DisplatyStats.Wisdom}");
+            AddText($"Power: {displatyStats.Power + attackCounter}");
+            AddText($"Agility: {displatyStats.Agility}");
+            AddText($"Health: {displatyStats.Health}");
+            AddText($"Luck: {displatyStats.Luck + luckCounter}");
+            AddText($"Aggression: {displatyStats.Attack}");
+            AddText($"Wisdom: {displatyStats.Wisdom}");
             AddText("================================");
             AddText($"Coins: {Coins}");
             AddText($"Gold: {Gold}");
             AddText("================================");
             AddText($"Right Hand: {(Inventory?.RightHand != null ? Inventory.RightHand.GetName() : "None")}");
             AddText($"Left Hand: {(Inventory?.LeftHand != null ? Inventory.LeftHand.GetName() : "None")}");
+            AddText("================================");
+            AddText($"Number of potions Applied: {AppliedPotions.Count}");
             AddText("================================");
             AddText("Inventory:");
 

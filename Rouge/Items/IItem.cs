@@ -12,7 +12,7 @@
         bool IsCurrency();
         int GetValue();
         Stats GetBuff();
-        bool IsActive() => false; 
+        public bool IsActive(int currentActionCounter);
         bool IsConsumable();
     }
 }

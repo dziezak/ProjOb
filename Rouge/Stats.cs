@@ -30,6 +30,7 @@ public struct Stats
             a.Wisdom + b.Wisdom
         );
     }
+    
 
     public override string ToString()
     {

@@ -27,7 +27,7 @@ internal class Potion: Item
     public override bool IsConsumable() => true;
     
 
-    public bool IsActive(int currentActionCounter)
+    public override bool IsActive(int currentActionCounter)
     {
         return currentActionCounter < StartActionCounter + Duration;
     } 

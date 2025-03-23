@@ -12,7 +12,7 @@
         }
         public virtual void ApplyEffect(Player player)
         {
-            // klasa jest jako wyjsciowa bez imprementacji
+            throw new NotImplementedException();
         }
         public virtual string GetName() => Name;
         public virtual int GetAttack() => 0;
@@ -21,5 +21,6 @@
         public virtual int GetValue() => 0;
         public virtual Stats GetBuff() => new Stats(0, 0, 0, 0, 0, 0);
         public virtual bool IsConsumable() => false;
+        public virtual bool IsActive(int currentActionCounter) => false;
     }
 }
