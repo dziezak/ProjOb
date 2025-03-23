@@ -14,6 +14,7 @@ namespace Rouge
         private char[,] _grid;
         public Dictionary<(int, int), List<IItem>> _itemMap;
         private Random _random = new Random();  
+        public Dictionary<(int, int), Enemy> _enemiesMap;
 
         public Room(int width, int height)
         {
@@ -169,15 +170,49 @@ namespace Rouge
         }
 
         public void GeneratePotions(int count)
-       {
-          for (int i = 0; i < count; i++)
-          {
-             int x = _random.Next(0, Width);
-             int y = _random.Next(0, Height);
-             if(_grid[y, x] == ' ')
-                DropItem(x, y, CreateRandomPotion());
-          }
-       }
+        {
+           for (int i = 0; i < count; i++)
+           {
+              int x = _random.Next(0, Width);
+              int y = _random.Next(0, Height);
+              if(_grid[y, x] == ' ')
+                 DropItem(x, y, CreateRandomPotion());
+           }
+        }
+
+        public Enemy CreateRandomEnemy()
+        {
+            int enemyType = rng.Next(0, 4);
+            Enemy enemy;
+            switch (enemyType)
+            {
+                case 0:
+                    enemy = new Minion();
+                    return enemy;
+                case 1:
+                    enemy = new Zombie();
+                    return enemy;
+                case 2:
+                    enemy = new Xenomorph();
+                    break;
+            }
+            return null;
+        }
+
+        public void GenerateEnemies(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                int x = _random.Next(0, Width);
+                int y = _random.Next(0, Height);
+                if (_grid[y, x] == ' ')
+                    if (!_enemiesMap.ContainsKey((y, x)))
+                        _enemiesMap.Add((y, x), CreateRandomEnemy());
+                    else
+                        count++;
+            }
+        }
+        
 
         /*
         private void GenerateRoom()
