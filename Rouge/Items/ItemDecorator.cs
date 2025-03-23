@@ -34,10 +34,7 @@
             throw new NotImplementedException();
         }
 
-        public bool IsConsumable()
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsConsumable() => false;
         
     }
 
