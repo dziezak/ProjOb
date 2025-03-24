@@ -11,7 +11,7 @@ namespace Rouge
     public class Room
     {
         public int Width, Height;
-        private char[,] _grid;
+        public char[,] _grid;
         public Dictionary<(int, int), List<IItem>> _itemMap;
         private Random _random = new Random();  
         public Dictionary<(int, int), Enemy> _enemiesMap;
