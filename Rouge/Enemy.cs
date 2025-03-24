@@ -1,6 +1,6 @@
 namespace Rouge;
 
-public class Enemy
+public abstract class Enemy
 {
    public string Name { get; set; }
    public Stats EnemyStats { get; set; }
@@ -11,6 +11,8 @@ public class Enemy
       Name = name;
       EnemyStats = stats;
    }
+
+   public abstract Stats GetStats();
 }
 
 public class Minion : Enemy
@@ -18,6 +20,7 @@ public class Minion : Enemy
    static Stats stats = new Stats(15, 30, 50, 0, 10, 20 );
    public Minion() : base("Minion", stats) { }
    public override string GetName() => "Minion";
+   public override Stats GetStats() => stats;
 }
 
 public class Zombie : Enemy
@@ -25,6 +28,7 @@ public class Zombie : Enemy
    static Stats stats = new Stats(50, 5, 100, 0, 10, 5 );
    public Zombie() : base("Zombie",stats) { }
    public override string GetName() => "Zombie";
+   public override Stats GetStats() => stats;
 }
 
 public class Xenomorph : Enemy
@@ -32,4 +36,5 @@ public class Xenomorph : Enemy
    static Stats stats = new Stats(100, 30, 200, 10, 10, 10 );
    public Xenomorph() : base("Xenomorph", stats) { }
    public override string GetName() => "Xenomorph";
+   public override Stats GetStats() => stats;
 }

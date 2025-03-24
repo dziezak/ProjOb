@@ -49,20 +49,20 @@ namespace Rouge
                 case ConsoleKey.W:
                     newY--;
                     NextTurn();
-                    DisplayStats(room.Width);
+                    DisplayStats(room);
                     break;
                 case ConsoleKey.A:
                     newX--;
                     NextTurn();
-                    DisplayStats(room.Width);
+                    DisplayStats(room);
                     break;
                 case ConsoleKey.S:
-                    DisplayStats(room.Width);
+                    DisplayStats(room);
                     NextTurn();
                     newY++;
                     break;
                 case ConsoleKey.D:
-                    DisplayStats(room.Width);
+                    DisplayStats(room);
                     NextTurn();
                     newX++;
                     break;
@@ -76,7 +76,7 @@ namespace Rouge
                     {
                         WarningMessage += "Invalid input. Please enter a digit.\n";
                     }
-                    DisplayStats(room.Width);
+                    DisplayStats(room);
                     break;
                 case ConsoleKey.R:
                     _itemToPickUp = Console.ReadKey();
@@ -85,7 +85,7 @@ namespace Rouge
                         _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
                         Inventory.EquipItemRightHand(_handItem, this);
                     }
-                    DisplayStats(room.Width);
+                    DisplayStats(room);
                     break;
                 case ConsoleKey.L:
                     _itemToPickUp = Console.ReadKey();
@@ -94,7 +94,7 @@ namespace Rouge
                         _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
                         Inventory.EquipItemLeftHand(_handItem, this);
                     }
-                    DisplayStats(room.Width);
+                    DisplayStats(room);
                     break;
                 case ConsoleKey.O:
                     _itemToDrop = Console.ReadKey();
@@ -129,7 +129,7 @@ namespace Rouge
                             WarningMessage += "Nie trzymasz nic w lewej rece\n";
                         }
                     }
-                    DisplayStats(room.Width);
+                    DisplayStats(room);
                     break;
                 case ConsoleKey.M:
                     var itemsToRemove = Inventory.GetItems().ToList();
@@ -164,7 +164,7 @@ namespace Rouge
                             WarningMessage += "nie ma w lewej recej nic uzywalnego\n";
                         }
                     }
-                    DisplayStats(room.Width);
+                    DisplayStats(room);
                     break;
             }
             if(room.IsWalkable(newX, newY))
@@ -173,7 +173,7 @@ namespace Rouge
                 Y = newY;
             }
             _itemsToGetFromRoom = room.GetItemsAt(X, Y);
-            DisplayStats(room.Width);
+            DisplayStats(room);
             WarningMessage = "";
         }
 
@@ -244,12 +244,15 @@ namespace Rouge
 
 
         int _maxRows = 0;
-        public void DisplayStats(int mapWidth)
+        public void DisplayStats(Room room)
         {
+            int mapWidth = room.Width;  
             int infoWidth = 55;
             int infoHeight = 100;
             char[,] infoGrid = new char[infoHeight, infoWidth];
             List<string> infoLines = new List<string>();
+            List<Enemy> enemiesNearby = room.GetEnemiesNearBy(Y, X);
+                        
 
             int row = 0;
             void AddText(string text)
@@ -315,17 +318,19 @@ namespace Rouge
                 }
             }
             AddText("================================");
+            AddText("Enemies nearby:");
+            foreach (var item in enemiesNearby)
+            {
+               string name = item.GetName();
+               Stats stats = item.GetStats();
+               AddText($"Enemy name: {name} with Attack: {stats.Attack} and Health {stats.Health}");
+            }
+            AddText("================================");
             if (!string.IsNullOrEmpty(WarningMessage))
             {
                 AddText(WarningMessage);
             }
 
-            /*
-            for (int i=infoLines.Count; i<=maxRows; i++)
-            {
-                AddText("");
-            }
-            */
             while(infoLines.Count < _maxRows)
             {
                 infoLines.Add(new string(' ', infoWidth));
@@ -340,8 +345,6 @@ namespace Rouge
                 Console.SetCursorPosition(mapWidth + 5, cursorTop++);
                 Console.Write(line);
             }
-            //maxRows = Math.Max(maxRows, infoLines.Count);
-
         }
 
         public void DisplayAvailableKeys(int mapWidth)

@@ -63,10 +63,11 @@ namespace Rouge
                 {
                     item = new Currency("Coin", randomValue);
                 }
+
                 if (_grid[y, x] == ' ')
-                {
                     DropItem(x, y, item);
-                }
+                else
+                    i--;
             }
         }
 
@@ -125,8 +126,10 @@ namespace Rouge
             {
                 int x = _random.Next(0, Width);
                 int y = _random.Next(0, Height);
-                if(_grid[y, x] == ' ')
+                if (_grid[y, x] == ' ')
                     DropItem(x, y, CreateRandomItem());
+                else
+                    i--;
             }
         }
 
@@ -176,15 +179,16 @@ namespace Rouge
            {
               int x = _random.Next(0, Width);
               int y = _random.Next(0, Height);
-              if(_grid[y, x] == ' ')
-                 DropItem(x, y, CreateRandomPotion());
+              if (_grid[y, x] == ' ')
+                  DropItem(x, y, CreateRandomPotion());
+              else --i;
            }
         }
 
         public Enemy CreateRandomEnemy()
         {
             Random rng = new Random();
-            int enemyType = rng.Next(0, 4);
+            int enemyType = rng.Next(0, 3);
             Enemy enemy;
             switch (enemyType)
             {
@@ -196,7 +200,7 @@ namespace Rouge
                     return enemy;
                 case 2:
                     enemy = new Xenomorph();
-                    break;
+                    return enemy;
             }
             return null;
         }
@@ -211,29 +215,22 @@ namespace Rouge
                     if (!_enemiesMap.ContainsKey((y, x)))
                         _enemiesMap.Add((y, x), CreateRandomEnemy());
                     else
-                       count++;
+                        i--;
+                else 
+                    i--;
             }
+        }
+
+        public List<Enemy> GetEnemiesNearBy(int y, int x)
+        {
+            List<Enemy> result = new List<Enemy>();
+            if (_enemiesMap.ContainsKey((y - 1, x))) result.Add(_enemiesMap[(y-1, x)]);
+            if (_enemiesMap.ContainsKey((y + 1, x))) result.Add(_enemiesMap[(y+1, x)]);
+            if (_enemiesMap.ContainsKey((y, x-1))) result.Add(_enemiesMap[(y, x-1)]);
+            if (_enemiesMap.ContainsKey((y, x+1))) result.Add(_enemiesMap[(y, x+1)]);
+            return result;
         }
         
-
-        /*
-        private void GenerateRoom()
-        {
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    if ((x % 3 == 0 && y % 3 == 0) || (y==1 && x == 10) ||
-                        (y==Height-1 ) || (x==1 && y == 4) || (x==0 && y==4)) 
-                        _grid[y, x] = '█';
-                    else 
-                        _grid[y, x] = ' ';
-                    _itemMap[(x, y)] = new List<IItem>();
-                }
-            }
-            _grid[0, 0] = ' ';
-        }
-        */
 
         public bool IsWalkable(int x, int y)
         {
@@ -242,6 +239,10 @@ namespace Rouge
                 return false;
             }
             if (_grid[y, x] == '█')
+            {
+                return false;
+            }
+            if (_enemiesMap.ContainsKey((y, x))) // na razie przeciwnicy nic nie robia i nie da sie przez nich przejsc
             {
                 return false;
             }
@@ -274,24 +275,21 @@ namespace Rouge
                     {
                         Console.Write('¶');
                     }
-                    else if (_itemMap[(x, y)].Count > 0)
-                    {
-                        Console.Write(_itemMap[(x, y)][0].GetName()[0]);
-                    }
                     else if (_enemiesMap.ContainsKey((y,x)))
                     {
-                        //Console.ForegroundColor = ConsoleColor.Red;
-                        //Console.Write(_enemiesMap[(y,x)].GetName()[0]);
-                        if (_enemiesMap[(y, x)].GetName() == null)
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        if (_enemiesMap[(y, x)].GetName() != null)
                         {
-                            Console.Write("@");
+                            Console.Write(_enemiesMap[(y,x)].GetName()[0]);
                         }
-                        else
-                        {
-                            Console.Write("!");
-                        }
-
-                        //Console.ResetColor();
+                        Console.ResetColor();
+                    }
+                    else if (_itemMap[(x, y)].Count > 0)
+                    {
+                        if(_itemMap[(x, y)][0].GetName() == "Gold" || _itemMap[(x, y)][0].GetName() == "Coin")
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write(_itemMap[(x, y)][0].GetName()[0]);
+                        Console.ResetColor();
                     }
                     else
                     {
