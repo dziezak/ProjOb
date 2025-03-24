@@ -20,6 +20,7 @@ namespace Rouge
         {
             this.Width = width;
             this.Height = height;
+            _enemiesMap = new Dictionary<(int, int), Enemy>();
             _grid = new char[height, width];
             _itemMap = new Dictionary<(int, int), List<IItem>>();
             //GenerateRoom();
@@ -145,9 +146,9 @@ namespace Rouge
             DropItem(0, 0, new LuckyItemDecorator(new PowerfulItemDecorator(CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
         }
         
-        Random rng = new Random();
         IItem CreateRandomPotion()
         {
+            Random rng = new Random();
             int itemType = rng.Next(0, 4);
             IItem item;
             switch (itemType)
@@ -182,6 +183,7 @@ namespace Rouge
 
         public Enemy CreateRandomEnemy()
         {
+            Random rng = new Random();
             int enemyType = rng.Next(0, 4);
             Enemy enemy;
             switch (enemyType)
@@ -209,7 +211,7 @@ namespace Rouge
                     if (!_enemiesMap.ContainsKey((y, x)))
                         _enemiesMap.Add((y, x), CreateRandomEnemy());
                     else
-                        count++;
+                       count++;
             }
         }
         
@@ -275,6 +277,21 @@ namespace Rouge
                     else if (_itemMap[(x, y)].Count > 0)
                     {
                         Console.Write(_itemMap[(x, y)][0].GetName()[0]);
+                    }
+                    else if (_enemiesMap.ContainsKey((y,x)))
+                    {
+                        //Console.ForegroundColor = ConsoleColor.Red;
+                        //Console.Write(_enemiesMap[(y,x)].GetName()[0]);
+                        if (_enemiesMap[(y, x)].GetName() == null)
+                        {
+                            Console.Write("@");
+                        }
+                        else
+                        {
+                            Console.Write("!");
+                        }
+
+                        //Console.ResetColor();
                     }
                     else
                     {

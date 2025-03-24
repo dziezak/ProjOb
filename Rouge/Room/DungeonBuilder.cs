@@ -197,6 +197,7 @@ public class DungeonBuilder : IDungeonBuilder
 
    public void AddEnemies()
    {
+      _room.GenerateEnemies(10);
       //throw new NotImplementedException();
    }
 
