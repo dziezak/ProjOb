@@ -40,7 +40,7 @@ public class DungeonBuilder : IDungeonBuilder<Room>
       int maks = 0;
       
       GenerateMazeDFS(0, 0);
-      void GenerateMazeDFS(int startX, int startY)
+      void GenerateMazeDFS(int startX, int startY) 
       {
          _room.SetGridElement(startY, startX,  ' ');
          var directions = new List<(int, int)>
@@ -58,7 +58,7 @@ public class DungeonBuilder : IDungeonBuilder<Room>
             if (IsValidCell(newX, newY))
             {
                maks++;
-               if (maks > _room.Width * _room.Height/2)
+               if (maks > _room.Width * _room.Height*2/3)
                {
                   return;
                }

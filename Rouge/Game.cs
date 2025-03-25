@@ -11,7 +11,7 @@
         {
             InstructionBuilder instructionBuilder = new InstructionBuilder();
             LegendBuilder legendBuilder = new LegendBuilder();
-            DungeonBuilder dungeonBuilder = new DungeonBuilder(20, 40);
+            DungeonBuilder dungeonBuilder = new DungeonBuilder(40, 30);
             DungeonDirector director = new DungeonDirector();
             
             //director.BuildBasicDungeon(); // opcja 1: sam labirynt bez przedmiotow
