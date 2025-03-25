@@ -23,9 +23,6 @@ namespace Rouge
             _enemiesMap = new Dictionary<(int, int), Enemy>();
             _grid = new char[height, width];
             _itemMap = new Dictionary<(int, int), List<IItem>>();
-            //GenerateRoom();
-            //GenerateItems();
-            //GenerateMoney();
         }
 
         public void SetGridElement(int y, int x, char value)
@@ -249,7 +246,6 @@ namespace Rouge
             return true;
         }
 
-        //funkcja uzywana do rozmieszczania przedmiotow
         public void DropItem(int x, int y, IItem item)
         {
             if(!_itemMap.ContainsKey((x, y)))

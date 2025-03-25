@@ -37,8 +37,7 @@ namespace Rouge
                         player.WarningMessage += "Nie mozna trzymac dwurecznej broni w jednej rece\n";
                     }
                 }
-                else if (Items[i].TwoHanded() == false)
-                if (LeftHand == null)
+                else if (Items[i].TwoHanded() == false && LeftHand == null)
                 {
                     LeftHand = Items[i];
                     Items.RemoveAt(i);
@@ -66,8 +65,7 @@ namespace Rouge
                         player.WarningMessage += "Nie mozna trzymac dwurecznej broni w jednej rece\n";
                     }
                 }
-                else if (Items[i].TwoHanded() == false)
-                if (RightHand == null)
+                else if (Items[i].TwoHanded() == false && RightHand == null)
                 {
                     RightHand = Items[i];
                     Items.RemoveAt(i);

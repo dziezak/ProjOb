@@ -173,7 +173,8 @@ public class GameDisplay
             "[R] - Equip Item in Right Hand (then pick number from 0-9)",
             "[L] - Equip Item in Left Hand (then pick numer from 0-9)",
             "[O] - Drop Item (choose hand: 'r' or 'l')",
-            "[M] - Drop All Items"
+            "[M] - Drop All Items from inventory",
+            "[E] - Use Potion in your hand (then choose hand: 'r' or 'l')"
         };
 
         Console.SetCursorPosition(startColumn, cursorTop);

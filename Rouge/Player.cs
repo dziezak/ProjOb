@@ -55,22 +55,18 @@ namespace Rouge
                 case ConsoleKey.W:
                     newY--;
                     NextTurn();
-                    ShowStats(room, this);
                     break;
                 case ConsoleKey.A:
                     newX--;
                     NextTurn();
-                    ShowStats(room, this);
                     break;
                 case ConsoleKey.S:
                     newY++;
                     NextTurn();
-                    ShowStats(room, this);
                     break;
                 case ConsoleKey.D:
                     newX++;
                     NextTurn();
-                    ShowStats(room, this);
                     break;
                 case ConsoleKey.P:
                     _itemToPickUp = Console.ReadKey();
@@ -82,7 +78,6 @@ namespace Rouge
                     {
                         WarningMessage += "Invalid input. Please enter a digit.\n";
                     }
-                    ShowStats(room, this);
                     break;
                 case ConsoleKey.R:
                     _itemToPickUp = Console.ReadKey();
@@ -91,7 +86,6 @@ namespace Rouge
                         _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
                         Inventory.EquipItemRightHand(_handItem, this);
                     }
-                    ShowStats(room, this);
                     break;
                 case ConsoleKey.L:
                     _itemToPickUp = Console.ReadKey();
@@ -100,7 +94,6 @@ namespace Rouge
                         _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
                         Inventory.EquipItemLeftHand(_handItem, this);
                     }
-                    ShowStats(room, this);
                     break;
                 case ConsoleKey.O:
                     _itemToDrop = Console.ReadKey();
@@ -135,7 +128,6 @@ namespace Rouge
                             WarningMessage += "Nie trzymasz nic w lewej rece\n";
                         }
                     }
-                    ShowStats(room, this);
                     break;
                 case ConsoleKey.M:
                     var itemsToRemove = Inventory.GetItems().ToList();
@@ -144,7 +136,6 @@ namespace Rouge
                         room.DropItem(X, Y, item);
                         Inventory.RemoveItem(item);
                     }
-                    ShowStats(room, this);
                     break;
                 case ConsoleKey.E:
                     _itemToDrop = Console.ReadKey();
@@ -171,7 +162,6 @@ namespace Rouge
                             WarningMessage += "nie ma w lewej recej nic uzywalnego\n";
                         }
                     }
-                    ShowStats(room, this);
                     break;
             }
             if(room.IsWalkable(newX, newY))
@@ -180,7 +170,7 @@ namespace Rouge
                 Y = newY;
             }
             ItemsToGetFromRoom = room.GetItemsAt(X, Y);
-            //ShowStats(room, this);
+            ShowStats(room, this);
             WarningMessage = "";
         }
 
@@ -233,7 +223,6 @@ namespace Rouge
                 if (potion.IsActive(ActionCounter))
                 {
                     currentStats += potion.GetBuff();
-                    //WarningMessage += potion.GetName();
                 }
             }
             return currentStats;

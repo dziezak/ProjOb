@@ -15,11 +15,11 @@
             
             _room = builder.GetResult();
             _player = new Player(0, 0, 10, 10, 10, 10, 10, 10, 0, 0);
-            //GameDisplay gameDisplay = GameDisplay.Instance;
         }
         public void Start()
         { 
-            GameDisplay.Instance?.DisplayStats(_room, _player);
+            // na starcie raz wywolujemy DisplayStats(), bo _player.GetKey() wywoluje DispalStats()
+            GameDisplay.Instance?.DisplayStats(_room, _player); 
             while (true)
             {
                 GameDisplay.Instance?.DisplayAvailableKeys(_room.Width);
