@@ -28,6 +28,7 @@ namespace Rouge
                 {
                     if (LeftHand == null && RightHand == null)
                     {
+                        player.LogMessage += $"Witcher moved {Items[i].GetName()} to Left Hand.";
                         LeftHand = Items[i];
                         RightHand = Items[i];
                         Items.RemoveAt(i);
@@ -39,6 +40,7 @@ namespace Rouge
                 }
                 else if (Items[i].TwoHanded() == false && LeftHand == null)
                 {
+                    player.LogMessage += $"Witcher moved {Items[i].GetName()} to Left Hand.";
                     LeftHand = Items[i];
                     Items.RemoveAt(i);
                 }
@@ -58,6 +60,7 @@ namespace Rouge
                     {
                         LeftHand = Items[i];
                         RightHand = Items[i];
+                        player.LogMessage += $"Witcher moved {Items[i].GetName()} to Right Hand.";
                         Items.RemoveAt(i);
                     }
                     else
@@ -67,6 +70,7 @@ namespace Rouge
                 }
                 else if (Items[i].TwoHanded() == false && RightHand == null)
                 {
+                    player.LogMessage += $"Witcher moved {Items[i].GetName()} to Right Hand.";
                     RightHand = Items[i];
                     Items.RemoveAt(i);
                 }

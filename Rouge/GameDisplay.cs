@@ -1,11 +1,9 @@
 namespace Rouge;
-
 public class GameDisplay
 {
+    private Queue<string> _logQueue = new Queue<string>(); //Log gracza do wyswietlenia
     private static GameDisplay? _instance; // bedzie jedyna instancja tej klasy
-
     private GameDisplay(){}
-
     public static GameDisplay? Instance
     {
         get
@@ -17,7 +15,6 @@ public class GameDisplay
             return _instance;
         }
     }
-
     public void RenderLabirynth(Room room, Player player)
     {
         Console.SetCursorPosition(0, 0);
@@ -53,7 +50,6 @@ public class GameDisplay
             Console.WriteLine();
         }
     }
-    
     int _maxRows = 0;
     public void DisplayStats(Room room, Player player)
     {
@@ -87,7 +83,7 @@ public class GameDisplay
         }
         Stats displatyStats = player.GetCurrentStats();
         AddText($"Action Counter: {player.ActionCounter}");
-        AddText("================================");
+        AddText("====================================================");
         AddText("Witchers Attributes:");
         AddText($"Power: {displatyStats.Power + attackCounter}");
         AddText($"Agility: {displatyStats.Agility}");
@@ -95,15 +91,15 @@ public class GameDisplay
         AddText($"Luck: {displatyStats.Luck + luckCounter}");
         AddText($"Aggression: {displatyStats.Attack}");
         AddText($"Wisdom: {displatyStats.Wisdom}");
-        AddText("================================");
+        AddText("====================================================");
         AddText($"Coins: {player.Coins}");
         AddText($"Gold: {player.Gold}");
-        AddText("================================");
+        AddText("====================================================");
         AddText($"Right Hand: {(player.Inventory?.RightHand != null ? player.Inventory.RightHand.GetName() : "None")}");
         AddText($"Left Hand: {(player.Inventory?.LeftHand != null ? player.Inventory.LeftHand.GetName() : "None")}");
-        AddText("================================");
+        AddText("====================================================");
         AddText($"Number of potions Applied: {player.AppliedPotions.Count}");
-        AddText("================================");
+        AddText("====================================================");
         AddText("Inventory:");
 
         if(player.Inventory.Items.Count == 0 || player.Inventory == null)
@@ -116,7 +112,7 @@ public class GameDisplay
             AddText($"item {index}: " + item.GetName());
             index++;
         }
-        AddText("================================");
+        AddText("====================================================");
         if (player.ItemsToGetFromRoom != null)
         {
             AddText("Items on tile:");
@@ -128,7 +124,7 @@ public class GameDisplay
                     AddText($"Item {i}: {player.ItemsToGetFromRoom[i].GetName()}");
             }
         }
-        AddText("================================");
+        AddText("====================================================");
         AddText("Enemies nearby:");
         foreach (var item in enemiesNearby)
         {
@@ -136,7 +132,7 @@ public class GameDisplay
            Stats stats = item.GetStats();
            AddText($"Enemy name: {name} with Attack: {stats.Attack} and Health {stats.Health}");
         }
-        AddText("================================");
+        AddText("====================================================");
         if (!string.IsNullOrEmpty(player.WarningMessage))
         {
             AddText(player.WarningMessage);
@@ -157,8 +153,6 @@ public class GameDisplay
             Console.Write(line);
         }
     }
-
-
     public void DisplayAvailableString(string input, int mapWidth)
     {
         int startColumn = mapWidth + 65;
@@ -172,4 +166,69 @@ public class GameDisplay
             Console.Write(description);
         }
     }
+
+    public void AddLogMessage(string logMessage)
+    {
+        string[] logLines = logMessage.Split('\n');
+        foreach (var line in logLines)
+        {
+            _logQueue.Enqueue(line);
+            if (_logQueue.Count > 10)
+            {
+                _logQueue.Dequeue();
+            }
+        }
+    }
+    /*
+    public void DisplayLog(int lineToStart, int mapWidth)
+    {
+        int startColumn = mapWidth + 65;
+        int cursorTop = lineToStart;
+
+        // Clear the display area (optional, for neat visuals)
+        for (int i = 0; i < 10; i++)
+        {
+            Console.SetCursorPosition(startColumn, cursorTop + i);
+            Console.Write(new string(' ', 50)); // Clear width of 50
+        }
+
+        // Display the last few logs stored in the queue
+        Console.SetCursorPosition(startColumn, cursorTop);
+        foreach (var log in _logQueue)
+        {
+            if (cursorTop >= lineToStart + 10) break; // Ensure we don't exceed 10 lines
+            Console.SetCursorPosition(startColumn, cursorTop++);
+            Console.WriteLine(log);
+        }
+    }
+    */
+    public void DisplayLog(int lineToStart, int mapWidth)
+    {
+        int startColumn = mapWidth + 65;
+        int cursorTop = lineToStart;
+
+        Console.SetCursorPosition(startColumn, cursorTop);
+        Console.WriteLine("╔══════════════════════════════╗");
+        Console.SetCursorPosition(startColumn, cursorTop + 1);
+        Console.WriteLine("║       📝 PLAYER LOGS:        ║");
+        Console.SetCursorPosition(startColumn, cursorTop + 2);
+        Console.WriteLine("╚══════════════════════════════╝");
+
+        cursorTop += 4;
+
+        for (int i = 0; i < 10; i++)
+        {
+            Console.SetCursorPosition(startColumn, cursorTop + i);
+            Console.Write(new string(' ', 50));
+        }
+
+        // Wyświetlanie logów w kolejności od najstarszego do najnowszego
+        foreach (var log in _logQueue)
+        {
+            if (cursorTop >= lineToStart + 14) break;
+            Console.SetCursorPosition(startColumn, cursorTop++);
+            Console.WriteLine(log);
+        }
+    }
+
 }

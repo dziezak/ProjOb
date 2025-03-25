@@ -26,6 +26,7 @@ namespace Rouge
         ConsoleKeyInfo _itemToDrop;
         int _handItem;
         public string WarningMessage = "";
+        public string LogMessage = "";
 
 
         public Player(int x, int y, int p, int a, int h, int l, int attack, int w, int coins, int gold)
@@ -55,18 +56,22 @@ namespace Rouge
                 case ConsoleKey.W:
                     newY--;
                     NextTurn();
+                    LogMessage += "Witcher moved up.";
                     break;
                 case ConsoleKey.A:
                     newX--;
                     NextTurn();
+                    LogMessage += "Witcher moved left.";
                     break;
                 case ConsoleKey.S:
                     newY++;
                     NextTurn();
+                    LogMessage += "Witcher moved down.";
                     break;
                 case ConsoleKey.D:
                     newX++;
                     NextTurn();
+                    LogMessage += "Witcher moved right.";
                     break;
                 case ConsoleKey.P:
                     _itemToPickUp = Console.ReadKey();
@@ -105,6 +110,7 @@ namespace Rouge
                             {
                                 Inventory.LeftHand = null;
                             }
+                            LogMessage += $"Witcher dropped {Inventory.RightHand.GetName()}.";
                             room.DropItem(X, Y, Inventory.RightHand);
                             Inventory.RightHand = null;
                         }
@@ -120,6 +126,7 @@ namespace Rouge
                             {
                                 Inventory.RightHand = null;
                             }
+                            LogMessage += $"Witcher dropped {Inventory.LeftHand.GetName()}.";
                             room.DropItem(X, Y, Inventory.LeftHand);
                             Inventory.LeftHand = null;
                         }
@@ -131,6 +138,7 @@ namespace Rouge
                     break;
                 case ConsoleKey.M:
                     var itemsToRemove = Inventory.GetItems().ToList();
+                    LogMessage += $"Witcher dropped all his inventory.";
                     foreach (var item in itemsToRemove)
                     {
                         room.DropItem(X, Y, item);
@@ -142,9 +150,10 @@ namespace Rouge
                     if (_itemToDrop.KeyChar == 'r')
                     {
                         if(Inventory.RightHand != null && Inventory.RightHand.IsConsumable())
-                        {
-                           ApplyEffect(Inventory.RightHand); 
-                           Inventory.RightHand = null;
+                        { 
+                            LogMessage += $"Witcher used {Inventory.RightHand.GetName()}.";
+                            ApplyEffect(Inventory.RightHand); 
+                            Inventory.RightHand = null;
                         }
                         else
                         {
@@ -154,6 +163,7 @@ namespace Rouge
                     {
                         if (Inventory.LeftHand != null && Inventory.LeftHand.IsConsumable())
                         {
+                            LogMessage += $"Witcher used {Inventory.LeftHand.GetName()}.";
                             ApplyEffect(Inventory.LeftHand);
                             Inventory.LeftHand = null;
                         }
@@ -172,6 +182,10 @@ namespace Rouge
             ItemsToGetFromRoom = room.GetItemsAt(X, Y);
             ShowStats(room, this);
             WarningMessage = "";
+            if(LogMessage.Length > 0)
+                GameDisplay.Instance?.AddLogMessage(LogMessage);
+            GameDisplay.Instance?.DisplayLog(15, room.Width);
+            LogMessage = "";
         }
 
         // przyszlosciowa funkcja dla efektow
@@ -194,16 +208,19 @@ namespace Rouge
                     else if (ItemsToGetFromRoom[n].GetName() == "Gold")
                     {
                         Gold += ItemsToGetFromRoom[n].GetValue();
+                        LogMessage += $"Witcher picked up Gold.";
                         ItemsToGetFromRoom.RemoveAt(n);
                     }
                     else
                     {
                         Coins += ItemsToGetFromRoom[n].GetValue();
+                        LogMessage += $"Witcher picked up Coins.";
                         ItemsToGetFromRoom.RemoveAt(n);
                     }
                 }
                 else
                 {
+                    LogMessage += $"Witcher picked up {ItemsToGetFromRoom[n].GetName()}.";
                     Inventory.AddItem(ItemsToGetFromRoom[n]);
                     ItemsToGetFromRoom.RemoveAt(n);
                 }
