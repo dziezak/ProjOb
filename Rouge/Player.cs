@@ -14,15 +14,14 @@ namespace Rouge
         public int X {  get; set; }
         public int Y {  get; set; }
         public Inventory Inventory { get; set; }
-        //Staty gracza
 
         public int ActionCounter;
         public Stats BaseStats { get; set; }
         public Stats AppliedStats { get; set; }
         public List<IItem> AppliedPotions = new List<IItem>();
         public int Coins {  get; set; }
-        public int Gold { get; set; } 
-        List<IItem> _itemsToGetFromRoom = new List<IItem>();
+        public int Gold { get; set; }
+        public List<IItem> ItemsToGetFromRoom = new List<IItem>();
         ConsoleKeyInfo _itemToPickUp;
         ConsoleKeyInfo _itemToDrop;
         int _handItem;
@@ -41,6 +40,13 @@ namespace Rouge
             Coins = coins;
             Gold = gold;
         }
+        
+        public void ShowStats(Room room, Player player)
+        {
+            GameDisplay.Instance?.DisplayStats(room, player);
+        }
+ 
+        
         public void GetKey(ConsoleKeyInfo key, Room room)
         {
             int newX = X, newY = Y;
@@ -49,22 +55,22 @@ namespace Rouge
                 case ConsoleKey.W:
                     newY--;
                     NextTurn();
-                    DisplayStats(room);
+                    ShowStats(room, this);
                     break;
                 case ConsoleKey.A:
                     newX--;
                     NextTurn();
-                    DisplayStats(room);
+                    ShowStats(room, this);
                     break;
                 case ConsoleKey.S:
-                    DisplayStats(room);
-                    NextTurn();
                     newY++;
+                    NextTurn();
+                    ShowStats(room, this);
                     break;
                 case ConsoleKey.D:
-                    DisplayStats(room);
-                    NextTurn();
                     newX++;
+                    NextTurn();
+                    ShowStats(room, this);
                     break;
                 case ConsoleKey.P:
                     _itemToPickUp = Console.ReadKey();
@@ -76,7 +82,7 @@ namespace Rouge
                     {
                         WarningMessage += "Invalid input. Please enter a digit.\n";
                     }
-                    DisplayStats(room);
+                    ShowStats(room, this);
                     break;
                 case ConsoleKey.R:
                     _itemToPickUp = Console.ReadKey();
@@ -85,7 +91,7 @@ namespace Rouge
                         _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
                         Inventory.EquipItemRightHand(_handItem, this);
                     }
-                    DisplayStats(room);
+                    ShowStats(room, this);
                     break;
                 case ConsoleKey.L:
                     _itemToPickUp = Console.ReadKey();
@@ -94,7 +100,7 @@ namespace Rouge
                         _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
                         Inventory.EquipItemLeftHand(_handItem, this);
                     }
-                    DisplayStats(room);
+                    ShowStats(room, this);
                     break;
                 case ConsoleKey.O:
                     _itemToDrop = Console.ReadKey();
@@ -129,7 +135,7 @@ namespace Rouge
                             WarningMessage += "Nie trzymasz nic w lewej rece\n";
                         }
                     }
-                    DisplayStats(room);
+                    ShowStats(room, this);
                     break;
                 case ConsoleKey.M:
                     var itemsToRemove = Inventory.GetItems().ToList();
@@ -138,6 +144,7 @@ namespace Rouge
                         room.DropItem(X, Y, item);
                         Inventory.RemoveItem(item);
                     }
+                    ShowStats(room, this);
                     break;
                 case ConsoleKey.E:
                     _itemToDrop = Console.ReadKey();
@@ -164,7 +171,7 @@ namespace Rouge
                             WarningMessage += "nie ma w lewej recej nic uzywalnego\n";
                         }
                     }
-                    DisplayStats(room);
+                    ShowStats(room, this);
                     break;
             }
             if(room.IsWalkable(newX, newY))
@@ -172,8 +179,8 @@ namespace Rouge
                 X = newX;
                 Y = newY;
             }
-            _itemsToGetFromRoom = room.GetItemsAt(X, Y);
-            DisplayStats(room);
+            ItemsToGetFromRoom = room.GetItemsAt(X, Y);
+            //ShowStats(room, this);
             WarningMessage = "";
         }
 
@@ -186,29 +193,29 @@ namespace Rouge
         void PickUpItem(int n)
         {
             
-            if (n >= 0 && n <_itemsToGetFromRoom.Count )
+            if (n >= 0 && n <ItemsToGetFromRoom.Count )
             {
-                if (!_itemsToGetFromRoom[n].Equipable() )
+                if (!ItemsToGetFromRoom[n].Equipable() )
                 {
-                    if (!_itemsToGetFromRoom[n].IsCurrency())
+                    if (!ItemsToGetFromRoom[n].IsCurrency())
                     {
                         WarningMessage = "You can't equip this item, cause it's Unusable!\n";
                     }
-                    else if (_itemsToGetFromRoom[n].GetName() == "Gold")
+                    else if (ItemsToGetFromRoom[n].GetName() == "Gold")
                     {
-                        Gold += _itemsToGetFromRoom[n].GetValue();
-                        _itemsToGetFromRoom.RemoveAt(n);
+                        Gold += ItemsToGetFromRoom[n].GetValue();
+                        ItemsToGetFromRoom.RemoveAt(n);
                     }
                     else
                     {
-                        Coins += _itemsToGetFromRoom[n].GetValue();
-                        _itemsToGetFromRoom.RemoveAt(n);
+                        Coins += ItemsToGetFromRoom[n].GetValue();
+                        ItemsToGetFromRoom.RemoveAt(n);
                     }
                 }
                 else
                 {
-                    Inventory.AddItem(_itemsToGetFromRoom[n]);
-                    _itemsToGetFromRoom.RemoveAt(n);
+                    Inventory.AddItem(ItemsToGetFromRoom[n]);
+                    ItemsToGetFromRoom.RemoveAt(n);
                 }
             }
         }
@@ -236,151 +243,6 @@ namespace Rouge
         {
             ActionCounter++;
             AppliedPotions.RemoveAll(potion => !potion.IsActive(ActionCounter));
-        }
-
-        
-        
-        
-
-
-        int _maxRows = 0;
-        public void DisplayStats(Room room)
-        {
-            int mapWidth = room.Width;  
-            int infoWidth = 55;
-            int infoHeight = 100;
-            char[,] infoGrid = new char[infoHeight, infoWidth];
-            List<string> infoLines = new List<string>();
-            List<Enemy> enemiesNearby = room.GetEnemiesNearBy(Y, X);
-                        
-
-            int row = 0;
-            void AddText(string text)
-            {
-                text = text.PadRight(infoWidth);
-                text = text.Substring(0, text.Length -1) + "|";
-                infoLines.Add(text);
-            }
-           
-            var leftHand = Inventory?.LeftHand;
-            var rightHand = Inventory?.RightHand;
-            int attackCounter = (leftHand?.GetAttack() ?? 0) + (rightHand?.GetAttack() ?? 0);
-            if (leftHand != null && leftHand.TwoHanded())
-            {
-                attackCounter = leftHand.GetAttack();
-            }
-            int luckCounter = (leftHand?.GetLuck() ?? 0) + (rightHand?.GetLuck() ?? 0);
-            if(leftHand != null && leftHand.TwoHanded())
-            {
-                luckCounter = leftHand.GetLuck();
-            }
-            Stats displatyStats = GetCurrentStats();
-            AddText($"Action Counter: {ActionCounter}");
-            AddText("================================");
-            AddText("Witchers Attributes:");
-            AddText($"Power: {displatyStats.Power + attackCounter}");
-            AddText($"Agility: {displatyStats.Agility}");
-            AddText($"Health: {displatyStats.Health}");
-            AddText($"Luck: {displatyStats.Luck + luckCounter}");
-            AddText($"Aggression: {displatyStats.Attack}");
-            AddText($"Wisdom: {displatyStats.Wisdom}");
-            AddText("================================");
-            AddText($"Coins: {Coins}");
-            AddText($"Gold: {Gold}");
-            AddText("================================");
-            AddText($"Right Hand: {(Inventory?.RightHand != null ? Inventory.RightHand.GetName() : "None")}");
-            AddText($"Left Hand: {(Inventory?.LeftHand != null ? Inventory.LeftHand.GetName() : "None")}");
-            AddText("================================");
-            AddText($"Number of potions Applied: {AppliedPotions.Count}");
-            AddText("================================");
-            AddText("Inventory:");
-
-            if(Inventory.Items.Count == 0 || Inventory == null)
-            {
-                AddText("Empty");
-            }
-            int index = 0;
-            foreach (var item in Inventory.GetItems())
-            {
-                AddText($"item {index}: " + item.GetName());
-                index++;
-            }
-            AddText("================================");
-            if (_itemsToGetFromRoom != null)
-            {
-                AddText("Items on tile:");
-                for (int i = 0; i < _itemsToGetFromRoom.Count; i++)
-                {
-                    if(_itemsToGetFromRoom[i].IsCurrency())
-                        AddText($"Item {i}: {_itemsToGetFromRoom[i].GetValue()}x {_itemsToGetFromRoom[i].GetName()}");
-                    else
-                        AddText($"Item {i}: {_itemsToGetFromRoom[i].GetName()}");
-                }
-            }
-            AddText("================================");
-            AddText("Enemies nearby:");
-            foreach (var item in enemiesNearby)
-            {
-               string name = item.GetName();
-               Stats stats = item.GetStats();
-               AddText($"Enemy name: {name} with Attack: {stats.Attack} and Health {stats.Health}");
-            }
-            AddText("================================");
-            if (!string.IsNullOrEmpty(WarningMessage))
-            {
-                AddText(WarningMessage);
-            }
-
-            while(infoLines.Count < _maxRows)
-            {
-                infoLines.Add(new string(' ', infoWidth));
-            }
-            _maxRows = infoLines.Count;
-
-
-            int cursorTop = 0;
-            Console.SetCursorPosition(mapWidth + 5, cursorTop);
-            foreach(var line in infoLines)
-            {
-                Console.SetCursorPosition(mapWidth + 5, cursorTop++);
-                Console.Write(line);
-            }
-        }
-
-        public void DisplayAvailableKeys(int mapWidth)
-        {
-            int startColumn = mapWidth + 65;
-            int cursorTop = 0;
-
-
-
-            // Lista dostępnych klawiszy
-            string[] keyDescriptions = new string[]
-            {
-                "Available keys:A",
-                "[W] - Move Up",
-                "[A] - Move Left",
-                "[S] - Move Down",
-                "[D] - Move Right",
-                "[P] - Pick Up Item (then pick number from 0-9) ",
-                "[R] - Equip Item in Right Hand (then pick number from 0-9)",
-                "[L] - Equip Item in Left Hand (then pick numer from 0-9)",
-                "[O] - Drop Item (choose hand: 'r' or 'l')",
-                "[M] - Drop All Items"
-            };
-
-            // Wyświetlanie opcji
-            Console.SetCursorPosition(startColumn, cursorTop);
-            foreach (var description in keyDescriptions)
-            {
-                // Ustawienie kursora na odpowiedniej pozycji
-
-                // Wyczyszczenie linii (opcjonalne)
-
-                // Ponownie ustaw pozycję kursora i wyświetl opis klawisza
-                Console.SetCursorPosition(startColumn, cursorTop++);
-                Console.Write(description);
-            }
         }
 
     }

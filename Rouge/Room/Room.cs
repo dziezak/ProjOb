@@ -264,40 +264,6 @@ namespace Rouge
             return _itemMap.ContainsKey((x, y)) ? _itemMap[(x, y)] : new List<IItem>();
         }
 
-        public void Render(Player player)
-        {
-            Console.SetCursorPosition(0, 0);
-            for (int y = 0; y < Height; y++)
-            {
-                for(int x = 0; x < Width; x++)
-                {
-                    if(x == player.X && y == player.Y)
-                    {
-                        Console.Write('¶');
-                    }
-                    else if (_enemiesMap.ContainsKey((y,x)))
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        if (_enemiesMap[(y, x)].GetName() != null)
-                        {
-                            Console.Write(_enemiesMap[(y,x)].GetName()[0]);
-                        }
-                        Console.ResetColor();
-                    }
-                    else if (_itemMap[(x, y)].Count > 0)
-                    {
-                        if(_itemMap[(x, y)][0].GetName() == "Gold" || _itemMap[(x, y)][0].GetName() == "Coin")
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write(_itemMap[(x, y)][0].GetName()[0]);
-                        Console.ResetColor();
-                    }
-                    else
-                    {
-                        Console.Write(_grid[y, x]);
-                    }
-                } 
-                Console.WriteLine();
-            }
-        }
+       
     }
 }
