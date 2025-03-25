@@ -19,10 +19,10 @@
         }
         public void Start()
         { 
+            GameDisplay.Instance?.DisplayStats(_room, _player);
             while (true)
             {
                 GameDisplay.Instance?.DisplayAvailableKeys(_room.Width);
-                GameDisplay.Instance?.DisplayStats(_room, _player);
                 GameDisplay.Instance?.RenderLabirynth(_room, _player);
                 var key = Console.ReadKey();
                 
