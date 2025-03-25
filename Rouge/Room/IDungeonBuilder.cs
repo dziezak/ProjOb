@@ -1,6 +1,6 @@
 namespace Rouge;
 
-public interface IDungeonBuilder
+public interface IDungeonBuilder<Template>
 {
     void BuildEmptyDungeon(); // Puste podziemia
     void BuildFilledDungeon(); // Wypełnione podziemia
@@ -12,7 +12,7 @@ public interface IDungeonBuilder
     void AddModifiedWeapons(); // Dodanie broni z modyfikatorami
     void AddPotions(); // Dodanie eliksirów
     void AddEnemies(); // Dodanie przeciwników
-    Room GetResult(); // Zwraca gotowy labirynt
+    Template GetResult(); // Zwraca gotowy labirynt
 }
 
 

@@ -2,7 +2,7 @@ using Rouge.Items;
 
 namespace Rouge;
 
-public class DungeonBuilder : IDungeonBuilder
+public class DungeonBuilder : IDungeonBuilder<Room>
 {
    private Room _room;
 

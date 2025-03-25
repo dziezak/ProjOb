@@ -158,27 +158,15 @@ public class GameDisplay
         }
     }
 
-    public void DisplayAvailableKeys(int mapWidth)
+
+    public void DisplayAvailableString(string input, int mapWidth)
     {
         int startColumn = mapWidth + 65;
         int cursorTop = 0;
-        string[] keyDescriptions = new string[]
-        {
-            "Available keys:A",
-            "[W] - Move Up",
-            "[A] - Move Left",
-            "[S] - Move Down",
-            "[D] - Move Right",
-            "[P] - Pick Up Item (then pick number from 0-9) ",
-            "[R] - Equip Item in Right Hand (then pick number from 0-9)",
-            "[L] - Equip Item in Left Hand (then pick numer from 0-9)",
-            "[O] - Drop Item (choose hand: 'r' or 'l')",
-            "[M] - Drop All Items from inventory",
-            "[E] - Use Potion in your hand (then choose hand: 'r' or 'l')"
-        };
+        string[] lines = input.Split('\n');
 
         Console.SetCursorPosition(startColumn, cursorTop);
-        foreach (var description in keyDescriptions)
+        foreach (var description in lines)
         {
             Console.SetCursorPosition(startColumn, cursorTop++);
             Console.Write(description);

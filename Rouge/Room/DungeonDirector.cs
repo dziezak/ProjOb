@@ -2,32 +2,27 @@ namespace Rouge;
 
 public class DungeonDirector
 {
-    private IDungeonBuilder _builder;
+    public DungeonDirector() {}
 
-    public DungeonDirector(IDungeonBuilder builder)
+    public void BuildBasicDungeon<Template>(IDungeonBuilder<Template> builder)
     {
-        _builder = builder;
+        builder.BuildEmptyDungeon();
+        builder.BuildFilledDungeon();
+        builder.AddPaths();
+        builder.AddCentralRoom();
+        builder.AddRooms();
     }
 
-    public void BuildBasicDungeon()
+    public void BuildFilledDungeonWithRooms<Template>(IDungeonBuilder<Template> builder)
     {
-        _builder.BuildEmptyDungeon();
-        _builder.BuildFilledDungeon();
-        _builder.AddPaths();
-        _builder.AddCentralRoom();
-        _builder.AddRooms();
-    }
-
-    public void BuildFilledDungeonWithRooms()
-    {
-        _builder.BuildEmptyDungeon();
-        _builder.BuildFilledDungeon();
-        _builder.AddPaths();
-        _builder.AddCentralRoom();
-        _builder.AddRooms();
-        _builder.AddItems();
-        _builder.AddModifiedWeapons();
-        _builder.AddPotions();
-        _builder.AddEnemies();
+        builder.BuildEmptyDungeon();
+        builder.BuildFilledDungeon();
+        builder.AddPaths();
+        builder.AddCentralRoom();
+        builder.AddRooms();
+        builder.AddItems();
+        builder.AddModifiedWeapons();
+        builder.AddPotions();
+        builder.AddEnemies();
     }
 }

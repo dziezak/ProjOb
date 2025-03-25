@@ -1,49 +1,75 @@
 using System.Text;
 
-namespace Rouge.Instruction;
+namespace Rouge;
 
-public class InstructionBuilder : IInstructionBuilder
+public class InstructionBuilder : IDungeonBuilder<string>
 {
-    private StringBuilder _instructions;
+    private StringBuilder _legend;
 
     public InstructionBuilder()
     {
-        _instructions = new StringBuilder();
+        _legend = new StringBuilder();
     }
 
-    public void AddMovementInstructions()
+    public void Reset()
     {
-        _instructions.AppendLine("[W] - Move Up");
-        _instructions.AppendLine("[A] - Move Left");
-        _instructions.AppendLine("[S] - Move Down");
-        _instructions.AppendLine("[D] - Move Right");
+        _legend.Clear(); 
     }
 
-    public void AddItemPickupInstructions()
+    public void BuildEmptyDungeon()
     {
-        _instructions.AppendLine("[P] - Pick Up Item (then pick number from 0-9)");
-        _instructions.AppendLine("[R] - Equip Item in Right Hand (then pick number from 0-9)");
-        _instructions.AppendLine("[L] - Equip Item in Left Hand (then pick number from 0-9)");
-        _instructions.AppendLine("[O] - Drop Item (choose hand: 'r' or 'l')");
-        _instructions.AppendLine("[M] - Drop All Items from inventory");
+        //_legend.AppendLine("The dungeon is empty. Feel free to explore.");
     }
 
-    public void AddCombatInstructions()
+    public void BuildFilledDungeon()
     {
+        _legend.AppendLine("The dungeon is filled with walls. Look for paths.");
     }
 
-    public void AddWeaponInstructions()
+    public void AddPaths()
     {
-        //future for fight
+        _legend.AppendLine("Paths have been added. Follow them to navigate.");
     }
 
-    public void AddPotionInstructions()
+    public void AddRooms()
     {
-        _instructions.AppendLine("[E] - Use Potion in your hand (then choose hand: 'r' or 'l')");
+        _legend.AppendLine("Rooms have been created in the dungeon.");
     }
 
-    public string GetInstructions()
+    public void AddCentralRoom()
     {
-        return _instructions.ToString();
+        _legend.AppendLine("A central room has been placed in the dungeon.");
+    }
+
+    public void AddItems()
+    {
+        _legend.AppendLine("Pick up items scattered across the dungeon.");
+    }
+
+    public void AddWeapons()
+    {
+        _legend.AppendLine("Equip weapons in your right hand.");
+        _legend.AppendLine("Equip weapons in your left hand.");
+    }
+
+    public void AddModifiedWeapons()
+    {
+        _legend.AppendLine("Modified weapons with efects affecting your stats are available.");
+    }
+
+    public void AddPotions()
+    {
+        _legend.AppendLine("Use potions to gain temporary bonuses.");
+    }
+
+    public void AddEnemies()
+    {
+        _legend.AppendLine("Beware of enemies lurking around.");
+    }
+
+    public string GetResult()
+    {
+        return _legend.ToString();
     }
 }
+
