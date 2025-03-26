@@ -188,7 +188,7 @@ public class GameDisplay
         Console.SetCursorPosition(startColumn, cursorTop);
         Console.WriteLine("╔══════════════════════════════╗");
         Console.SetCursorPosition(startColumn, cursorTop + 1);
-        Console.WriteLine("║       📝 PLAYER LOGS:        ║");
+        Console.WriteLine("║      📝 WHICHERS LOGS:       ║");
         Console.SetCursorPosition(startColumn, cursorTop + 2);
         Console.WriteLine("╚══════════════════════════════╝");
 
