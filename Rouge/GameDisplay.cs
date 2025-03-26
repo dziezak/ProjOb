@@ -179,29 +179,7 @@ public class GameDisplay
             }
         }
     }
-    /*
-    public void DisplayLog(int lineToStart, int mapWidth)
-    {
-        int startColumn = mapWidth + 65;
-        int cursorTop = lineToStart;
-
-        // Clear the display area (optional, for neat visuals)
-        for (int i = 0; i < 10; i++)
-        {
-            Console.SetCursorPosition(startColumn, cursorTop + i);
-            Console.Write(new string(' ', 50)); // Clear width of 50
-        }
-
-        // Display the last few logs stored in the queue
-        Console.SetCursorPosition(startColumn, cursorTop);
-        foreach (var log in _logQueue)
-        {
-            if (cursorTop >= lineToStart + 10) break; // Ensure we don't exceed 10 lines
-            Console.SetCursorPosition(startColumn, cursorTop++);
-            Console.WriteLine(log);
-        }
-    }
-    */
+   
     public void DisplayLog(int lineToStart, int mapWidth)
     {
         int startColumn = mapWidth + 65;

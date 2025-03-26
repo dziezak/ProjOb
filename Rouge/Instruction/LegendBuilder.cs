@@ -18,6 +18,9 @@ public class LegendBuilder : IDungeonBuilder<string>
 
     public void BuildEmptyDungeon()
     {
+        _legend.AppendLine("╔══════════════════════════════╗");
+        _legend.AppendLine("║       WHITCHERS MOVES:       ║");
+        _legend.AppendLine("╚══════════════════════════════╝");
         _legend.AppendLine("Available keys:A");
         _legend.AppendLine("[W] - Move Up");
         _legend.AppendLine("[A] - Move Left");
