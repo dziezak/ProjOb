@@ -42,8 +42,9 @@ public class ChainBuilder : IDungeonBuilder<IActionHandler>
 
     public void AddItems()
     {
-        AddHandler(new PickUpItemHandler());
-        AddHandler(new PickUpItemNumberHandler());
+        var pickUpHandler = new PickUpItemHandler();
+        AddHandler(pickUpHandler);
+        AddHandler(new PickUpItemNumberHandler(pickUpHandler));
     }
 
     public void AddWeapons()
