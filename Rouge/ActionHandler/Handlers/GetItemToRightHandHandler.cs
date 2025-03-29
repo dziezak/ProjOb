@@ -12,7 +12,7 @@ public class GetItemToRightHandHandler : ActionHandlerBase
     {
         if (input == 'r')
         {
-            _nextHandler.Handle(input, room, player);
+           _nextHandler.Handle(input, room, player);
         }
         else
         {
