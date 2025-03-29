@@ -22,7 +22,7 @@ namespace Rouge
         public int Coins {  get; set; }
         public int Gold { get; set; }
         public List<IItem> ItemsToGetFromRoom = new List<IItem>();
-        ConsoleKeyInfo _itemToPickUp;
+        public ConsoleKeyInfo _itemToPickUp;
         ConsoleKeyInfo _itemToDrop;
         int _handItem;
         public string WarningMessage = "";
@@ -46,157 +46,158 @@ namespace Rouge
         {
             GameDisplay.Instance?.DisplayStats(room, player);
         }
- 
+
+        public void PotionFunction(char itemToUse)
+        {
+            if (itemToUse == 'r')
+            {
+                if(Inventory.RightHand != null && Inventory.RightHand.IsConsumable())
+                { 
+                    LogMessage += $"Witcher used {Inventory.RightHand.GetName()}.";
+                    ApplyEffect(Inventory.RightHand); 
+                    Inventory.RightHand = null;
+                }
+                else
+                {
+                    WarningMessage += "nie ma w prawej recej nic uzywalnego\n";
+                }
+            }else if(itemToUse == 'l')
+            {
+                if (Inventory.LeftHand != null && Inventory.LeftHand.IsConsumable())
+                {
+                    LogMessage += $"Witcher used {Inventory.LeftHand.GetName()}.";
+                    ApplyEffect(Inventory.LeftHand);
+                    Inventory.LeftHand = null;
+                }
+                else
+                {
+                    WarningMessage += "nie ma w lewej recej nic uzywalnego\n";
+                }
+            }
+        }
+
+
+        public void DropItemByHand(char itemToDrop, Room room)
+        {
+            
+            if (itemToDrop == 'r')
+            {
+                if(Inventory.RightHand != null)
+                {
+                    if(Inventory.RightHand.TwoHanded())
+                    {
+                        Inventory.LeftHand = null;
+                    }
+                    LogMessage += $"Witcher dropped {Inventory.RightHand.GetName()}.";
+                    room.DropItem(X, Y, Inventory.RightHand);
+                    Inventory.RightHand = null;
+                }
+                else
+                {
+                    WarningMessage += "Nie trzymasz nic w prawej rece\n";
+                }
+            }else if(itemToDrop == 'l')
+            {
+                if (Inventory.LeftHand != null)
+                {
+                    if(Inventory.LeftHand.TwoHanded())
+                    {
+                        Inventory.RightHand = null;
+                    }
+                    LogMessage += $"Witcher dropped {Inventory.LeftHand.GetName()}.";
+                    room.DropItem(X, Y, Inventory.LeftHand);
+                    Inventory.LeftHand = null;
+                }
+                else
+                {
+                    WarningMessage += "Nie trzymasz nic w lewej rece\n";
+                }
+            }
+        }
+
+        public void LeftHand(char itemToPickUp, Room room)
+        {
+            if (char.IsDigit(itemToPickUp))
+            {
+                _handItem = int.Parse(itemToPickUp.ToString());
+                Inventory.EquipItemLeftHand(_handItem, this);
+            }
+        }
+        public void RightHand(char itemToPickUp, Room room)
+        {
+            if(char.IsDigit(itemToPickUp))
+            {
+                _handItem = int.Parse(itemToPickUp.ToString());
+                Inventory.EquipItemRightHand(_handItem, this);
+            }
+        }
         
-        public void GetKey(ConsoleKeyInfo key, Room room)
+        public void DropAllItems(Room room)
+        {
+            var itemsToRemove = Inventory.GetItems().ToList();
+            LogMessage += $"Witcher dropped all his inventory.";
+            foreach (var item in itemsToRemove)
+            {
+                room.DropItem(X, Y, item);
+                Inventory.RemoveItem(item);
+            }
+        }
+
+        public void MoveRight(Room room)
         {
             int newX = X, newY = Y;
-            switch(key.Key)
+            newX++;
+            if (room.IsWalkable(newX, newY))
             {
-                case ConsoleKey.W:
-                    newY--;
-                    NextTurn();
-                    LogMessage += "Witcher moved up.";
-                    break;
-                case ConsoleKey.A:
-                    newX--;
-                    NextTurn();
-                    LogMessage += "Witcher moved left.";
-                    break;
-                case ConsoleKey.S:
-                    newY++;
-                    NextTurn();
-                    LogMessage += "Witcher moved down.";
-                    break;
-                case ConsoleKey.D:
-                    newX++;
-                    NextTurn();
-                    LogMessage += "Witcher moved right.";
-                    break;
-                case ConsoleKey.P:
-                    _itemToPickUp = Console.ReadKey();
-                    if (char.IsDigit(_itemToPickUp.KeyChar))
-                    {
-                        PickUpItem(int.Parse(_itemToPickUp.KeyChar.ToString()));
-                    }
-                    else
-                    {
-                        WarningMessage += "Invalid input. Please enter a digit.\n";
-                    }
-                    break;
-                case ConsoleKey.R:
-                    _itemToPickUp = Console.ReadKey();
-                    if(char.IsDigit(_itemToPickUp.KeyChar))
-                    {
-                        _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
-                        Inventory.EquipItemRightHand(_handItem, this);
-                    }
-                    break;
-                case ConsoleKey.L:
-                    _itemToPickUp = Console.ReadKey();
-                    if (char.IsDigit(_itemToPickUp.KeyChar))
-                    {
-                        _handItem = int.Parse(_itemToPickUp.KeyChar.ToString());
-                        Inventory.EquipItemLeftHand(_handItem, this);
-                    }
-                    break;
-                case ConsoleKey.O:
-                    _itemToDrop = Console.ReadKey();
-                    if (_itemToDrop.KeyChar == 'r')
-                    {
-                        if(Inventory.RightHand != null)
-                        {
-                            if(Inventory.RightHand.TwoHanded())
-                            {
-                                Inventory.LeftHand = null;
-                            }
-                            LogMessage += $"Witcher dropped {Inventory.RightHand.GetName()}.";
-                            room.DropItem(X, Y, Inventory.RightHand);
-                            Inventory.RightHand = null;
-                        }
-                        else
-                        {
-                            WarningMessage += "Nie trzymasz nic w prawej rece\n";
-                        }
-                    }else if(_itemToDrop.KeyChar == 'l')
-                    {
-                        if (Inventory.LeftHand != null)
-                        {
-                            if(Inventory.LeftHand.TwoHanded())
-                            {
-                                Inventory.RightHand = null;
-                            }
-                            LogMessage += $"Witcher dropped {Inventory.LeftHand.GetName()}.";
-                            room.DropItem(X, Y, Inventory.LeftHand);
-                            Inventory.LeftHand = null;
-                        }
-                        else
-                        {
-                            WarningMessage += "Nie trzymasz nic w lewej rece\n";
-                        }
-                    }
-                    break;
-                case ConsoleKey.M:
-                    var itemsToRemove = Inventory.GetItems().ToList();
-                    LogMessage += $"Witcher dropped all his inventory.";
-                    foreach (var item in itemsToRemove)
-                    {
-                        room.DropItem(X, Y, item);
-                        Inventory.RemoveItem(item);
-                    }
-                    break;
-                case ConsoleKey.E:
-                    _itemToDrop = Console.ReadKey();
-                    if (_itemToDrop.KeyChar == 'r')
-                    {
-                        if(Inventory.RightHand != null && Inventory.RightHand.IsConsumable())
-                        { 
-                            LogMessage += $"Witcher used {Inventory.RightHand.GetName()}.";
-                            ApplyEffect(Inventory.RightHand); 
-                            Inventory.RightHand = null;
-                        }
-                        else
-                        {
-                            WarningMessage += "nie ma w prawej recej nic uzywalnego\n";
-                        }
-                    }else if(_itemToDrop.KeyChar == 'l')
-                    {
-                        if (Inventory.LeftHand != null && Inventory.LeftHand.IsConsumable())
-                        {
-                            LogMessage += $"Witcher used {Inventory.LeftHand.GetName()}.";
-                            ApplyEffect(Inventory.LeftHand);
-                            Inventory.LeftHand = null;
-                        }
-                        else
-                        {
-                            WarningMessage += "nie ma w lewej recej nic uzywalnego\n";
-                        }
-                    }
-                    break;
+                X = newX;
+                Y = newY;
+                NextTurn();
             }
+        }
+
+        public void MoveLeft(Room room)
+        {
+            int newX = X, newY = Y;
+            newX--;
             if(room.IsWalkable(newX, newY))
             {
                 X = newX;
                 Y = newY;
+                NextTurn();
             }
-            ItemsToGetFromRoom = room.GetItemsAt(X, Y);
-            ShowStats(room, this);
-            WarningMessage = "";
-            if(LogMessage.Length > 0)
-                GameDisplay.Instance?.AddLogMessage(LogMessage);
-            GameDisplay.Instance?.DisplayLog(15, room.Width);
-            LogMessage = "";
         }
 
-        // przyszlosciowa funkcja dla efektow
+        public void MoveDown(Room room)
+        {
+            int newX = X, newY = Y;
+            newY++;
+            if(room.IsWalkable(newX, newY))
+            {
+                X = newX;
+                Y = newY;
+                NextTurn();
+            }
+        }
+
+        public void MoveUp(Room room)
+        {
+            int newX = X, newY = Y;
+            newY--;
+            if(room.IsWalkable(newX, newY))
+            {
+                X = newX;
+                Y = newY;
+                NextTurn();
+            }
+        }
+
         public void ApplyEffect(IItem item)
         {
             item.ApplyEffect(this);
         }
 
-        void PickUpItem(int n)
+        public void PickUpItem(int n)
         {
-            
             if (n >= 0 && n <ItemsToGetFromRoom.Count )
             {
                 if (!ItemsToGetFromRoom[n].Equipable() )
