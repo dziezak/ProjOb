@@ -59,6 +59,7 @@ public class ChainBuilder : IDungeonBuilder<IActionHandler>
         AddHandler(new GetItemToRightHandNumberHandler());
         AddHandler(new DropItemHandler());
         AddHandler(new DropItemNumberHandler());
+        AddHandler(new DropAllItemsFromInventoryHandler());
     }
 
     public void AddPotions()
