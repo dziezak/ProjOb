@@ -9,7 +9,7 @@ public class GetItemToLeftHandHandler : ActionHandlerBase
 
     public override void Handle(char input, Room room, Player player)
     {
-        if (input == 'l' && player.lastCharacter != 'o')
+        if (input == 'l' && (player.lastCharacter != 'o' && player.lastCharacter != 'e'))
         {
             player.lastCharacter = 'l';
             //player.WarningMessage = "You are trying to get item to left hand.";

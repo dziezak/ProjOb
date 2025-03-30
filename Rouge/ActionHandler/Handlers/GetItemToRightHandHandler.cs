@@ -9,7 +9,7 @@ public class GetItemToRightHandHandler : ActionHandlerBase
 
     public override void Handle(char input, Room room, Player player)
     {
-        if (input == 'r' && player.lastCharacter != 'o')
+        if (input == 'r' && (player.lastCharacter != 'o' && player.lastCharacter != 'e'))
         {
             player.lastCharacter = 'r';
             UpdateUI(room, player);

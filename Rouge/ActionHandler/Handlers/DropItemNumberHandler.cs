@@ -14,10 +14,9 @@ public class DropItemNumberHandler : ActionHandlerBase
             player.lastCharacter = input;
             player.DropItemByHand(input, room);
             UpdateUI(room, player);
-        }else
+        }
+        else
         {
-            GameDisplay.Instance?.AddLogMessage("Nie ma 'o'");
-            UpdateUI(room, player);
             base.Handle(input, room, player);
         }
     }

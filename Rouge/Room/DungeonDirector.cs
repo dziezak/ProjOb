@@ -22,7 +22,7 @@ public class DungeonDirector
         builder.AddRooms();
         builder.AddItems();
         builder.AddModifiedWeapons();
-        //builder.AddPotions();
+        builder.AddPotions();
         //builder.AddEnemies();
     }
 }
