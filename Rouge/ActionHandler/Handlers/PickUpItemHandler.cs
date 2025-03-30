@@ -3,15 +3,14 @@ namespace Rouge.ActionHandler.Handlers;
 public class PickUpItemHandler:ActionHandlerBase
 {
     private bool _isActivated = false;
+    //ActionHandlerBase _alternativeHandler;
     public PickUpItemHandler()
     {
-        _nextHandler = new PickUpItemNumberHandler(this);
     }
     public override void Handle(char input, Room room, Player player)
     {
         if (input == 'p')
         {
-            _isActivated = true;
             var items = room.GetItemsAt(player.X, player.Y);
             if (items == null || items.Count == 0)
             {
@@ -20,13 +19,13 @@ public class PickUpItemHandler:ActionHandlerBase
             }
             else
             {
+                _isActivated = true;
                 player.WarningMessage = "There are some items to pick up at this position.";
-                GameDisplay.Instance?.DisplayStats(room, player);
+                UpdateUI(room, player);
             }
         }
         else
         {
-            _isActivated = false;
             base.Handle(input, room, player);
         }
     }
@@ -35,4 +34,10 @@ public class PickUpItemHandler:ActionHandlerBase
     {
         return _isActivated;
     }
+
+    public void Deactivate()
+    {
+        _isActivated = false;
+    }
+
 }

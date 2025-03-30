@@ -10,15 +10,17 @@ public class PickUpItemNumberHandler:ActionHandlerBase
     }
     public override void Handle(char itemToPickUp, Room room, Player player) 
     {
-        if (!_previousHandler.IsActivated())
+        if (_previousHandler.IsActivated() == false)
         {
             base.Handle(itemToPickUp, room, player);
-            player.WarningMessage = "Didnt work.\n"; 
+            //player.WarningMessage = "Didnt work.\n"; 
             UpdateUI(room, player);
-            //return;
-        }else if (char.IsDigit(itemToPickUp))
+            return; // wykonalem swoja prace i konicze
+        }
+        if (char.IsDigit(itemToPickUp))
         {
             player.PickUpItem(int.Parse(itemToPickUp.ToString()));
+            _previousHandler.Deactivate();
             UpdateUI(room, player);
             //_previousHandler.Handle('?', room, player);
         }
@@ -26,7 +28,7 @@ public class PickUpItemNumberHandler:ActionHandlerBase
         {
             player.WarningMessage += "Invalid input. Please enter a digit.\n";
             UpdateUI(room, player);
-            //base.Handle(itemToPickUp, room, player);
+            base.Handle(itemToPickUp, room, player);
         }
     }
 }
