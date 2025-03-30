@@ -77,7 +77,18 @@ namespace Rouge
             }
         }
 
-
+        public void DropItemFromInvetory(char digit, Room room)
+        {
+            if (char.IsDigit(digit))
+            {
+                if (Inventory.Items.Count > int.Parse(digit.ToString()))
+                {
+                    IItem item = Inventory.Items[int.Parse(digit.ToString())];
+                    Inventory.Items.Remove(item);
+                    room.DropItem(X, Y, item);
+                }
+            }
+        }
         public void DropItemByHand(char itemToDrop, Room room)
         {
             

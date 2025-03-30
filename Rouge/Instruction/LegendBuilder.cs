@@ -53,7 +53,7 @@ public class LegendBuilder : IDungeonBuilder<string>
     {
         _legend.AppendLine("[R] - Equip Item in Right Hand (then pick number from 0-9)");
         _legend.AppendLine("[L] - Equip Item in Left Hand (then pick number from 0-9)");
-        _legend.AppendLine("[O] - Drop Item (choose hand: 'r' or 'l')");
+        _legend.AppendLine("[O] - Drop Item (choose hand: 'r' or 'l') or from invetory (choose 0-9)");
         _legend.AppendLine("[M] - Drop All Items from inventory");
     }
 

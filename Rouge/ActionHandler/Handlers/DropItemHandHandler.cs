@@ -1,23 +1,23 @@
 namespace Rouge.ActionHandler.Handlers;
 
-public class DropItemNumberHandler : ActionHandlerBase
+public class DropItemHandHandler : ActionHandlerBase
 {
-    public DropItemNumberHandler()
+    public DropItemHandHandler()
     {
     }
 
     public override void Handle(char input, Room room, Player player)
     {
-        if (char.IsDigit(input) && player.lastCharacter == 'o')
+        if ((input == 'l' || input == 'r') && player.lastCharacter == 'o')
         {
-            GameDisplay.Instance?.AddLogMessage("Nowy handler wyrzucenia z inventory");
+            //GameDisplay.Instance?.AddLogMessage("jest 'o' oraz jest 'l' lub 'r'");
             player.lastCharacter = input;
-            player.DropItemFromInvetory(input, room);
+            player.DropItemByHand(input, room);
             UpdateUI(room, player);
         }
         else
         {
             base.Handle(input, room, player);
         }
-    } 
+    }
 }

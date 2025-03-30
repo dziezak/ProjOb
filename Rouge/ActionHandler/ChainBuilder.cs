@@ -58,6 +58,7 @@ public class ChainBuilder : IDungeonBuilder<IActionHandler>
         AddHandler(new GetItemToRightHandHandler());
         AddHandler(new GetItemToRightHandNumberHandler());
         AddHandler(new DropItemHandler());
+        AddHandler(new DropItemHandHandler());
         AddHandler(new DropItemNumberHandler());
         AddHandler(new DropAllItemsFromInventoryHandler());
     }
