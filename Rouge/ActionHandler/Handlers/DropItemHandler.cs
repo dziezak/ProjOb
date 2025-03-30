@@ -10,7 +10,8 @@ public class DropItemHandler:ActionHandlerBase
     {
         if (input == 'o')
         {
-            GameDisplay.Instance?.AddLogMessage("Probuje zdjac przedmiot");
+            GameDisplay.Instance?.DisplayMovementInformation("Pick hand or item number to drop", room);
+            //GameDisplay.Instance?.AddLogMessage("Probuje zdjac przedmiot");
             player.lastCharacter = 'o';
             UpdateUI(room, player);
         }

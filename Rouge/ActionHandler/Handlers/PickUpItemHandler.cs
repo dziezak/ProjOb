@@ -19,6 +19,7 @@ public class PickUpItemHandler:ActionHandlerBase
             {
                 player.lastCharacter = 'p';
                 player.WarningMessage = "There are some items to pick up at this position.";
+                GameDisplay.Instance?.DisplayMovementInformation("pick number of item to pick up", room);
                 UpdateUI(room, player);
             }
         }

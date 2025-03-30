@@ -1,23 +1,22 @@
 namespace Rouge.ActionHandler.Handlers;
 
-public class PotionHandHandler : ActionHandlerBase
+public class PotionNumberHandler : ActionHandlerBase
 {
-    public PotionHandHandler()
+    public PotionNumberHandler()
     {
     }
 
     public override void Handle(char input, Room room, Player player)
     {
-        if ((input == 'l' || input == 'r') && player.lastCharacter == 'e')
+        if (char.IsDigit(input) && player.lastCharacter == 'e')
         {
-            GameDisplay.Instance?.DisplayMovementInformation("", room);
             player.lastCharacter = input;
-            player.PotionFunction(input);
+            player.DrinkPotionFromInventory(input, room);
             UpdateUI(room, player);
         }
         else
         {
             base.Handle(input, room, player);
         }
-    }
+    } 
 }

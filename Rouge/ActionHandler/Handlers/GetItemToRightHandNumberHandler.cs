@@ -10,6 +10,7 @@ public class GetItemToRightHandNumberHandler : ActionHandlerBase
     {
         if (player.lastCharacter == 'r' && char.IsDigit(input))
         {
+            GameDisplay.Instance?.DisplayMovementInformation("", room);
             player.lastCharacter = input;
             player.RightHand(input, room);
             UpdateUI(room, player);

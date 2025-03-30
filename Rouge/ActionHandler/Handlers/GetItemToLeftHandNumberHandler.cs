@@ -11,6 +11,7 @@ public class GetItemToLeftHandNumberHandler : ActionHandlerBase
         
         if (player.lastCharacter == 'l' &&  char.IsDigit(input))
         {
+            GameDisplay.Instance?.DisplayMovementInformation("", room);
             player.lastCharacter = input;
             player.LeftHand(input, room);
             UpdateUI(room, player);

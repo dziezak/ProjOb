@@ -11,6 +11,7 @@ public class PotionHandler: ActionHandlerBase
        if(input == 'e')
        {
            player.lastCharacter = input;
+           GameDisplay.Instance?.DisplayMovementInformation("Pick number or hand to use potion", room);
            UpdateUI(room, player);
        }
        else

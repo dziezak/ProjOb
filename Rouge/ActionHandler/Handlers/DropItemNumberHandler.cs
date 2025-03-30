@@ -10,7 +10,8 @@ public class DropItemNumberHandler : ActionHandlerBase
     {
         if (char.IsDigit(input) && player.lastCharacter == 'o')
         {
-            GameDisplay.Instance?.AddLogMessage("Nowy handler wyrzucenia z inventory");
+            //GameDisplay.Instance?.AddLogMessage("Nowy handler wyrzucenia z inventory");
+            GameDisplay.Instance?.DisplayMovementInformation("", room);
             player.lastCharacter = input;
             player.DropItemFromInvetory(input, room);
             UpdateUI(room, player);

@@ -67,6 +67,7 @@ public class ChainBuilder : IDungeonBuilder<IActionHandler>
     {
         AddHandler(new PotionHandler());
         AddHandler(new PotionHandHandler());
+        AddHandler(new PotionNumberHandler());
     }
 
     public void AddEnemies()

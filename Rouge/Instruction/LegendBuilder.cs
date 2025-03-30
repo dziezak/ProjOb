@@ -67,7 +67,7 @@ public class LegendBuilder : IDungeonBuilder<string>
 
     public void AddPotions()
     {
-        _legend.AppendLine("[E] - Use Potion in your hand (then choose hand: 'r' or 'l')");
+        _legend.AppendLine("[E] - Use Potion (then choose hand: 'r' or 'l' or number 0-9 from inventory)");
     }
 
     public void AddEnemies()

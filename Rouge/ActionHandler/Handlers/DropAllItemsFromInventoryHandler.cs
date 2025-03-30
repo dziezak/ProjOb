@@ -9,6 +9,7 @@ public class DropAllItemsFromInventoryHandler:ActionHandlerBase
     {
         if (input == 'm')
         {
+            GameDisplay.Instance?.DisplayMovementInformation("", room);
             player.lastCharacter = input;
             player.DropAllItems(room);
             UpdateUI(room, player);

@@ -1,6 +1,7 @@
 namespace Rouge;
 public class GameDisplay
 {
+    public string CriticalInfo = "";
     private Queue<string> _logQueue = new Queue<string>(); //Log gracza do wyswietlenia
     private static GameDisplay? _instance; // bedzie jedyna instancja tej klasy
     private GameDisplay(){}
@@ -209,4 +210,39 @@ public class GameDisplay
         }
     }
 
+    public void DisplayMovementInformation(string input, Room room)
+    {
+        int startColum = 0;
+        int cursorTop = room.Height + 1;
+        
+        Console.SetCursorPosition(startColum, cursorTop);
+        Console.Write(new String(' ', room.Width));
+        
+        Console.SetCursorPosition(startColum, cursorTop);
+        Console.Write(input);
+    }
+
+    public void GameOverDisplay(Room room)
+    {
+        Console.Clear();
+
+        string message = " GAME OVER ";
+        string border = new string('=', message.Length + 4);
+
+        int centerX = (room.Width) - (border.Length / 2);
+        int centerY = room.Height / 2;
+
+        Console.SetCursorPosition(centerX, centerY - 1);
+        Console.WriteLine(border);
+
+        Console.SetCursorPosition(centerX, centerY);
+        Console.WriteLine($"|{message}|");
+
+        Console.SetCursorPosition(centerX, centerY + 1);
+        Console.WriteLine(border);
+
+        Console.SetCursorPosition(0, room.Height + 2);
+        Console.WriteLine("Press any key to exit...");
+        Console.ReadKey();
+    } 
 }

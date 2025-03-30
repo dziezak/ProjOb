@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,6 +78,27 @@ namespace Rouge
             }
         }
 
+        public void DrinkPotionFromInventory(char digit, Room room)
+        {
+            if (char.IsDigit(digit))
+            {
+                if (Inventory.Items.Count > int.Parse(digit.ToString()))
+                {
+                    IItem item = Inventory.Items[int.Parse(digit.ToString())];
+                    if (item.IsConsumable())
+                    {
+                        Inventory.Items.Remove(item);
+                        LogMessage += $"Witcher used {item.GetName()}.";
+                        ApplyEffect(item); 
+                    }
+                    else
+                    {
+                        WarningMessage = "Item is not a potion";
+                    }
+                }
+            }
+            
+        }
         public void DropItemFromInvetory(char digit, Room room)
         {
             if (char.IsDigit(digit))

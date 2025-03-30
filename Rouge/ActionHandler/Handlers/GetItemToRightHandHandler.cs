@@ -11,6 +11,7 @@ public class GetItemToRightHandHandler : ActionHandlerBase
     {
         if (input == 'r' && (player.lastCharacter != 'o' && player.lastCharacter != 'e'))
         {
+            GameDisplay.Instance?.DisplayMovementInformation("Pick number of item to pick up", room);
             player.lastCharacter = 'r';
             UpdateUI(room, player);
         }

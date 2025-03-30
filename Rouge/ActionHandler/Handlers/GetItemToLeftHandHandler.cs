@@ -11,6 +11,7 @@ public class GetItemToLeftHandHandler : ActionHandlerBase
     {
         if (input == 'l' && (player.lastCharacter != 'o' && player.lastCharacter != 'e'))
         {
+            GameDisplay.Instance?.DisplayMovementInformation("Pick number of item to pick up", room);
             player.lastCharacter = 'l';
             //player.WarningMessage = "You are trying to get item to left hand.";
             UpdateUI(room, player);

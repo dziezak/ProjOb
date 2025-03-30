@@ -10,6 +10,7 @@ public class DropItemHandHandler : ActionHandlerBase
     {
         if ((input == 'l' || input == 'r') && player.lastCharacter == 'o')
         {
+            GameDisplay.Instance?.DisplayMovementInformation("", room);
             //GameDisplay.Instance?.AddLogMessage("jest 'o' oraz jest 'l' lub 'r'");
             player.lastCharacter = input;
             player.DropItemByHand(input, room);

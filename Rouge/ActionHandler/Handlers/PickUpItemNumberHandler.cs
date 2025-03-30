@@ -8,6 +8,7 @@ public class PickUpItemNumberHandler:ActionHandlerBase
     }
     public override void Handle(char itemToPickUp, Room room, Player player) 
     {
+        GameDisplay.Instance?.DisplayMovementInformation("", room);
         if (player.lastCharacter != 'p')
         {
             base.Handle(itemToPickUp, room, player);
