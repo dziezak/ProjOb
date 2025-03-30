@@ -11,6 +11,7 @@ public class MoveRightHandler:ActionHandlerBase
     {
         if (input == 'd')
         {
+            player.lastCharacter = input;
             player.MoveRight(room);
             GameDisplay.Instance?.AddLogMessage("Player moved right using [D]");
             UpdateUI(room, player);

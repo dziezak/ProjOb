@@ -10,19 +10,17 @@ public class PickUpItemNumberHandler:ActionHandlerBase
     }
     public override void Handle(char itemToPickUp, Room room, Player player) 
     {
-        if (_previousHandler.IsActivated() == false)
+        if (player.lastCharacter == 'p')
         {
             base.Handle(itemToPickUp, room, player);
-            //player.WarningMessage = "Didnt work.\n"; 
             UpdateUI(room, player);
-            return; // wykonalem swoja prace i konicze
+            //return; // wykonalem swoja prace i konicze
         }
         if (char.IsDigit(itemToPickUp))
         {
+            player.lastCharacter = itemToPickUp;
             player.PickUpItem(int.Parse(itemToPickUp.ToString()));
-            _previousHandler.Deactivate();
             UpdateUI(room, player);
-            //_previousHandler.Handle('?', room, player);
         }
         else
         {

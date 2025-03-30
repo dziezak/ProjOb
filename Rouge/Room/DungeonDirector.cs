@@ -21,7 +21,7 @@ public class DungeonDirector
         builder.AddCentralRoom();
         builder.AddRooms();
         builder.AddItems();
-        //builder.AddModifiedWeapons();
+        builder.AddModifiedWeapons();
         //builder.AddPotions();
         //builder.AddEnemies();
     }

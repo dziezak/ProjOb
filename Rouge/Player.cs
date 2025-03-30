@@ -27,6 +27,7 @@ namespace Rouge
         int _handItem;
         public string WarningMessage = "";
         public string LogMessage = "";
+        public char lastCharacter = ' ';
 
 
         public Player(int x, int y, int p, int a, int h, int l, int attack, int w, int coins, int gold)

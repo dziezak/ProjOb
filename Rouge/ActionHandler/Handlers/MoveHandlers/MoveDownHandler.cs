@@ -9,6 +9,7 @@ public class MoveDownHandler:ActionHandlerBase
     {
         if (input == 's')
         {
+            player.lastCharacter = 's';
             player.MoveDown(room);
             GameDisplay.Instance?.AddLogMessage("Witcher moved down using [S]");
             UpdateUI(room, player);

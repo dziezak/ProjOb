@@ -11,6 +11,7 @@ public class MoveUpHandler: ActionHandlerBase
     {
         if (input == 'w')
         {
+            player.lastCharacter = input;
             player.MoveUp(room);
             GameDisplay.Instance?.AddLogMessage("Player moved up using [W]");
             UpdateUI(room, player);

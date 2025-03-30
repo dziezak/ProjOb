@@ -2,8 +2,7 @@ namespace Rouge.ActionHandler.Handlers;
 
 public class PickUpItemHandler:ActionHandlerBase
 {
-    private bool _isActivated = false;
-    //ActionHandlerBase _alternativeHandler;
+    //private bool _isActivated = false;
     public PickUpItemHandler()
     {
     }
@@ -19,7 +18,7 @@ public class PickUpItemHandler:ActionHandlerBase
             }
             else
             {
-                _isActivated = true;
+                player.lastCharacter = 'p';
                 player.WarningMessage = "There are some items to pick up at this position.";
                 UpdateUI(room, player);
             }
@@ -29,15 +28,4 @@ public class PickUpItemHandler:ActionHandlerBase
             base.Handle(input, room, player);
         }
     }
-
-    public bool IsActivated()
-    {
-        return _isActivated;
-    }
-
-    public void Deactivate()
-    {
-        _isActivated = false;
-    }
-
 }

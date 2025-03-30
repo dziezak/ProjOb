@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Rouge.ActionHandler.Handlers;
 
 public class MoveLeftHandler:ActionHandlerBase
@@ -11,6 +13,7 @@ public class MoveLeftHandler:ActionHandlerBase
     {
         if (input == 'a')
         {
+            player.lastCharacter = input;
             player.MoveLeft(room);
             GameDisplay.Instance?.AddLogMessage("Player moved left using [A]");
             UpdateUI(room, player);

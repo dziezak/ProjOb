@@ -54,14 +54,22 @@ public class ChainBuilder : IDungeonBuilder<IActionHandler>
 
     public void AddModifiedWeapons()
     {
-        AddHandler(new DropItemHandler());
-        AddHandler(new DropItemNumberHandler());
+        /*
+        var DropItemHandler = new DropItemHandler();
+        var DropItemNumberHandler = new DropItemNumberHandler(DropItemHandler);
+        AddHandler(DropItemHandler);
+        AddHandler(DropItemNumberHandler);
+        */
 
-        AddHandler(new GetItemToLeftHandHandler());
-        AddHandler(new GetItemToLeftHandNumberHandler());
+        var getItemToLeftHandler = new GetItemToLeftHandHandler();
+        var getItemToLeftNumberHandler = new GetItemToLeftHandNumberHandler(getItemToLeftHandler);
+        AddHandler(getItemToLeftHandler);
+        AddHandler(getItemToLeftNumberHandler);
         
+        /*
         AddHandler(new GetItemToRightHandHandler());
         AddHandler(new GetItemToRightHandNumberHandler());
+        */
     }
 
     public void AddPotions()
