@@ -26,6 +26,7 @@ public class ChainBuilder : IDungeonBuilder<IActionHandler>
         AddHandler(new MoveDownHandler());
         AddHandler(new MoveLeftHandler());
         AddHandler(new MoveRightHandler());
+        AddHandler(new EndGameHandler());
     }
 
     public void AddPaths()

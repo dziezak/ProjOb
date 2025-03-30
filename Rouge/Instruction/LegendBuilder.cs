@@ -76,6 +76,7 @@ public class LegendBuilder : IDungeonBuilder<string>
 
     public string GetResult()
     {
+        _legend.AppendLine("[V] - End Game");
         return _legend.ToString();
     }
 }

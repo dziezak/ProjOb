@@ -35,21 +35,25 @@ namespace Rouge
             chain = chainBuilder.GetResult();
         }
         public void Start()
-        { 
+        {
+            bool isGameOver = false;
             //Console.Write(_instruction);
             GameDisplay.Instance?.DisplayAvailableString(_instruction, _room.Width); //instrukcja na starcie
             Console.ReadKey();
             Console.Clear();
             GameDisplay.Instance?.DisplayStats(_room, _player); 
             GameDisplay.Instance?.DisplayLog(15, _room.Width);
-            while (true)
+            while (!isGameOver)
             {
                 GameDisplay.Instance?.DisplayAvailableString(_legend, _room.Width);
                 GameDisplay.Instance?.RenderLabirynth(_room, _player);
                 char key = Console.ReadKey().KeyChar;
                 
                 chain.Handle(key, _room, _player);
-                //_player.GetKey(key, _room);
+                if (key == 'v')
+                {
+                    isGameOver = true;
+                }
             }
         }
     }
