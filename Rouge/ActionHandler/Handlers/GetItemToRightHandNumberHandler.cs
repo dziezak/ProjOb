@@ -8,9 +8,11 @@ public class GetItemToRightHandNumberHandler : ActionHandlerBase
 
     public override void Handle(char input, Room room, Player player)
     {
-        if (char.IsDigit(input))
+        if (player.lastCharacter == 'r' && char.IsDigit(input))
         {
+            player.lastCharacter = input;
             player.RightHand(input, room);
+            UpdateUI(room, player);
         }
         else
         {

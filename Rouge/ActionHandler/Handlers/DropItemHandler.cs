@@ -2,7 +2,6 @@ namespace Rouge.ActionHandler.Handlers;
 
 public class DropItemHandler:ActionHandlerBase
 {
-    private bool _isActivated = false;
     public DropItemHandler()
     {
     }
@@ -11,8 +10,9 @@ public class DropItemHandler:ActionHandlerBase
     {
         if (input == 'o')
         {
-            _isActivated = true;
-            player.WarningMessage = "You are trying to drop it.";
+            GameDisplay.Instance?.AddLogMessage("Probuje zdjac przedmiot");
+            player.lastCharacter = 'o';
+            UpdateUI(room, player);
         }
         else
         {
@@ -20,15 +20,4 @@ public class DropItemHandler:ActionHandlerBase
         }
 
     }
-
-    public bool IsActivated()
-    {
-        return _isActivated;
-    }
-
-    public void Deactivate()
-    {
-        _isActivated = false;
-    }
-    
 }

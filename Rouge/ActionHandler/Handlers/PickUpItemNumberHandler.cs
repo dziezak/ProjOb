@@ -2,19 +2,17 @@ namespace Rouge.ActionHandler.Handlers;
 
 public class PickUpItemNumberHandler:ActionHandlerBase
 {
-    private readonly PickUpItemHandler _previousHandler;
 
-    public PickUpItemNumberHandler(PickUpItemHandler previousHandler)
+    public PickUpItemNumberHandler()
     {
-        _previousHandler = previousHandler;
     }
     public override void Handle(char itemToPickUp, Room room, Player player) 
     {
-        if (player.lastCharacter == 'p')
+        if (player.lastCharacter != 'p')
         {
             base.Handle(itemToPickUp, room, player);
             UpdateUI(room, player);
-            //return; // wykonalem swoja prace i konicze
+            return; // wykonalem swoja prace i konicze
         }
         if (char.IsDigit(itemToPickUp))
         {

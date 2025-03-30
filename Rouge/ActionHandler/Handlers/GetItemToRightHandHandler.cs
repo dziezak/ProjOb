@@ -5,14 +5,14 @@ public class GetItemToRightHandHandler : ActionHandlerBase
 
     public GetItemToRightHandHandler()
     {
-        _nextHandler = new GetItemToRightHandNumberHandler();
     }
 
     public override void Handle(char input, Room room, Player player)
     {
-        if (input == 'r')
+        if (input == 'r' && player.lastCharacter != 'o')
         {
-           _nextHandler.Handle(input, room, player);
+            player.lastCharacter = 'r';
+            UpdateUI(room, player);
         }
         else
         {

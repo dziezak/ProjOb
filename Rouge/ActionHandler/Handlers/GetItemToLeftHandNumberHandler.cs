@@ -2,28 +2,20 @@ namespace Rouge.ActionHandler.Handlers;
 
 public class GetItemToLeftHandNumberHandler : ActionHandlerBase
 {
-    private readonly GetItemToLeftHandHandler _previousHandler;
-    public GetItemToLeftHandNumberHandler(GetItemToLeftHandHandler getItemToLeftHandHandler)
+    public GetItemToLeftHandNumberHandler()
     {
-       _previousHandler = getItemToLeftHandHandler; 
     }
 
     public override void Handle(char input, Room room, Player player)
     {
-        if (_previousHandler.IsActivated() == false)
+        
+        if (player.lastCharacter == 'l' &&  char.IsDigit(input))
         {
-            base.Handle(input, room, player);
-            UpdateUI(room, player);
-            return;
-        }
-        if (char.IsDigit(input))
-        {
-            _previousHandler.Deactivate(); 
+            player.lastCharacter = input;
             player.LeftHand(input, room);
-        }
-        else
+            UpdateUI(room, player);
+        }else
         {
-            _previousHandler.Deactivate();
             base.Handle(input, room, player);
         }
     }

@@ -2,7 +2,6 @@ namespace Rouge.ActionHandler.Handlers;
 
 public class PickUpItemHandler:ActionHandlerBase
 {
-    //private bool _isActivated = false;
     public PickUpItemHandler()
     {
     }
