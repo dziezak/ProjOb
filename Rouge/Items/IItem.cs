@@ -14,5 +14,6 @@
         Stats GetBuff();
         public bool IsActive(int currentActionCounter);
         bool IsConsumable();
+        public void Update();
     }
 }

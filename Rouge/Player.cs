@@ -283,7 +283,16 @@ namespace Rouge
         public void NextTurn()
         {
             ActionCounter++;
+            foreach(var potion in AppliedPotions)
+            {
+                potion.Update();
+            }
             AppliedPotions.RemoveAll(potion => !potion.IsActive(ActionCounter));
+        }
+
+        public void FlushPotions()
+        {
+            AppliedPotions.Clear();
         }
 
     }

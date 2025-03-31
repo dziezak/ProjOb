@@ -19,6 +19,7 @@
         public virtual string GetName() => DecoratedItem.GetName();
         public virtual bool IsCurrency() => DecoratedItem.IsCurrency();
         public virtual int GetValue() => DecoratedItem.GetValue();
+        public virtual void Update() => DecoratedItem.Update();
         public Stats GetBuff()
         {
             throw new NotImplementedException();

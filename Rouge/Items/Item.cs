@@ -22,5 +22,7 @@
         public virtual Stats GetBuff() => new Stats(0, 0, 0, 0, 0, 0);
         public virtual bool IsConsumable() => false;
         public virtual bool IsActive(int currentActionCounter) => false;
+        public virtual void Update(){}
+        
     }
 }

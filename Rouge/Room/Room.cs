@@ -149,7 +149,7 @@ namespace Rouge
         IItem CreateRandomPotion()
         {
             Random rng = new Random();
-            int itemType = rng.Next(0, 4);
+            int itemType = rng.Next(0, 5);
             IItem item;
             switch (itemType)
             {
@@ -164,6 +164,9 @@ namespace Rouge
                     return item;
                 case 3:
                     item = new AttackPotion();
+                    return item;
+                case 4:
+                    item = new ClarityPotion();
                     return item;
                 default:
                     return null;
