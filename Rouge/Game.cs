@@ -41,7 +41,7 @@ namespace Rouge
             GameDisplay.Instance?.DisplayAvailableString(_instruction, _room.Width); //instrukcja na starcie
             Console.ReadKey();
             Console.Clear();
-            GameDisplay.Instance?.DisplayStats(_room, _player); 
+            GameDisplay.Instance?.DisplayStats(_room, _player, false); 
             GameDisplay.Instance?.DisplayLog(15, _room.Width);
             while (!isGameOver)
             {

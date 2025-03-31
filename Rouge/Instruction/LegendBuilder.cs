@@ -68,6 +68,7 @@ public class LegendBuilder : IDungeonBuilder<string>
     public void AddPotions()
     {
         _legend.AppendLine("[E] - Use Potion (then choose hand: 'r' or 'l' or number 0-9 from inventory)");
+        _legend.AppendLine("[E] then [I] to see potions with pending effect");
     }
 
     public void AddEnemies()

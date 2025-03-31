@@ -52,7 +52,7 @@ public class GameDisplay
         }
     }
     int _maxRows = 0;
-    public void DisplayStats(Room room, Player player)
+    public void DisplayStats(Room room, Player player, bool Eliksir)
     {
         int mapWidth = room.Width;  
         int infoWidth = 55;
@@ -100,43 +100,53 @@ public class GameDisplay
         AddText($"Left Hand: {(player.Inventory?.LeftHand != null ? player.Inventory.LeftHand.GetName() : "None")}");
         AddText("====================================================");
         AddText($"Number of potions Applied: {player.AppliedPotions.Count}");
-        AddText("====================================================");
-        AddText("Inventory:");
+        if(Eliksir == false){
+            AddText("====================================================");
+            AddText("Inventory:");
 
-        if(player.Inventory.Items.Count == 0 || player.Inventory == null)
-        {
-            AddText("Empty");
-        }
-        int index = 0;
-        foreach (var item in player.Inventory.GetItems())
-        {
-            AddText($"item {index}: " + item.GetName());
-            index++;
-        }
-        AddText("====================================================");
-        if (player.ItemsToGetFromRoom != null)
-        {
-            AddText("Items on tile:");
-            for (int i = 0; i < player.ItemsToGetFromRoom.Count; i++)
+            if(player.Inventory.Items.Count == 0 || player.Inventory == null)
             {
-                if(player.ItemsToGetFromRoom[i].IsCurrency())
-                    AddText($"Item {i}: {player.ItemsToGetFromRoom[i].GetValue()}x {player.ItemsToGetFromRoom[i].GetName()}");
-                else
-                    AddText($"Item {i}: {player.ItemsToGetFromRoom[i].GetName()}");
+                AddText("Empty");
+            }
+            int index = 0;
+            foreach (var item in player.Inventory.GetItems())
+            {
+                AddText($"item {index}: " + item.GetName());
+                index++;
+            }
+            AddText("====================================================");
+            if (player.ItemsToGetFromRoom != null)
+            {
+                AddText("Items on tile:");
+                for (int i = 0; i < player.ItemsToGetFromRoom.Count; i++)
+                {
+                    if(player.ItemsToGetFromRoom[i].IsCurrency())
+                        AddText($"Item {i}: {player.ItemsToGetFromRoom[i].GetValue()}x {player.ItemsToGetFromRoom[i].GetName()}");
+                    else
+                        AddText($"Item {i}: {player.ItemsToGetFromRoom[i].GetName()}");
+                }
+            }
+            AddText("====================================================");
+            AddText("Enemies nearby:");
+            foreach (var item in enemiesNearby)
+            {
+               string name = item.GetName();
+               Stats stats = item.GetStats();
+               AddText($"Enemy name: {name} with Attack: {stats.Attack} and Health {stats.Health}");
+            }
+            AddText("====================================================");
+            if (!string.IsNullOrEmpty(player.WarningMessage))
+            {
+                AddText(player.WarningMessage);
             }
         }
-        AddText("====================================================");
-        AddText("Enemies nearby:");
-        foreach (var item in enemiesNearby)
+        else
         {
-           string name = item.GetName();
-           Stats stats = item.GetStats();
-           AddText($"Enemy name: {name} with Attack: {stats.Attack} and Health {stats.Health}");
-        }
-        AddText("====================================================");
-        if (!string.IsNullOrEmpty(player.WarningMessage))
-        {
-            AddText(player.WarningMessage);
+            foreach (var eliksir in player.AppliedPotions)
+            {
+                var eliksirToPrint = (Potion)eliksir;
+                AddText($"{eliksirToPrint.GetName()} for {eliksirToPrint.Duration}");
+            }
         }
 
         while(infoLines.Count < _maxRows)
@@ -184,7 +194,7 @@ public class GameDisplay
     public void DisplayLog(int lineToStart, int mapWidth)
     {
         int startColumn = mapWidth + 65;
-        int cursorTop = lineToStart;
+        int cursorTop = lineToStart+1;
 
         Console.SetCursorPosition(startColumn, cursorTop);
         Console.WriteLine("╔══════════════════════════════╗");
@@ -244,5 +254,5 @@ public class GameDisplay
         Console.SetCursorPosition(0, room.Height + 2);
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();
-    } 
+    }
 }

@@ -12,7 +12,7 @@ public class PickUpItemNumberHandler:ActionHandlerBase
         if (player.lastCharacter != 'p')
         {
             base.Handle(itemToPickUp, room, player);
-            UpdateUI(room, player);
+            //UpdateUI(room, player);
             return; // wykonalem swoja prace i konicze
         }
         if (char.IsDigit(itemToPickUp))

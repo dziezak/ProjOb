@@ -46,7 +46,7 @@ namespace Rouge
         
         public void ShowStats(Room room, Player player)
         {
-            GameDisplay.Instance?.DisplayStats(room, player);
+            GameDisplay.Instance?.DisplayStats(room, player, false);
         }
 
         public void PotionFunction(char itemToUse)
