@@ -21,5 +21,28 @@ internal class Potion: Item
     public override bool IsActive(int currentActionCounter)
     {
         return Duration > 0;
-    } 
+    }
+
+    public override void Subscribe(Player player)
+    {
+        Timer.OnNextTurn += () => Update(player);
+    }
+
+    public override void Unsubscribe(Player player)
+    {
+        Timer.OnNextTurn -= () => Update(player);
+    }
+
+    public override void Update(Player player)
+    {
+        if (Duration > 0)
+        {
+            Duration--;
+        }
+        else
+        {
+            Unsubscribe(player);    
+            player.RemovePotion(this);
+        }
+    }
 }

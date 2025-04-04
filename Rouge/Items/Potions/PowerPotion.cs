@@ -9,8 +9,16 @@ internal class PowerPotion : Potion
         player.DrinkPotion(this);
     }
 
-    public override void Update()
+    public override void Update(Player player)
     {
-        Duration--;
+        if (Duration > 0)
+        {
+            Duration--;
+        }
+        else
+        {
+            Unsubscribe(player);    
+            player.RemovePotion(this);
+        }
     }
 }

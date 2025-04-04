@@ -9,7 +9,7 @@ internal class ClarityPotion : Potion
         player.FlushPotions();
     }
 
-    public override void Update()
+    public override void Update(Player player)
     {
         Duration--;
     }

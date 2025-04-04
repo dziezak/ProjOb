@@ -19,7 +19,9 @@
         public virtual string GetName() => DecoratedItem.GetName();
         public virtual bool IsCurrency() => DecoratedItem.IsCurrency();
         public virtual int GetValue() => DecoratedItem.GetValue();
-        public virtual void Update() => DecoratedItem.Update();
+        public virtual void Update(Player player) => DecoratedItem.Update(player);
+        public virtual void Subscribe(Player player) => DecoratedItem.Subscribe(player);
+        public virtual void Unsubscribe(Player player) => DecoratedItem.Unsubscribe(player);
         public Stats GetBuff()
         {
             throw new NotImplementedException();

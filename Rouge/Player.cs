@@ -185,7 +185,8 @@ namespace Rouge
             {
                 X = newX;
                 Y = newY;
-                NextTurn();
+                //NextTurn();
+                Timer.NextTurn();
             }
         }
 
@@ -197,7 +198,7 @@ namespace Rouge
             {
                 X = newX;
                 Y = newY;
-                NextTurn();
+                Timer.NextTurn();
             }
         }
 
@@ -209,7 +210,7 @@ namespace Rouge
             {
                 X = newX;
                 Y = newY;
-                NextTurn();
+                Timer.NextTurn();
             }
         }
 
@@ -221,7 +222,7 @@ namespace Rouge
             {
                 X = newX;
                 Y = newY;
-                NextTurn();
+                Timer.NextTurn();
             }
         }
 
@@ -265,6 +266,7 @@ namespace Rouge
         public void DrinkPotion(IItem potion)
         {
             AppliedPotions.Add(potion);
+            potion.Subscribe(this);
         }
 
         public Stats GetCurrentStats()
@@ -285,9 +287,15 @@ namespace Rouge
             ActionCounter++;
             foreach(var potion in AppliedPotions)
             {
-                potion.Update();
+                potion.Update(this);
             }
             AppliedPotions.RemoveAll(potion => !potion.IsActive(ActionCounter));
+        }
+
+        public void RemovePotion(IItem potion)
+        {
+            AppliedPotions.Remove(potion);
+            potion.Unsubscribe(this);
         }
 
         public void FlushPotions()

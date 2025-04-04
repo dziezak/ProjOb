@@ -9,10 +9,17 @@ internal class LuckyPotion : Potion
         player.DrinkPotion(this);
     }
 
-    public override void Update()
+    public override void Update(Player player)
     {
-        //EffectStats = new Stats(0, 0, 0, 2, 0, 0);
-        EffectStats = EffectStats with { Luck = EffectStats.Luck * (Duration) };
-        Duration--;
+        if (Duration > 0)
+        {
+            EffectStats = EffectStats with { Luck = EffectStats.Luck * (Duration) };
+            Duration--;
+        }
+        else
+        {
+            Unsubscribe(player);    
+            player.RemovePotion(this);
+        }
     }
 }

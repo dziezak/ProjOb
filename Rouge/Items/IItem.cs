@@ -14,6 +14,9 @@
         Stats GetBuff();
         public bool IsActive(int currentActionCounter);
         bool IsConsumable();
-        public void Update();
+        //do potionow
+        public void Update(Player player);
+        public void Subscribe(Player player);
+        public void Unsubscribe(Player player);
     }
 }
