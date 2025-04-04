@@ -10,4 +10,9 @@ public static class Timer
        ActionCounter++; 
        OnNextTurn?.Invoke();
     }
+
+    public static int GetActionCounter()
+    {
+        return ActionCounter;
+    }
 }

@@ -35,7 +35,7 @@ internal class Potion: Item
 
     public override void Update(Player player)
     {
-        if (Duration > 0)
+        if (Duration > 1)
         {
             Duration--;
         }

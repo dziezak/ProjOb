@@ -11,7 +11,7 @@ internal class LuckyPotion : Potion
 
     public override void Update(Player player)
     {
-        if (Duration > 0)
+        if (Duration > 1)
         {
             EffectStats = EffectStats with { Luck = EffectStats.Luck * (Duration) };
             Duration--;

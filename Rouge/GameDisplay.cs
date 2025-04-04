@@ -83,7 +83,7 @@ public class GameDisplay
             luckCounter = leftHand.GetLuck();
         }
         Stats displatyStats = player.GetCurrentStats();
-        AddText($"Action Counter: {player.ActionCounter}");
+        AddText($"Action Counter: {Timer.GetActionCounter()}");
         AddText("====================================================");
         AddText("Witchers Attributes:");
         AddText($"Power: {displatyStats.Power + attackCounter}");

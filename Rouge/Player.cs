@@ -16,7 +16,6 @@ namespace Rouge
         public int Y {  get; set; }
         public Inventory Inventory { get; set; }
 
-        public int ActionCounter;
         public Stats BaseStats { get; set; }
         public Stats AppliedStats { get; set; }
         public List<IItem> AppliedPotions = new List<IItem>();
@@ -36,7 +35,6 @@ namespace Rouge
             X = x;
             Y = y;
             Inventory = new Inventory();
-            ActionCounter = 0;
 
             // Inicjalizacja statystyk
             BaseStats = new Stats(p, a, h, l, attack, w);
@@ -274,7 +272,7 @@ namespace Rouge
             Stats currentStats = BaseStats;
             foreach (var potion in AppliedPotions)
             {
-                if (potion.IsActive(ActionCounter))
+                if (potion.IsActive(Timer.GetActionCounter()))
                 {
                     currentStats += potion.GetBuff();
                 }
@@ -282,15 +280,6 @@ namespace Rouge
             return currentStats;
         }
 
-        public void NextTurn()
-        {
-            ActionCounter++;
-            foreach(var potion in AppliedPotions)
-            {
-                potion.Update(this);
-            }
-            AppliedPotions.RemoveAll(potion => !potion.IsActive(ActionCounter));
-        }
 
         public void RemovePotion(IItem potion)
         {
