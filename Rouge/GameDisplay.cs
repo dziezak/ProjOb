@@ -132,7 +132,8 @@ public class GameDisplay
             {
                string name = item.GetName();
                Stats stats = item.GetStats();
-               AddText($"Enemy name: {name} with Attack: {stats.Attack} and Health {stats.Health}");
+               int defence = item.GetDefense();
+               AddText($"{name} Attack:{stats.Attack}, Health:{stats.Health}, Defence: {defence}");
             }
             AddText("====================================================");
             if (!string.IsNullOrEmpty(player.WarningMessage))

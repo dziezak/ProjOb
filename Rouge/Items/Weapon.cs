@@ -9,12 +9,5 @@
             Damage = damage;
         }
 
-        public override void ApplyEffect(Player player)
-        {
-            //player.DisplayStats();
-        }
-
-        public override int GetAttack() => 0;
-        public override int GetLuck() => 0; 
     }
 }

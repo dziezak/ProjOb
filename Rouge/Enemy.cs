@@ -13,6 +13,7 @@ public abstract class Enemy
    }
 
    public abstract Stats GetStats();
+   public abstract int GetDefense();
 }
 
 public class Minion : Enemy
@@ -21,6 +22,7 @@ public class Minion : Enemy
    public Minion() : base("Minion", stats) { }
    public override string GetName() => "Minion";
    public override Stats GetStats() => stats;
+   public override int GetDefense() => (stats.Power + stats.Agility + stats.Wisdom) / 3;
 }
 
 public class Zombie : Enemy
@@ -29,6 +31,7 @@ public class Zombie : Enemy
    public Zombie() : base("Zombie",stats) { }
    public override string GetName() => "Zombie";
    public override Stats GetStats() => stats;
+   public override int GetDefense() => (stats.Power + stats.Agility + stats.Wisdom) / 3;
 }
 
 public class Xenomorph : Enemy
@@ -37,4 +40,5 @@ public class Xenomorph : Enemy
    public Xenomorph() : base("Xenomorph", stats) { }
    public override string GetName() => "Xenomorph";
    public override Stats GetStats() => stats;
+   public override int GetDefense() => (stats.Power + stats.Agility + stats.Wisdom) / 3;
 }
