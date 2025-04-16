@@ -183,8 +183,7 @@ namespace Rouge
             {
                 X = newX;
                 Y = newY;
-                //NextTurn();
-                Timer.NextTurn();
+                Timer.NextTurn(this);
             }
         }
 
@@ -196,7 +195,7 @@ namespace Rouge
             {
                 X = newX;
                 Y = newY;
-                Timer.NextTurn();
+                Timer.NextTurn(this);
             }
         }
 
@@ -208,7 +207,7 @@ namespace Rouge
             {
                 X = newX;
                 Y = newY;
-                Timer.NextTurn();
+                Timer.NextTurn(this);
             }
         }
 
@@ -220,7 +219,7 @@ namespace Rouge
             {
                 X = newX;
                 Y = newY;
-                Timer.NextTurn();
+                Timer.NextTurn(this);
             }
         }
 

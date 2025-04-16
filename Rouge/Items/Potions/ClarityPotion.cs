@@ -7,6 +7,7 @@ internal class ClarityPotion : Potion
     public override void ApplyEffect(Player player)
     {
         player.FlushPotions();
+        Timer.ClearPotions(player);
     }
 
     public override void Update(Player player)

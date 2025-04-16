@@ -194,7 +194,7 @@ public class GameDisplay
     public void DisplayLog(int lineToStart, int mapWidth)
     {
         int startColumn = mapWidth + 65;
-        int cursorTop = lineToStart+1;
+        int cursorTop = lineToStart;
 
         Console.SetCursorPosition(startColumn, cursorTop);
         Console.WriteLine("╔══════════════════════════════╗");

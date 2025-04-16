@@ -27,7 +27,7 @@ public class ActionHandlerBase : IActionHandler
         player.WarningMessage = "";
         if (player.LogMessage.Length > 0)
             GameDisplay.Instance?.AddLogMessage(player.LogMessage);
-        GameDisplay.Instance?.DisplayLog(15, room.Width);
+        GameDisplay.Instance?.DisplayLog(16, room.Width);
         player.LogMessage = "";
         
     }

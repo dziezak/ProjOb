@@ -25,12 +25,12 @@ internal class Potion: Item
 
     public override void Subscribe(Player player)
     {
-        Timer.OnNextTurn += () => Update(player);
+        Timer.AddPotion(this);
     }
 
     public override void Unsubscribe(Player player)
     {
-        Timer.OnNextTurn -= () => Update(player);
+        Timer.RemovePotion(this);
     }
 
     public override void Update(Player player)
