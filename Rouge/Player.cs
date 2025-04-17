@@ -326,8 +326,19 @@ namespace Rouge
                     baseRightDamage = this.Inventory.RightHand.GetAttack();
                 Attack attackRightHand = new Attack(attackType, baseLeftDamage);
                 Attack attackLeftHand = new Attack(attackType, baseRightDamage);
-                attackRightHand.Apply((IWeapon)this.Inventory.RightHand);
-                attackLeftHand.Apply((IWeapon)this.Inventory.LeftHand);
+                if (this.Inventory.RightHand != null)
+                {
+                    if (this.Inventory.RightHand.IsWeapon())
+                    {
+                        attackRightHand.Apply((IWeapon)this.Inventory.RightHand);
+                    }
+                }
+
+                if (this.Inventory.LeftHand != null)
+                {
+                    if(this.Inventory.LeftHand.IsWeapon())
+                        attackLeftHand.Apply((IWeapon)this.Inventory.LeftHand);
+                }
                 
                 int totalDamage = attackRightHand.Damage + attackLeftHand.Damage;
                 CurrentEnemyHealth -= totalDamage;

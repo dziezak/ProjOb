@@ -21,6 +21,7 @@
         public virtual int GetValue() => 0;
         public virtual Stats GetBuff() => new Stats(0, 0, 0, 0, 0, 0);
         public virtual bool IsConsumable() => false;
+        public bool IsWeapon() => false;
         public virtual bool IsActive(int currentActionCounter) => false;
         public virtual void Update(Player player){}
         public virtual void Subscribe(Player player) { }
