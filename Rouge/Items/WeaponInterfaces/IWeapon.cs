@@ -2,8 +2,8 @@ namespace Rouge.Items.WeaponInterfaces;
 
 public interface IWeapon : IItem
 {
-    public int Damage { get; set; }
-    public int GetMagicalDamage();
-    public int GetPhysicalDamage();
-    public int GetSneakyDamage();
+    void Accept(IWeaponVisitor visitor, Attack attack);
 }
+public interface IMagic : IWeapon { }
+public interface ILight : IWeapon { }
+public interface IHeavy : IWeapon { }

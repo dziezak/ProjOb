@@ -1,6 +1,8 @@
-﻿namespace Rouge.Items
+﻿using Rouge.Items.WeaponInterfaces;
+
+namespace Rouge.Items
 {
-    internal class Weapon : Item
+    public abstract class Weapon : Item, IWeapon
     {
         public int Damage { get; set; }
 
@@ -8,6 +10,6 @@
         {
             Damage = damage;
         }
-
+        public abstract void Accept(IWeaponVisitor visitor, Attack attack);
     }
 }

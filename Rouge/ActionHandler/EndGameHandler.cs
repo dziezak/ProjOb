@@ -10,7 +10,7 @@ public class EndGameHandler : ActionHandlerBase
     public override void Handle(char input, Room room, Player player)
     {
         if(input == 'v')
-            GameDisplay.Instance?.GameOverDisplay(room);
+            GameDisplay.Instance?.GameOverDisplay();
         else
             base.Handle(input, room, player);
     }

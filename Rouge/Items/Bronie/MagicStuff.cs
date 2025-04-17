@@ -7,15 +7,16 @@ using Rouge.Items.WeaponInterfaces;
 
 namespace Rouge.Items.Bronie
 {
-    internal class Sword : Weapon, IHeavy
+    internal class MagicStuff: Weapon, IMagic
     {
-        public Sword(string name, int damage) : base(name, damage)
+        public MagicStuff(string name, int damage) : base(name, damage)
         {
-            name = "Sword";
+            name = "MagicStuff";
         }
+
         public override void Accept(IWeaponVisitor visitor, Attack attack)
         {
-            visitor.VisitHeavy(this, attack);
+            visitor.VisitMagic(this, attack);
         }
     }
 }

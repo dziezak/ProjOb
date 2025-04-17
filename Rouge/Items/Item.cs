@@ -1,6 +1,6 @@
 ﻿namespace Rouge.Items
 {
-    internal class Item : IItem
+    public class Item : IItem
     {
         public string Name { get; set; }
         public virtual bool TwoHanded() => false;

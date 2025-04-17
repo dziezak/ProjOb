@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Rouge.Items;
+using Rouge.Items.WeaponInterfaces;
 
 namespace Rouge
 {
@@ -21,6 +22,7 @@ namespace Rouge
         public List<IItem> AppliedPotions = new List<IItem>();
         public int Coins {  get; set; }
         public int Gold { get; set; }
+
         public List<IItem> ItemsToGetFromRoom = new List<IItem>();
         public ConsoleKeyInfo _itemToPickUp;
         ConsoleKeyInfo _itemToDrop;
@@ -28,6 +30,8 @@ namespace Rouge
         public string WarningMessage = "";
         public string LogMessage = "";
         public char lastCharacter = ' ';
+        public bool IsSelectingEnemies = false;
+        public Enemy SelectedEnemy = null;
 
 
         public Player(int x, int y, int p, int a, int h, int l, int attack, int w, int coins, int gold)
@@ -290,6 +294,124 @@ namespace Rouge
         {
             AppliedPotions.Clear();
         }
+
+        public int CurrentHealh;
+        public int CurrentEnemyHealth;
+
+        public void Fight()
+        {
+            Console.Clear();
+            Console.SetCursorPosition(0, Console.CursorTop);
+            var playerStats = this.GetCurrentStats();
+            CurrentHealh = playerStats.Health;
+            CurrentEnemyHealth = SelectedEnemy.EnemyStats.Health;
+            GameDisplay.Instance?.RenderBattleUI(this);
+            GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
+            GameDisplay.Instance?.DisplayAvailableString(SelectedEnemy.GetImage(), 0);
+            GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health,SelectedEnemy.GetName(), false);
+            //Dispaly Available Attacks
+            //GameDisplay.Instance?.DisplayLog(16, 70);
+            DisplayAvailableAttacks();
+            
+            while (SelectedEnemy.EnemyStats.Health > 0 && playerStats.Health > 0)
+            {
+                char input = Console.ReadKey(true).KeyChar;
+                AttackType attackType = GetAttackType(input);
+                
+                int baseLeftDamage = 0;
+                int baseRightDamage = 0;
+                if(this.Inventory.LeftHand != null)
+                    baseLeftDamage = this.Inventory.LeftHand.GetAttack();
+                if(this.Inventory.RightHand != null)
+                    baseRightDamage = this.Inventory.RightHand.GetAttack();
+                Attack attackRightHand = new Attack(attackType, baseLeftDamage);
+                Attack attackLeftHand = new Attack(attackType, baseRightDamage);
+                attackRightHand.Apply((IWeapon)this.Inventory.RightHand);
+                attackLeftHand.Apply((IWeapon)this.Inventory.LeftHand);
+                
+                int totalDamage = attackRightHand.Damage + attackLeftHand.Damage;
+                CurrentEnemyHealth -= totalDamage;
+                
+                Console.SetCursorPosition(50, 50);
+                Console.WriteLine($"TOTAL DAMAGE = {totalDamage}"); // damage z jakiego powodu jest zawsze 0
+                
+                GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health,SelectedEnemy.GetName(), false);
+                
+                //GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
+                if (CurrentEnemyHealth <= 0)
+                {
+                    //GameDisplay.Instance?.AddLogMessage($"{SelectedEnemy.GetName()} is defeated!");
+                    break;
+                }
+
+                int enemyAttackDamage = SelectedEnemy.EnemyStats.Attack;
+                //CurrentHealh -= enemyAttackDamage;
+                GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
+
+                if (CurrentHealh <= 0)
+                { 
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    GameDisplay.Instance?.GameOverDisplay(); 
+                    Game.isGameOver = true;
+                }
+            }
+            
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Clear();
+        }
+        
+        private AttackType GetAttackType(char input)
+        {
+            return input switch
+            {
+                '1' => AttackType.Heavy,
+                '2' => AttackType.Stealth,
+                '3' => AttackType.Magic,
+                _ => AttackType.Heavy
+            };
+        }
+        
+        private void DisplayAvailableAttacks()
+        {
+            Console.SetCursorPosition(30, 30);
+            Console.WriteLine("\nAvailable Attacks:");
+
+            string format = "{0,-15} | Damage: {1,3}";
+
+            // Pobieramy bazowe obrażenia dla każdej ręki
+            int baseLeftDamage = this.Inventory.LeftHand?.GetAttack() ?? 0;
+            int baseRightDamage = this.Inventory.RightHand?.GetAttack() ?? 0;
+
+            // Tworzymy obiekty ataku, aby Visitor poprawnie obliczył rzeczywiste obrażenia
+            Attack normalLeft = new Attack(AttackType.Heavy, baseLeftDamage);
+            Attack normalRight = new Attack(AttackType.Heavy, baseRightDamage);
+            Attack stealthLeft = new Attack(AttackType.Stealth, baseLeftDamage);
+            Attack stealthRight = new Attack(AttackType.Stealth, baseRightDamage);
+            Attack magicLeft = new Attack(AttackType.Magic, baseLeftDamage);
+            Attack magicRight = new Attack(AttackType.Magic, baseRightDamage);
+
+            // Zastosowanie Visitor dla każdej broni
+            if (this.Inventory.LeftHand != null)
+            {
+                normalLeft.Apply((IWeapon)this.Inventory.LeftHand);
+                stealthLeft.Apply((IWeapon)this.Inventory.LeftHand);
+                magicLeft.Apply((IWeapon)this.Inventory.LeftHand);
+            }
+
+            if (this.Inventory.RightHand != null)
+            {
+                normalRight.Apply((IWeapon)this.Inventory.RightHand);
+                stealthRight.Apply((IWeapon)this.Inventory.RightHand);
+                magicRight.Apply((IWeapon)this.Inventory.RightHand);
+            }
+
+            // Wyświetlenie danych
+            Console.WriteLine(format, "1 - Normal", normalLeft.Damage + normalRight.Damage);
+            Console.WriteLine(format, "2 - Stealth", stealthLeft.Damage + stealthRight.Damage);
+            Console.WriteLine(format, "3 - Magic", magicLeft.Damage + magicRight.Damage);
+        }
+
+
 
     }
 

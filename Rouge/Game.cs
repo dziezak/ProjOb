@@ -3,13 +3,14 @@ using Rouge.ActionHandler.Handlers;
 
 namespace Rouge
 {
-    internal class Game
+    public class Game
     {
         private Room _room;
         private Player _player;
         private string _instruction;
         private string _legend;
         private IActionHandler chain;
+        public static bool isGameOver = false;
         
         
         public Game()
@@ -36,7 +37,7 @@ namespace Rouge
         }
         public void Start()
         {
-            bool isGameOver = false;
+            isGameOver = false;
             //Console.Write(_instruction);
             GameDisplay.Instance?.DisplayAvailableString(_instruction, _room.Width); //instrukcja na starcie
             Console.ReadKey();

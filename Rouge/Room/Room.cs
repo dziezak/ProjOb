@@ -81,7 +81,7 @@ namespace Rouge
                     item = new Knife("Knife", 5);
                     return item;
                 case 2:
-                    item = new Bow("Bow", 7);
+                    item = new MagicStuff("MagicStuff", 7);
                     return item;
                 case 3:
                     item = new Item("Stick");
