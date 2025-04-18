@@ -319,8 +319,8 @@ namespace Rouge
                 char input = Console.ReadKey(true).KeyChar;
                 AttackType attackType = GetAttackType(input);
 
-                int baseLeftDamage = this.Inventory?.LeftHand.GetAttack() ?? 0;
-                int baseRightDamage = this.Inventory?.RightHand.GetAttack() ?? 0;
+                int baseLeftDamage = this.Inventory.LeftHand?.GetAttack() ?? 0;
+                int baseRightDamage = this.Inventory.RightHand?.GetAttack() ?? 0;
                 
                 Attack attackRight = new Attack(attackType, baseLeftDamage);
                 Attack attackLeft = new Attack(attackType, baseRightDamage);
@@ -391,23 +391,32 @@ namespace Rouge
             var leftHandWeapon = (IWeapon) this.Inventory?.LeftHand;
             var rightHandWeapon = (IWeapon) this.Inventory?.RightHand;
 
+            int leftBase = leftHandWeapon?.BaseDamage ?? 0;
+            int rightBase = rightHandWeapon?.BaseDamage ?? 0;
+
             // Tworzymy obiekty ataku, aby Visitor poprawnie obliczył rzeczywiste obrażenia
-            Attack normalLeft = new Attack(AttackType.Heavy, leftHandWeapon.BaseDamage);
-            Attack normalRight = new Attack(AttackType.Heavy, leftHandWeapon.BaseDamage);
-            Attack stealthLeft = new Attack(AttackType.Stealth, leftHandWeapon.BaseDamage);
-            Attack stealthRight = new Attack(AttackType.Stealth, rightHandWeapon.BaseDamage);
-            Attack magicLeft = new Attack(AttackType.Magic, rightHandWeapon.BaseDamage);
-            Attack magicRight = new Attack(AttackType.Magic, rightHandWeapon.BaseDamage);
+            Attack normalLeft = new Attack(AttackType.Heavy, leftBase);
+            Attack normalRight = new Attack(AttackType.Heavy, rightBase);
+            Attack stealthLeft = new Attack(AttackType.Stealth, leftBase);
+            Attack stealthRight = new Attack(AttackType.Stealth, rightBase);
+            Attack magicLeft = new Attack(AttackType.Magic, leftBase);
+            Attack magicRight = new Attack(AttackType.Magic, rightBase);
 
             // Zastosowanie Visitor dla każdej broni
-            
-            normalLeft.Apply(leftHandWeapon);
-            stealthLeft.Apply(leftHandWeapon);
-            magicLeft.Apply(leftHandWeapon);
 
-            normalRight.Apply(rightHandWeapon);
-            stealthRight.Apply(rightHandWeapon);
-            magicRight.Apply(rightHandWeapon);
+            if (leftHandWeapon != null)
+            {
+                normalLeft.Apply(leftHandWeapon);
+                stealthLeft.Apply(leftHandWeapon);
+                magicLeft.Apply(leftHandWeapon);
+            }
+
+            if (rightHandWeapon != null)
+            {
+                normalRight.Apply(rightHandWeapon);
+                stealthRight.Apply(rightHandWeapon);
+                magicRight.Apply(rightHandWeapon);
+            }
 
             // Wyświetlenie danych
             Console.WriteLine(format, "1 - Normal", normalLeft.Damage + normalRight.Damage);
