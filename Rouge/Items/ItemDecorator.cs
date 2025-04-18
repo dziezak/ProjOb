@@ -1,6 +1,8 @@
-﻿namespace Rouge.Items
+﻿using Rouge.Items.WeaponInterfaces;
+
+namespace Rouge.Items
 {
-    class ItemDecorator : IItem
+    abstract class ItemDecorator : IItem, IWeapon
     {
     //Bazowy dekorator:
         protected IItem DecoratedItem;
@@ -19,27 +21,37 @@
         public virtual string GetName() => DecoratedItem.GetName();
         public virtual bool IsCurrency() => DecoratedItem.IsCurrency();
         public virtual int GetValue() => DecoratedItem.GetValue();
-        public bool IsWeapon() => false;
+
         public virtual void Update(Player player) => DecoratedItem.Update(player);
         public virtual void Subscribe(Player player) => DecoratedItem.Subscribe(player);
         public virtual void Unsubscribe(Player player) => DecoratedItem.Unsubscribe(player);
-        public Stats GetBuff()
+
+        //do visitor
+        public virtual void Accept(IWeaponVisitor visitor, Attack attack)
         {
-            throw new NotImplementedException();
+            if (DecoratedItem is IWeapon weapon)
+            {
+                weapon.Accept(visitor, attack);
+            }
+            else
+            {
+                visitor.VisitOther(DecoratedItem, attack);
+            }
         }
 
-        public bool IsActive(int currentActionCounter)
+        public bool IsWeapon() => DecoratedItem.IsWeapon();
+        public int GetDefenseValue(Player player, AttackType type)
         {
+            if (DecoratedItem is Weapon weapon)
+            {
+                return weapon.GetDefenseValue(player, type);
+            }
             throw new NotImplementedException();
         }
-
-        public bool IsActive()
-        {
-            throw new NotImplementedException();
-        }
-
+        public int BaseDamage { get; }
+        public Stats GetBuff() => DecoratedItem.GetBuff();
+        public bool IsActive(int currentActionCounter) => DecoratedItem.IsActive(currentActionCounter);
         public bool IsConsumable() => false;
-        
     }
 
     //Dekorator dla przedmiotów zwiększających szczescie:

@@ -333,7 +333,7 @@ public class GameDisplay
         }
     }
 
-    public void RenderHeathBar(int MaxHealth, int CurrentHealth, string name, bool ForPlayer)
+    public void RenderHeathBar(int CurrentHealth, int MaxHealth, string name, bool ForPlayer)
     {
         int barWidth = 40;
         int filledBars = (int)((double)CurrentHealth/MaxHealth * barWidth);

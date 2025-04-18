@@ -1,4 +1,6 @@
-﻿namespace Rouge.Items
+﻿using Rouge.Items.WeaponInterfaces;
+
+namespace Rouge.Items
 {
     public class Item : IItem
     {
@@ -26,6 +28,12 @@
         public virtual void Update(Player player){}
         public virtual void Subscribe(Player player) { }
         public virtual void Unsubscribe(Player player){}
-        
+
+        public virtual void Accept(IWeaponVisitor visitor, Attack attack)
+        {
+            visitor.VisitOther(this, attack);
+        }
+
+        public virtual int GetAttackForBattle() => 0;
     }
 }

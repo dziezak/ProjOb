@@ -13,9 +13,11 @@ namespace Rouge.Items.Bronie
         {
             name = "Knife";
         }
+
         public override void Accept(IWeaponVisitor visitor, Attack attack)
         {
             visitor.VisitLight(this, attack);
         }
+        public bool IsWeapon() => true;
     }
 }

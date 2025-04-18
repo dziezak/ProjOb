@@ -1,4 +1,6 @@
-﻿namespace Rouge.Items
+﻿using Rouge.Items.WeaponInterfaces;
+
+namespace Rouge.Items
 {
     public interface IItem
     {
@@ -20,5 +22,7 @@
         public void Update(Player player);
         public void Subscribe(Player player);
         public void Unsubscribe(Player player);
+        
+        // do Visitora:
     }
 }

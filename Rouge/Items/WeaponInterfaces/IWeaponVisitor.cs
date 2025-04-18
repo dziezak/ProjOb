@@ -5,4 +5,6 @@ public interface IWeaponVisitor
     void VisitMagic(IMagic magicWeapon, Attack attack);
     void VisitLight(ILight lightWeapon, Attack attack);
     void VisitHeavy(IHeavy heavyWeapon, Attack attack);
+    void VisitOther(IItem other, Attack attack); // dla pozostalych
+    
 } 

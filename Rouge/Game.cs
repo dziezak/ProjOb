@@ -28,7 +28,7 @@ namespace Rouge
             _instruction = instructionBuilder.GetResult();
             _legend = legendBuilder.GetResult();
             _room = dungeonBuilder.GetResult();
-            _player = new Player(0, 0, 10, 10, 10, 10, 10, 10, 0, 0);
+            _player = new Player(0, 0, 10, 10, 100, 10, 10, 10, 0, 0);
             
             ChainBuilder chainBuilder = new ChainBuilder(_player, _room);
             director.BuildFilledDungeonWithRooms(chainBuilder);

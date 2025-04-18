@@ -17,5 +17,6 @@ namespace Rouge.Items.Bronie
         {
             visitor.VisitHeavy(this, attack);
         }
+        public bool IsWeapon() => true;
     }
 }

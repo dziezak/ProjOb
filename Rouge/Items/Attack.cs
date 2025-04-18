@@ -13,13 +13,12 @@ public class Attack
     {
         Type = type;
         BaseDamage = baseDamage;
+        Damage = 0;
     }
 
-    public void Apply(IWeapon? weapon)
+    public void Apply(IWeapon weapon)
     {
-        if (weapon == null) return;
-        WeaponVisitor visitor = new WeaponVisitor();
-        weapon.Accept(visitor, this);
+        Console.WriteLine($"[ATTACK] Apply() called for {weapon.GetType().Name}, base dmg: {BaseDamage}");
+        WeaponVisitor.Instance.Visit(weapon, this);
     }
-    
 }
