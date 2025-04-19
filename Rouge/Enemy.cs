@@ -6,6 +6,8 @@ public abstract class Enemy
    public Stats EnemyStats { get; set; }
    public virtual string GetName() => Name;
    public virtual string Image { get; set; }
+   public int X { get; set; }
+   public int Y { get; set; }
 
    public Enemy(string name, Stats stats)
    {

@@ -298,10 +298,11 @@ namespace Rouge
         public int CurrentHealh;
         public int CurrentEnemyHealth;
 
-        public void Fight()
+        public void Fight(Room room)
         {
             Console.Clear();
             Console.SetCursorPosition(0, Console.CursorTop);
+            
             var playerStats = this.GetCurrentStats();
             CurrentHealh = playerStats.Health;
             CurrentEnemyHealth = SelectedEnemy.EnemyStats.Health;
@@ -310,62 +311,65 @@ namespace Rouge
             GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
             //GameDisplay.Instance?.DisplayAvailableString(SelectedEnemy.GetImage(), 0);
             GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health,SelectedEnemy.GetName(), false);
-            //Dispaly Available Attacks
-            //GameDisplay.Instance?.DisplayLog(16, 70);
-            DisplayAvailableAttacks();
+            GameDisplay.Instance?.DisplayLog(16, 70);
             
             while (CurrentHealh > 0 && CurrentEnemyHealth > 0)
             {
+                DisplayAvailableAttacks();
                 char input = Console.ReadKey(true).KeyChar;
                 AttackType attackType = GetAttackType(input);
 
                 int baseLeftDamage = this.Inventory.LeftHand?.GetAttack() ?? 0;
                 int baseRightDamage = this.Inventory.RightHand?.GetAttack() ?? 0;
                 
-                Attack attackRight = new Attack(attackType, baseLeftDamage);
-                Attack attackLeft = new Attack(attackType, baseRightDamage);
+                Attack attackLeft = new Attack(attackType, baseLeftDamage);
+                Attack attackRight = new Attack(attackType, baseRightDamage);
                 
-                if (this.Inventory.RightHand is IWeapon rightWeapon)
+                if (this.Inventory.RightHand != null)
                 {
-                    attackRight.Apply(rightWeapon);
-                }
-                else
-                {
-                    attackRight.Damage = 0;
+                    attackRight.Apply((IWeapon)this.Inventory.RightHand);
                 }
 
-                if (this.Inventory.LeftHand is IWeapon leftWeapon)
+                if (this.Inventory.LeftHand != null)
                 {
-                    attackLeft.Apply(leftWeapon);
-                }
-                else
-                {
-                    attackLeft.Damage = 0;
+                    attackLeft.Apply((IWeapon)this.Inventory.LeftHand);
                 }
                 
                 int totalDamage = attackRight.Damage + attackLeft.Damage;
                 CurrentEnemyHealth -= totalDamage;
                 
                 GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health, SelectedEnemy.GetName(), false);
-                GameDisplay.Instance?.DisplayLog(0, 50);
-                
                 GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
                 if (CurrentEnemyHealth <= 0)
                 {
+                    //Usun przeciwnika z tego miejsca
+                    var key = (SelectedEnemy.Y, SelectedEnemy.X);
+                    //room._enemiesMap.Remove(key);
+                    if (room._enemiesMap.ContainsKey(key))
+                    {
+                        room._enemiesMap.Remove(key);
+                        GameDisplay.Instance?.AddLogMessage("Enemy should be deleted");
+                    }
+                    else
+                    {
+                        GameDisplay.Instance?.AddLogMessage($"There is no enemy on {SelectedEnemy.Y}, {SelectedEnemy.X}");
+                    }
+                    //room._enemiesMap.Clear();
+                    GameDisplay.Instance?.RenderLabirynth(room, this);
                     GameDisplay.Instance?.AddLogMessage($"{SelectedEnemy.GetName()} is defeated!");
+                    break;
+                }
+
+                if (CurrentHealh <= 0)
+                {
+                    Game.isGameOver = true;
+                    GameDisplay.Instance?.GameOverDisplay();
                     break;
                 }
 
                 int enemyAttackDamage = SelectedEnemy.EnemyStats.Attack;
                 CurrentHealh -= enemyAttackDamage;
                 GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
-                
-
-                if (CurrentHealh <= 0)
-                {
-                    Console.ReadKey(); // przerwa aby zobaczyc, ze przegralismy ( HeathBar)
-                    Game.isGameOver = true;
-                }
             }
             
             Console.SetCursorPosition(0, Console.CursorTop);

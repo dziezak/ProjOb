@@ -216,7 +216,13 @@ namespace Rouge
                 int y = _random.Next(0, Height);
                 if (_grid[y, x] == ' ')
                     if (!_enemiesMap.ContainsKey((y, x)))
-                        _enemiesMap.Add((y, x), CreateRandomEnemy());
+                    {
+                        var enemy = CreateRandomEnemy();
+                        enemy.Y = y;
+                        enemy.X = x;
+                        Console.WriteLine($"I created enemy on {enemy.Y}, {enemy.X}");
+                        _enemiesMap.Add((y, x), enemy);
+                    }
                     else
                         i--;
                 else 
