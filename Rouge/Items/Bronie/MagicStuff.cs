@@ -13,7 +13,7 @@ namespace Rouge.Items.Bronie
 
         public override void Accept(IWeaponVisitor visitor, Attack attack)
         {
-            Console.WriteLine($"[ACCEPT] MagicStuff accepted visitor with attackType: {attack.Type}");
+            //Console.WriteLine($"[ACCEPT] MagicStuff accepted visitor with attackType: {attack.Type}");
             visitor.VisitMagic(this, attack);
         }
         public bool IsWeapon() => true;

@@ -16,7 +16,7 @@ namespace Rouge.Items.Bronie
 
         public override void Accept(IWeaponVisitor visitor, Attack attack)
         {
-            Console.WriteLine($"[ACCEPT] Knife accepted visitor with attackType: {attack.Type}");
+            //Console.WriteLine($"[ACCEPT] Knife accepted visitor with attackType: {attack.Type}");
             visitor.VisitLight(this, attack);
         }
         public bool IsWeapon() => true;

@@ -18,7 +18,7 @@ public class Attack
 
     public void Apply(IWeapon weapon)
     {
-        Console.WriteLine($"[ATTACK] Apply() called for {weapon.GetType().Name}, base dmg: {BaseDamage}");
+        //Console.WriteLine($"[ATTACK] Apply() called for {weapon.GetType().Name}, base dmg: {BaseDamage}");
         WeaponVisitor.Instance.Visit(weapon, this);
     }
 }
