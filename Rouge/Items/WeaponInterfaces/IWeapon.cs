@@ -2,8 +2,6 @@ namespace Rouge.Items.WeaponInterfaces;
 
 public interface IWeapon : IItem
 {
-    //void Accept(IWeaponVisitor visitor, Attack attack);
-    public int BaseDamage { get; }
     void Accept(IWeaponVisitor visitor, Attack attack);
     bool IItem.IsWeapon() => true;
     int GetDefenseValue(Player player, AttackType type);

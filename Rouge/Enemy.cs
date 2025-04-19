@@ -20,7 +20,7 @@ public abstract class Enemy
 
 public class Minion : Enemy
 {
-   static Stats stats = new Stats(15, 30, 50, 0, 10, 20 );
+   static Stats stats = new Stats(5, 30, 50, 0, 10, 20 );
 
    public Minion() : base("Minion", stats)
    {
@@ -65,7 +65,7 @@ public class Minion : Enemy
 
 public class Zombie : Enemy
 {
-   static Stats stats = new Stats(50, 5, 100, 0, 10, 5 );
+   static Stats stats = new Stats(3, 5, 100, 0, 10, 5 );
 
    public Zombie() : base("Zombie", stats)
    {
@@ -124,7 +124,7 @@ public class Zombie : Enemy
 
 public class Xenomorph : Enemy
 {
-   static Stats stats = new Stats(100, 30, 200, 10, 10, 10 );
+   static Stats stats = new Stats(10, 30, 200, 10, 10, 10 );
 
    public Xenomorph() : base("Xenomorph", stats)
    {

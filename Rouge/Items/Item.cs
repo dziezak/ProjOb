@@ -29,11 +29,5 @@ namespace Rouge.Items
         public virtual void Subscribe(Player player) { }
         public virtual void Unsubscribe(Player player){}
 
-        public virtual void Accept(IWeaponVisitor visitor, Attack attack)
-        {
-            visitor.VisitOther(this, attack);
-        }
-
-        public virtual int GetAttackForBattle() => 0;
     }
 }

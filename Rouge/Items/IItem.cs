@@ -17,12 +17,12 @@ namespace Rouge.Items
         public bool IsActive(int currentActionCounter);
         bool IsConsumable();
 
-        bool IsWeapon();
         //do potionow
         public void Update(Player player);
         public void Subscribe(Player player);
         public void Unsubscribe(Player player);
         
         // do Visitora:
+        bool IsWeapon();
     }
 }

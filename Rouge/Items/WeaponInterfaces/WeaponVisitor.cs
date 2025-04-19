@@ -5,9 +5,15 @@ public class WeaponVisitor : IWeaponVisitor
     public static WeaponVisitor Instance { get; } = new WeaponVisitor();
     public void VisitMagic(IMagic magicWeapon, Attack attack)
     {
-        //Console.SetCursorPosition(50, 50);
         Console.WriteLine($"[VISITOR] VisitorMagic. Typye: {attack.Type}");
-        attack.Damage = attack.Type == AttackType.Magic ? attack.BaseDamage : 1;
+        if (attack.Type == AttackType.Magic)
+        {
+            attack.Damage = attack.Damage;
+        }
+        else
+        {
+            attack.Damage = 1;
+        }
     }
     public void Visit(IWeapon weapon, Attack attack)
     {
@@ -18,21 +24,29 @@ public class WeaponVisitor : IWeaponVisitor
 
     public void VisitLight(ILight lightWeapon, Attack attack)
     {
-        //Console.SetCursorPosition(50, 50);
         Console.WriteLine("[VISITOR] VisitLight");
-        attack.Damage = attack.Type == AttackType.Stealth ? attack.BaseDamage * 2 : attack.BaseDamage;
+        //attack.Damage = attack.Type == AttackType.Stealth ? attack.BaseDamage * 2 : attack.BaseDamage;
+        if (attack.Type == AttackType.Stealth)
+            attack.Damage = attack.BaseDamage * 2;
+        else if (attack.Type == AttackType.Magic)
+            attack.Damage = 1;
+        else 
+            attack.Damage = attack.BaseDamage;
     }
 
     public void VisitHeavy(IHeavy heavyWeapon, Attack attack)
     {
-        //Console.SetCursorPosition(50, 50);
         Console.WriteLine("[VISITOR] VisitHeavy");
-        attack.Damage = attack.Type == AttackType.Stealth ? attack.BaseDamage / 2 : attack.BaseDamage;
+        if (attack.Type == AttackType.Stealth)
+            attack.Damage = attack.BaseDamage / 2; // Stealth redukuje obrażenia
+        else if (attack.Type == AttackType.Magic)
+            attack.Damage = 1; // Atak magiczny daje minimalne obrażenia
+        else
+            attack.Damage = attack.BaseDamage; // Normalne obrażenia
     }
 
     public void VisitOther(IItem other, Attack attack)
     {
-        //Console.SetCursorPosition(50, 50);
         Console.WriteLine("[VISITOR] VisitOther");
         attack.Damage = 0;
     }

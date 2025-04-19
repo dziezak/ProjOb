@@ -347,11 +347,12 @@ namespace Rouge
                 CurrentEnemyHealth -= totalDamage;
                 
                 GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health, SelectedEnemy.GetName(), false);
+                GameDisplay.Instance?.DisplayLog(0, 50);
                 
-                //GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
+                GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
                 if (CurrentEnemyHealth <= 0)
                 {
-                    //GameDisplay.Instance?.AddLogMessage($"{SelectedEnemy.GetName()} is defeated!");
+                    GameDisplay.Instance?.AddLogMessage($"{SelectedEnemy.GetName()} is defeated!");
                     break;
                 }
 
@@ -388,11 +389,9 @@ namespace Rouge
             Console.WriteLine("\nAvailable Attacks:");
 
             string format = "{0,-15} | Damage: {1,3}";
-            var leftHandWeapon = (IWeapon) this.Inventory?.LeftHand;
-            var rightHandWeapon = (IWeapon) this.Inventory?.RightHand;
+            int leftBase = this.Inventory.LeftHand?.GetAttack() ?? 0;
+            int rightBase = this.Inventory.RightHand?.GetAttack() ?? 0;
 
-            int leftBase = leftHandWeapon?.BaseDamage ?? 0;
-            int rightBase = rightHandWeapon?.BaseDamage ?? 0;
 
             // Tworzymy obiekty ataku, aby Visitor poprawnie obliczył rzeczywiste obrażenia
             Attack normalLeft = new Attack(AttackType.Heavy, leftBase);
@@ -404,18 +403,18 @@ namespace Rouge
 
             // Zastosowanie Visitor dla każdej broni
 
-            if (leftHandWeapon != null)
+            if (this.Inventory?.LeftHand != null)
             {
-                normalLeft.Apply(leftHandWeapon);
-                stealthLeft.Apply(leftHandWeapon);
-                magicLeft.Apply(leftHandWeapon);
+                normalLeft.Apply((IWeapon)this.Inventory.LeftHand);
+                stealthLeft.Apply((IWeapon)this.Inventory.LeftHand);
+                magicLeft.Apply((IWeapon)this.Inventory.LeftHand);
             }
 
-            if (rightHandWeapon != null)
+            if (this.Inventory?.RightHand != null)
             {
-                normalRight.Apply(rightHandWeapon);
-                stealthRight.Apply(rightHandWeapon);
-                magicRight.Apply(rightHandWeapon);
+                normalRight.Apply((IWeapon)this.Inventory.RightHand);
+                stealthRight.Apply((IWeapon)this.Inventory.RightHand);
+                magicRight.Apply((IWeapon)this.Inventory.RightHand);
             }
 
             // Wyświetlenie danych

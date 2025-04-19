@@ -5,7 +5,6 @@ namespace Rouge.Items
     public abstract class Weapon : Item, IWeapon
     {
         public int Damage { get; set; }
-        public int BaseDamage { get; }
 
         protected Weapon(string name, int damage) : base(name)
         {
@@ -17,6 +16,6 @@ namespace Rouge.Items
         {
             throw new NotImplementedException();
         }
-        public override int GetAttackForBattle() => Damage;
+        public override int GetAttack() => Damage;
     }
 }

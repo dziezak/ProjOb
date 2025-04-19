@@ -144,6 +144,9 @@ namespace Rouge
             DropItem(0, 0, GetRandomDecorator(CreateRandomItem()));
             DropItem(0, 0, GetRandomDecorator(GetRandomDecorator( CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
             DropItem(0, 0, new LuckyItemDecorator(new PowerfulItemDecorator(CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
+            DropItem(0, 0, new Sword("Sword", 20));
+            DropItem(0, 0, new Knife("Knife", 20));
+            DropItem(0, 0, new MagicStuff("MagicStuff", 20));
         }
         
         IItem CreateRandomPotion()
