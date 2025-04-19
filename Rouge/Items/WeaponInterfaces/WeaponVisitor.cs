@@ -13,7 +13,6 @@ public class WeaponVisitor : IWeaponVisitor
     }
     public void Visit(IWeapon weapon, Attack attack)
     {
-        //Console.WriteLine($"[VISITOR] Visiting {weapon.GetType().Name}");
         weapon.Accept(this, attack);
     }
 

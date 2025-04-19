@@ -309,7 +309,7 @@ namespace Rouge
             
             GameDisplay.Instance?.RenderBattleUI(this);
             GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
-            //GameDisplay.Instance?.DisplayAvailableString(SelectedEnemy.GetImage(), 0);
+            GameDisplay.Instance?.DisplayAvailableString(SelectedEnemy.GetImage(), 0);
             GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health,SelectedEnemy.GetName(), false);
             GameDisplay.Instance?.DisplayLog(16, 70);
             
@@ -322,8 +322,8 @@ namespace Rouge
                 int baseLeftDamage = this.Inventory.LeftHand?.GetAttack() ?? 0;
                 int baseRightDamage = this.Inventory.RightHand?.GetAttack() ?? 0;
                 
-                Attack attackLeft = new Attack(attackType, baseLeftDamage);
-                Attack attackRight = new Attack(attackType, baseRightDamage);
+                Attack attackLeft = new Attack(attackType, baseLeftDamage, this);
+                Attack attackRight = new Attack(attackType, baseRightDamage, this);
                 
                 if (this.Inventory.RightHand != null)
                 {
@@ -344,7 +344,6 @@ namespace Rouge
                 {
                     //Usun przeciwnika z tego miejsca
                     var key = (SelectedEnemy.Y, SelectedEnemy.X);
-                    //room._enemiesMap.Remove(key);
                     if (room._enemiesMap.ContainsKey(key))
                     {
                         room._enemiesMap.Remove(key);
@@ -354,12 +353,16 @@ namespace Rouge
                     {
                         GameDisplay.Instance?.AddLogMessage($"There is no enemy on {SelectedEnemy.Y}, {SelectedEnemy.X}");
                     }
-                    //room._enemiesMap.Clear();
                     GameDisplay.Instance?.RenderLabirynth(room, this);
                     GameDisplay.Instance?.AddLogMessage($"{SelectedEnemy.GetName()} is defeated!");
                     break;
                 }
 
+                //int playerDefense = CalculateDefense(attackType); // oborna gracza
+                //int enemyAttackDamage = Math.Max(0,  SelectedEnemy.EnemyStats.Attack - playerDefense);
+                int enemyAttackDamage = SelectedEnemy.EnemyStats.Attack;
+                CurrentHealh -= enemyAttackDamage;
+                GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
                 if (CurrentHealh <= 0)
                 {
                     Game.isGameOver = true;
@@ -367,9 +370,6 @@ namespace Rouge
                     break;
                 }
 
-                int enemyAttackDamage = SelectedEnemy.EnemyStats.Attack;
-                CurrentHealh -= enemyAttackDamage;
-                GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
             }
             
             Console.SetCursorPosition(0, Console.CursorTop);
@@ -398,12 +398,12 @@ namespace Rouge
 
 
             // Tworzymy obiekty ataku, aby Visitor poprawnie obliczył rzeczywiste obrażenia
-            Attack normalLeft = new Attack(AttackType.Heavy, leftBase);
-            Attack normalRight = new Attack(AttackType.Heavy, rightBase);
-            Attack stealthLeft = new Attack(AttackType.Stealth, leftBase);
-            Attack stealthRight = new Attack(AttackType.Stealth, rightBase);
-            Attack magicLeft = new Attack(AttackType.Magic, leftBase);
-            Attack magicRight = new Attack(AttackType.Magic, rightBase);
+            Attack normalLeft = new Attack(AttackType.Heavy, leftBase, this);
+            Attack normalRight = new Attack(AttackType.Heavy, rightBase, this);
+            Attack stealthLeft = new Attack(AttackType.Stealth, leftBase, this);
+            Attack stealthRight = new Attack(AttackType.Stealth, rightBase, this);
+            Attack magicLeft = new Attack(AttackType.Magic, leftBase, this);
+            Attack magicRight = new Attack(AttackType.Magic, rightBase, this);
 
             // Zastosowanie Visitor dla każdej broni
 
