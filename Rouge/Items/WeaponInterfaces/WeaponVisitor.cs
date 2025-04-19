@@ -7,13 +7,9 @@ public class WeaponVisitor : IWeaponVisitor
     {
         Console.WriteLine($"[VISITOR] VisitorMagic. Typye: {attack.Type}");
         if (attack.Type == AttackType.Magic)
-        {
-            attack.Damage = attack.Damage;
-        }
+            attack.Damage = attack.BaseDamage;
         else
-        {
             attack.Damage = 1;
-        }
     }
     public void Visit(IWeapon weapon, Attack attack)
     {
@@ -25,7 +21,6 @@ public class WeaponVisitor : IWeaponVisitor
     public void VisitLight(ILight lightWeapon, Attack attack)
     {
         Console.WriteLine("[VISITOR] VisitLight");
-        //attack.Damage = attack.Type == AttackType.Stealth ? attack.BaseDamage * 2 : attack.BaseDamage;
         if (attack.Type == AttackType.Stealth)
             attack.Damage = attack.BaseDamage * 2;
         else if (attack.Type == AttackType.Magic)
