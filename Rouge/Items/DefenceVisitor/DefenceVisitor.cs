@@ -1,13 +1,17 @@
+using System.Reflection.Metadata;
 using Rouge.Items.WeaponInterfaces;
 
 namespace Rouge.Items.DefenceVisitor;
 
 public class DefenseVisitor : IWeaponVisitor
 {
-    private AttackType _attackType;
-    private int _defense;
 
     public static DefenseVisitor Instance { get; } = new DefenseVisitor();
+
+
+    private DefenseVisitor()
+    {
+    }
 
     public void Visit(IWeapon weapon, Attack attack)
     {
@@ -15,54 +19,50 @@ public class DefenseVisitor : IWeaponVisitor
     }
     public void VisitMagic(IMagic magicWeapon, Attack attack)
     {
-        Console.WriteLine($"[VISITOR] VisitMagic Defense. Type: {_attackType}");
+        Console.WriteLine($"[VISITOR] VisitMagic Defense. Type: {attack.Type}");
 
         var stats = attack.Owner.GetCurrentStats();
-        if (_attackType == AttackType.Magic)
-            _defense = stats.Wisdom * 2;
+        if (attack.Type == AttackType.Magic)
+            attack.Defense = stats.Wisdom * 2;
         else
-            _defense = stats.Luck;
+            attack.Defense = stats.Luck;
     }
 
     public void VisitLight(ILight lightWeapon, Attack attack)
     {
-        Console.WriteLine("[VISITOR] VisitLight Defense");
+        //Console.WriteLine("[VISITOR] VisitLight Defense");
         var stats = attack.Owner.GetCurrentStats();
-        if (_attackType == AttackType.Heavy)
-            _defense = stats.Agility + stats.Luck;
-        else if (_attackType == AttackType.Stealth)
-            _defense = stats.Agility;
+        if (attack.Type == AttackType.Heavy)
+            attack.Defense = stats.Agility + stats.Luck;
+        else if (attack.Type == AttackType.Stealth)
+            attack.Defense = stats.Agility;
         else
-            _defense = stats.Luck;
+            attack.Defense = stats.Luck;
     }
 
     public void VisitHeavy(IHeavy heavyWeapon, Attack attack)
     {
-        Console.WriteLine("[VISITOR] VisitHeavy Defense");
+        //Console.WriteLine("[VISITOR] VisitHeavy Defense");
 
         var stats = attack.Owner.GetCurrentStats();
-        if (_attackType == AttackType.Heavy)
-            _defense = stats.Power + stats.Luck;
-        else if (_attackType == AttackType.Stealth)
-            _defense = stats.Power;
+        if (attack.Type == AttackType.Heavy)
+            attack.Defense = stats.Power + stats.Luck;
+        else if (attack.Type == AttackType.Stealth)
+            attack.Defense = stats.Power;
         else
-            _defense = stats.Luck;
+            attack.Defense = stats.Luck;
     }
 
     public void VisitOther(IItem other, Attack attack)
     {
-        Console.WriteLine("[VISITOR] VisitOther Defense");
+        //Console.WriteLine("[VISITOR] VisitOther Defense");
         var stats = attack.Owner.GetCurrentStats();
-        if (_attackType == AttackType.Heavy)
-            _defense = stats.Agility;
-        else if (_attackType == AttackType.Magic)
-            _defense = stats.Luck;
+        if (attack.Type == AttackType.Heavy)
+            attack.Defense = stats.Agility;
+        else if (attack.Type == AttackType.Magic)
+            attack.Defense = stats.Luck;
         else
-            _defense = 0;
+            attack.Defense = 0;
     }
 
-    public int GetDefense()
-    {
-        return _defense;
-    }
 }

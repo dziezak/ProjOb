@@ -311,11 +311,12 @@ namespace Rouge
             GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
             GameDisplay.Instance?.DisplayAvailableString(SelectedEnemy.GetImage(), 0);
             GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health,SelectedEnemy.GetName(), false);
-            GameDisplay.Instance?.DisplayLog(16, 70);
+            GameDisplay.Instance?.DisplayLog(0, 70);
             
             while (CurrentHealh > 0 && CurrentEnemyHealth > 0)
             {
                 DisplayAvailableAttacks();
+                GameDisplay.Instance?.DisplayLog(0, 70);
                 char input = Console.ReadKey(true).KeyChar;
                 AttackType attackType = GetAttackType(input);
 
@@ -338,8 +339,8 @@ namespace Rouge
                 int totalDamage = attackRight.Damage + attackLeft.Damage;
                 CurrentEnemyHealth -= totalDamage;
                 
-                GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health, SelectedEnemy.GetName(), false);
                 GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
+                GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health, SelectedEnemy.GetName(), false);
                 if (CurrentEnemyHealth <= 0)
                 {
                     //Usun przeciwnika z tego miejsca
@@ -347,7 +348,7 @@ namespace Rouge
                     if (room._enemiesMap.ContainsKey(key))
                     {
                         room._enemiesMap.Remove(key);
-                        GameDisplay.Instance?.AddLogMessage("Enemy should be deleted");
+                        //GameDisplay.Instance?.AddLogMessage("Enemy should be deleted");
                     }
                     else
                     {
@@ -358,10 +359,11 @@ namespace Rouge
                     break;
                 }
 
-                //int playerDefense = CalculateDefense(attackType); // oborna gracza
-                //int enemyAttackDamage = Math.Max(0,  SelectedEnemy.EnemyStats.Attack - playerDefense);
-                int enemyAttackDamage = SelectedEnemy.EnemyStats.Attack;
+                int playerDefense = attackLeft.Defense + attackRight.Defense;
+                int enemyAttackDamage = Math.Max(0,  SelectedEnemy.EnemyStats.Power - playerDefense);
+                GameDisplay.Instance?.AddLogMessage($"Player got attacked {SelectedEnemy.EnemyStats.Power}, but blocked {playerDefense} damage!");
                 CurrentHealh -= enemyAttackDamage;
+                //Console.WriteLine($"CurrentHealth = {CurrentHealh}");
                 GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
                 if (CurrentHealh <= 0)
                 {
@@ -392,7 +394,7 @@ namespace Rouge
             Console.SetCursorPosition(30, 30);
             Console.WriteLine("\nAvailable Attacks:");
 
-            string format = "{0,-15} | Damage: {1,3}";
+            string format = "{0,-15} | Damage: {1,3} | Defense: {2, 3}";
             int leftBase = this.Inventory.LeftHand?.GetAttack() ?? 0;
             int rightBase = this.Inventory.RightHand?.GetAttack() ?? 0;
 
@@ -422,9 +424,9 @@ namespace Rouge
             }
 
             // Wyświetlenie danych
-            Console.WriteLine(format, "1 - Normal", normalLeft.Damage + normalRight.Damage);
-            Console.WriteLine(format, "2 - Stealth", stealthLeft.Damage + stealthRight.Damage);
-            Console.WriteLine(format, "3 - Magic", magicLeft.Damage + magicRight.Damage);
+            Console.WriteLine(format, "1 - Normal", normalLeft.Damage + normalRight.Damage, normalLeft.Defense + normalRight.Defense);
+            Console.WriteLine(format, "2 - Stealth", stealthLeft.Damage + stealthRight.Damage, stealthLeft.Defense + stealthRight.Defense);
+            Console.WriteLine(format, "3 - Magic", magicLeft.Damage + magicRight.Damage, magicLeft.Defense + magicRight.Defense);
         }
 
 
