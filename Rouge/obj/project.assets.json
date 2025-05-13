@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Rouge.csproj",
+      "projectUniqueName": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\ProjOb\\Rouge\\Rouge.csproj",
       "projectName": "Rouge",
-      "projectPath": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\Rouge.csproj",
+      "projectPath": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\ProjOb\\Rouge\\Rouge.csproj",
       "packagesPath": "C:\\Users\\korne\\.nuget\\packages\\",
-      "outputPath": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\Rouge\\obj\\",
+      "outputPath": "C:\\dev\\GitHub\\CPP\\Politechnika\\ProjOb\\ProjOb\\Rouge\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

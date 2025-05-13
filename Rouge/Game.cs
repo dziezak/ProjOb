@@ -5,12 +5,13 @@ namespace Rouge
 {
     public class Game
     {
-        private Room _room;
-        private Player _player;
         private string _instruction;
         private string _legend;
         private IActionHandler chain;
-        public static bool isGameOver = false;
+        public GameState gameState;
+        public static bool isGameOver;
+        public int MyPlayerID { get; set; }
+        
         
         
         public Game()
@@ -27,33 +28,46 @@ namespace Rouge
 
             _instruction = instructionBuilder.GetResult();
             _legend = legendBuilder.GetResult();
-            _room = dungeonBuilder.GetResult();
-            _player = new Player(0, 0, 10, 10, 100, 10, 10, 10, 0, 0);
             
-            ChainBuilder chainBuilder = new ChainBuilder(_player, _room);
+            gameState = new GameState(dungeonBuilder.GetResult());
+            
+            gameState.CurrentRoom = dungeonBuilder.GetResult();
+            Player player1 = new Player(0, 0, 10, 10, 100, 10, 10, 10, 10, 0);
+            player1.Id = 1;
+            gameState.AddPlayer(player1);
+            
+            Player player2 = new Player(3, 3, 10, 10, 100, 10, 10, 10, 10, 0);
+            player2.Id = 2;
+            gameState.AddPlayer(player2);
+            
+            MyPlayerID = player1.Id;
+            
+            ChainBuilder chainBuilder = new ChainBuilder(gameState.Players[0], gameState.CurrentRoom);
             director.BuildFilledDungeonWithRooms(chainBuilder);
             chainBuilder.AddHandler(new GuardHandler());
             chain = chainBuilder.GetResult();
         }
         public void Start()
         {
-            isGameOver = false;
+            
+            gameState.IsGameOver = false;
             //Console.Write(_instruction);
-            GameDisplay.Instance?.DisplayAvailableString(_instruction, _room.Width); //instrukcja na starcie
+            GameDisplay.Instance?.DisplayAvailableString(_instruction, gameState.CurrentRoom.Width); //instrukcja na starcie
             Console.ReadKey();
             Console.Clear();
-            GameDisplay.Instance?.DisplayStats(_room, _player, false); 
-            GameDisplay.Instance?.DisplayLog(16, _room.Width);
-            while (!isGameOver)
+            GameDisplay.Instance?.DisplayStats(gameState.CurrentRoom, gameState.Players[0], false); 
+            GameDisplay.Instance?.DisplayLog(16, gameState.CurrentRoom.Width);
+            while (!gameState.IsGameOver)
             {
-                GameDisplay.Instance?.DisplayAvailableString(_legend, _room.Width);
-                GameDisplay.Instance?.RenderLabirynth(_room, _player);
+                if (isGameOver == true) gameState.IsGameOver = true;
+                GameDisplay.Instance?.DisplayAvailableString(_legend, gameState.CurrentRoom.Width);
+                GameDisplay.Instance?.RenderLabirynth(gameState.CurrentRoom, gameState.Players[0]);
                 char key = Console.ReadKey().KeyChar;
                 
-                chain.Handle(key, _room, _player);
+                chain.Handle(key, gameState.CurrentRoom, gameState.Players[0]);
                 if (key == 'v')
                 {
-                    isGameOver = true;
+                    gameState.IsGameOver = true;
                 }
             }
         }
