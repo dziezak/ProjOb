@@ -220,7 +220,7 @@ namespace Rouge
                         var enemy = CreateRandomEnemy();
                         enemy.Y = y;
                         enemy.X = x;
-                        Console.WriteLine($"I created enemy on {enemy.Y}, {enemy.X}");
+                        //Console.WriteLine($"I created enemy on {enemy.Y}, {enemy.X}");
                         _enemiesMap.Add((y, x), enemy);
                     }
                     else

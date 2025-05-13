@@ -1,3 +1,6 @@
+using Rouge.Items;
+using Rouge.Items.WeaponInterfaces;
+
 namespace Rouge;
 public class GameDisplay
 {
@@ -16,17 +19,34 @@ public class GameDisplay
             return _instance;
         }
     }
-    public void RenderLabirynth(Room room, Player player)
+    public void RenderLabirynth(Room room, List<Player> players, int myPlayerID, bool[] isPlayerDead)
     {
         Console.SetCursorPosition(0, 0);
         for (int y = 0; y < room.Height; y++)
         {
             for(int x = 0; x < room.Width; x++)
             {
-                if(x == player.X && y == player.Y)
+                bool isPlayerHere = false;
+                foreach (var player in players)
                 {
-                    Console.Write('¶');
+                    if (player.X == x && player.Y == y)
+                    {
+                        isPlayerHere = true;
+                        if (isPlayerDead[player.Id])
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red; // Wyświetlamy na czerwono
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = (player.Id == myPlayerID) ? ConsoleColor.Green : ConsoleColor.Blue;
+                        }
+                        Console.Write(player.Id.ToString()[0]); // Wyświetlamy ID gracza
+                        Console.ResetColor();
+                        break; // Przerywamy pętlę po znalezieniu gracza
+                    }
                 }
+            
+                if (isPlayerHere) continue;
                 else if (room._enemiesMap.ContainsKey((y,x)))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -347,4 +367,46 @@ public class GameDisplay
         Console.SetCursorPosition(x, y);
         Console.Write(healthBar);
     }
+
+    public void DisplayAvailableAttacks(Player player)
+    {
+        Console.SetCursorPosition(30, 30);
+        Console.WriteLine("\nAvailable Attacks:");
+
+        string format = "{0,-15} | Damage: {1,3} | Defense: {2, 3}";
+        int leftBase = player.Inventory.LeftHand?.GetAttack() ?? 0;
+        int rightBase = player.Inventory.RightHand?.GetAttack() ?? 0;
+
+
+        // Tworzymy obiekty ataku, aby Visitor poprawnie obliczył rzeczywiste obrażenia
+        Attack normalLeft = new Attack(AttackType.Heavy, leftBase, player);
+        Attack normalRight = new Attack(AttackType.Heavy, rightBase, player);
+        Attack stealthLeft = new Attack(AttackType.Stealth, leftBase, player);
+        Attack stealthRight = new Attack(AttackType.Stealth, rightBase, player);
+        Attack magicLeft = new Attack(AttackType.Magic, leftBase, player);
+        Attack magicRight = new Attack(AttackType.Magic, rightBase, player);
+
+        // Zastosowanie Visitor dla każdej broni
+
+        if (player.Inventory?.LeftHand != null)
+        {
+            normalLeft.Apply((IWeapon)player.Inventory.LeftHand);
+            stealthLeft.Apply((IWeapon)player.Inventory.LeftHand);
+            magicLeft.Apply((IWeapon)player.Inventory.LeftHand);
+        }
+
+        if (player.Inventory?.RightHand != null)
+        {
+            normalRight.Apply((IWeapon)player.Inventory.RightHand);
+            stealthRight.Apply((IWeapon)player.Inventory.RightHand);
+            magicRight.Apply((IWeapon)player.Inventory.RightHand);
+        }
+
+        // Wyświetlenie danych
+        Console.WriteLine(format, "1 - Normal", normalLeft.Damage + normalRight.Damage, normalLeft.Defense + normalRight.Defense);
+        Console.WriteLine(format, "2 - Stealth", stealthLeft.Damage + stealthRight.Damage, stealthLeft.Defense + stealthRight.Defense);
+        Console.WriteLine(format, "3 - Magic", magicLeft.Damage + magicRight.Damage, magicLeft.Defense + magicRight.Defense);
+    }
+
+    
 }

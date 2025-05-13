@@ -39,10 +39,10 @@ namespace Rouge
             Player player2 = new Player(3, 3, 10, 10, 100, 10, 10, 10, 10, 0);
             player2.Id = 2;
             gameState.AddPlayer(player2);
+
+            MyPlayerID = player1.Id - 1;
             
-            MyPlayerID = player1.Id;
-            
-            ChainBuilder chainBuilder = new ChainBuilder(gameState.Players[0], gameState.CurrentRoom);
+            ChainBuilder chainBuilder = new ChainBuilder(gameState.Players[MyPlayerID], gameState.CurrentRoom);
             director.BuildFilledDungeonWithRooms(chainBuilder);
             chainBuilder.AddHandler(new GuardHandler());
             chain = chainBuilder.GetResult();
@@ -51,23 +51,31 @@ namespace Rouge
         {
             
             gameState.IsGameOver = false;
-            //Console.Write(_instruction);
             GameDisplay.Instance?.DisplayAvailableString(_instruction, gameState.CurrentRoom.Width); //instrukcja na starcie
             Console.ReadKey();
             Console.Clear();
-            GameDisplay.Instance?.DisplayStats(gameState.CurrentRoom, gameState.Players[0], false); 
+            GameDisplay.Instance?.DisplayStats(gameState.CurrentRoom, gameState.Players[MyPlayerID], false); 
             GameDisplay.Instance?.DisplayLog(16, gameState.CurrentRoom.Width);
-            while (!gameState.IsGameOver)
+            while (!gameState.IsGameOver && !isGameOver)
             {
-                if (isGameOver == true) gameState.IsGameOver = true;
                 GameDisplay.Instance?.DisplayAvailableString(_legend, gameState.CurrentRoom.Width);
-                GameDisplay.Instance?.RenderLabirynth(gameState.CurrentRoom, gameState.Players[0]);
+                GameDisplay.Instance?.RenderLabirynth(gameState.CurrentRoom, gameState.Players, MyPlayerID, gameState.isPlayerDead);
                 char key = Console.ReadKey().KeyChar;
                 
-                chain.Handle(key, gameState.CurrentRoom, gameState.Players[0]);
+                chain.Handle(key, gameState.CurrentRoom, gameState.Players[MyPlayerID]);
                 if (key == 'v')
                 {
                     gameState.IsGameOver = true;
+                }
+                if (gameState.Players.Count == 0)
+                {
+                    gameState.IsGameOver = true;
+                }
+
+                if (isGameOver == true)
+                {
+                    gameState.RemovePlayer(gameState.Players[MyPlayerID]);
+                    gameState.isPlayerDead[MyPlayerID] = true;
                 }
             }
         }

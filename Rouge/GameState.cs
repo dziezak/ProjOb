@@ -6,6 +6,8 @@ public class GameState
     public Room CurrentRoom { get; set; }
     public Queue<int> TurnQueue { get; set; }
     public bool IsGameOver { get; set; }
+    public bool[] isPlayerDead { get; set; }
+    public int maxNumerOfPlayers = 9;
 
     public GameState(Room room)
     {
@@ -13,6 +15,9 @@ public class GameState
         CurrentRoom = room;
         TurnQueue = new Queue<int>();
         IsGameOver = false;
+        isPlayerDead = new bool[maxNumerOfPlayers+1];
+        for(int i=0; i<maxNumerOfPlayers; i++)
+            isPlayerDead[i] = false;
     }
 
     public void AddPlayer(Player player)
@@ -24,6 +29,7 @@ public class GameState
     public void RemovePlayer(Player player)
     {
         Players.Remove(player);
+        isPlayerDead[player.Id] = true;
         TurnQueue = new Queue<int>(TurnQueue.Where(id => id != player.Id));
     }
 

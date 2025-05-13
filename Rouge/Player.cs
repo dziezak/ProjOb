@@ -316,7 +316,7 @@ namespace Rouge
             
             while (CurrentHealh > 0 && CurrentEnemyHealth > 0)
             {
-                DisplayAvailableAttacks();
+                GameDisplay.Instance?.DisplayAvailableAttacks(this);
                 GameDisplay.Instance?.DisplayLog(0, 70);
                 char input = Console.ReadKey(true).KeyChar;
                 AttackType attackType = GetAttackType(input);
@@ -344,18 +344,16 @@ namespace Rouge
                 GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, SelectedEnemy.EnemyStats.Health, SelectedEnemy.GetName(), false);
                 if (CurrentEnemyHealth <= 0)
                 {
-                    //Usun przeciwnika z tego miejsca
                     var key = (SelectedEnemy.Y, SelectedEnemy.X);
                     if (room._enemiesMap.ContainsKey(key))
                     {
                         room._enemiesMap.Remove(key);
-                        //GameDisplay.Instance?.AddLogMessage("Enemy should be deleted");
                     }
                     else
                     {
                         GameDisplay.Instance?.AddLogMessage($"There is no enemy on {SelectedEnemy.Y}, {SelectedEnemy.X}");
                     }
-                    GameDisplay.Instance?.RenderLabirynth(room, this);
+                    //GameDisplay.Instance?.RenderLabirynth(room, this); // tutaj usuniete pytanie czy bylo potrzebne?
                     GameDisplay.Instance?.AddLogMessage($"{SelectedEnemy.GetName()} is defeated!");
                     break;
                 }
@@ -364,7 +362,6 @@ namespace Rouge
                 int enemyAttackDamage = Math.Max(0,  SelectedEnemy.EnemyStats.Power - playerDefense);
                 GameDisplay.Instance?.AddLogMessage($"Player got attacked {SelectedEnemy.EnemyStats.Power}, but blocked {playerDefense} damage!");
                 CurrentHealh -= enemyAttackDamage;
-                //Console.WriteLine($"CurrentHealth = {CurrentHealh}");
                 GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
                 if (CurrentHealh <= 0)
                 {
@@ -390,46 +387,6 @@ namespace Rouge
             };
         }
         
-        private void DisplayAvailableAttacks()
-        {
-            Console.SetCursorPosition(30, 30);
-            Console.WriteLine("\nAvailable Attacks:");
-
-            string format = "{0,-15} | Damage: {1,3} | Defense: {2, 3}";
-            int leftBase = this.Inventory.LeftHand?.GetAttack() ?? 0;
-            int rightBase = this.Inventory.RightHand?.GetAttack() ?? 0;
-
-
-            // Tworzymy obiekty ataku, aby Visitor poprawnie obliczył rzeczywiste obrażenia
-            Attack normalLeft = new Attack(AttackType.Heavy, leftBase, this);
-            Attack normalRight = new Attack(AttackType.Heavy, rightBase, this);
-            Attack stealthLeft = new Attack(AttackType.Stealth, leftBase, this);
-            Attack stealthRight = new Attack(AttackType.Stealth, rightBase, this);
-            Attack magicLeft = new Attack(AttackType.Magic, leftBase, this);
-            Attack magicRight = new Attack(AttackType.Magic, rightBase, this);
-
-            // Zastosowanie Visitor dla każdej broni
-
-            if (this.Inventory?.LeftHand != null)
-            {
-                normalLeft.Apply((IWeapon)this.Inventory.LeftHand);
-                stealthLeft.Apply((IWeapon)this.Inventory.LeftHand);
-                magicLeft.Apply((IWeapon)this.Inventory.LeftHand);
-            }
-
-            if (this.Inventory?.RightHand != null)
-            {
-                normalRight.Apply((IWeapon)this.Inventory.RightHand);
-                stealthRight.Apply((IWeapon)this.Inventory.RightHand);
-                magicRight.Apply((IWeapon)this.Inventory.RightHand);
-            }
-
-            // Wyświetlenie danych
-            Console.WriteLine(format, "1 - Normal", normalLeft.Damage + normalRight.Damage, normalLeft.Defense + normalRight.Defense);
-            Console.WriteLine(format, "2 - Stealth", stealthLeft.Damage + stealthRight.Damage, stealthLeft.Defense + stealthRight.Defense);
-            Console.WriteLine(format, "3 - Magic", magicLeft.Damage + magicRight.Damage, magicLeft.Defense + magicRight.Defense);
-        }
-
 
     }
 
