@@ -407,6 +407,4 @@ public class GameDisplay
         Console.WriteLine(format, "2 - Stealth", stealthLeft.Damage + stealthRight.Damage, stealthLeft.Defense + stealthRight.Defense);
         Console.WriteLine(format, "3 - Magic", magicLeft.Damage + magicRight.Damage, magicLeft.Defense + magicRight.Defense);
     }
-
-    
 }
