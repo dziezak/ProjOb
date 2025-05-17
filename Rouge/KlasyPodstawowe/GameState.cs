@@ -1,35 +1,40 @@
+using Rouge.ActionHandler;
+
 namespace Rouge;
 
 public class GameState
 {
-    public List<Player> Players { get; set; }
+    public Player[] Players { get; set; }
     public Room CurrentRoom { get; set; }
     public Queue<int> TurnQueue { get; set; }
     public bool IsGameOver { get; set; }
-    public bool[] isPlayerDead { get; set; }
-    public int maxNumerOfPlayers = 9;
+    public bool[] IsPlayerDead { get; set; }
+    private const int MaxNumberOfPlayers = 9;
+    public int NumberOfPlayers;
 
     public GameState(Room room)
     {
-        Players = new List<Player>();
+        NumberOfPlayers = 0;
+        Players = new Player[MaxNumberOfPlayers];
         CurrentRoom = room;
         TurnQueue = new Queue<int>();
         IsGameOver = false;
-        isPlayerDead = new bool[maxNumerOfPlayers+1];
-        for(int i=0; i<maxNumerOfPlayers; i++)
-            isPlayerDead[i] = false;
+        IsPlayerDead = new bool[MaxNumberOfPlayers+1];
+        for(int i=0; i<MaxNumberOfPlayers; i++)
+            IsPlayerDead[i] = false;
     }
 
     public void AddPlayer(Player player)
     {
-        Players.Add(player);
+        player.Id = NumberOfPlayers;
+        Players[NumberOfPlayers] = player;
+        NumberOfPlayers++;
         TurnQueue.Enqueue(player.Id);
     }
 
     public void RemovePlayer(Player player)
     {
-        Players.Remove(player);
-        isPlayerDead[player.Id] = true;
+        IsPlayerDead[player.Id] = true;
         TurnQueue = new Queue<int>(TurnQueue.Where(id => id != player.Id));
     }
 

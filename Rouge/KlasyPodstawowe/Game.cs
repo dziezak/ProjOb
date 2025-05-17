@@ -1,4 +1,4 @@
-﻿using Rouge.ActionHandler;
+﻿/*using Rouge.ActionHandler;
 using Rouge.ActionHandler.Handlers;
 
 namespace Rouge
@@ -59,7 +59,7 @@ namespace Rouge
             while (!gameState.IsGameOver && !isGameOver)
             {
                 GameDisplay.Instance?.DisplayAvailableString(_legend, gameState.CurrentRoom.Width);
-                GameDisplay.Instance?.RenderLabirynth(gameState.CurrentRoom, gameState.Players, MyPlayerID, gameState.isPlayerDead);
+                GameDisplay.Instance?.RenderLabirynth(gameState.CurrentRoom, gameState.Players, MyPlayerID, gameState.IsPlayerDead);
                 char key = Console.ReadKey().KeyChar;
                 
                 chain.Handle(key, gameState.CurrentRoom, gameState.Players[MyPlayerID]);
@@ -75,9 +75,9 @@ namespace Rouge
                 if (isGameOver == true)
                 {
                     gameState.RemovePlayer(gameState.Players[MyPlayerID]);
-                    gameState.isPlayerDead[MyPlayerID] = true;
+                    gameState.IsPlayerDead[MyPlayerID] = true;
                 }
             }
         }
     }
-}
+}*/

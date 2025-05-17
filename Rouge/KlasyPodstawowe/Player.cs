@@ -299,6 +299,7 @@ namespace Rouge
         public int CurrentHealh;
         public int CurrentEnemyHealth;
 
+        /*
         public void Fight(Room room)
         {
             Console.Clear();
@@ -365,7 +366,7 @@ namespace Rouge
                 GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
                 if (CurrentHealh <= 0)
                 {
-                    Game.isGameOver = true;
+                    gameState.IsGameOver = true;
                     GameDisplay.Instance?.GameOverDisplay();
                     break;
                 }
@@ -386,6 +387,7 @@ namespace Rouge
                 _ => AttackType.Heavy
             };
         }
+        */
         
 
     }

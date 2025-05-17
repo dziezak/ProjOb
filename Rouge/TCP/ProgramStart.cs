@@ -22,11 +22,7 @@ static class Program
                 string address = args.Length > 1 ? args[1] : "127.0.0.1";
                 int port = args.Length > 2 ? int.Parse(args[2]) : 5555;
                 GameClient client = new GameClient(address, port);
-                client.StartListening();
-
-                // Teraz uruchamiamy grę na kliencie
-                Game game = new Game(client);
-                game.Start();
+                client.Start();
             }
         }
         else
@@ -34,13 +30,11 @@ static class Program
             Console.WriteLine("Start as (S)erver or (C)lient?");
             char mode = Console.ReadKey().KeyChar;
             Console.Clear();
-            if (mode == 'S') new GameServer(5555).Start();
-            else if (mode == 'C')
+            if (mode == 's') new GameServer(5555).Start();
+            else if (mode == 'c')
             {
                 GameClient client = new GameClient("127.0.0.1", 5555);
-                client.StartListening();
-                Game game = new Game(client);
-                game.Start();
+                client.Start();
             }
             else Console.WriteLine("Invalid choice.");
         }

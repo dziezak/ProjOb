@@ -16,7 +16,7 @@ public class ChooseEnemyHandler : ActionHandlerBase
                 GameDisplay.Instance?.AddLogMessage($"Witcher decided to fight {selectedEnemy.GetName()}");
                 player.SelectedEnemy = selectedEnemy;
                 player.IsSelectingEnemies = false;
-                player.Fight(room); 
+                //player.Fight(room); 
             }
             else
             {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Rouge
+/*namespace Rouge
 {
     internal class Program
     {
@@ -17,4 +17,4 @@ namespace Rouge
             game.Start();
         }
     }
-}
+}*/

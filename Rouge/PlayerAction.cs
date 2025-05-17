@@ -7,15 +7,15 @@ public class PlayerAction
     public int PlayerId { get; set; }
 
     [JsonPropertyName("type")]
-    public string Type { get; set; } // "Move", "Attack", "PickUpItem", 
+    public char Type { get; set; } //'a', 'w', 'p', itd.
 
     [JsonPropertyName("number")]
-    public int? Number { get; set; } // Jeśli akcja to "Move"
+    public int? Number { get; set; } // dodatkowa obsluga
 
     [JsonPropertyName("targetId")]
-    public int? TargetId { get; set; } // Jeśli akcja to "Attack"
+    public int? TargetId { get; set; } // Jeśli akcja to "Attack" w przyszlosci dla atakowania jakiegos gracza
 
-    public PlayerAction(int playerId, string type, int? number = null, int? targetId = null)
+    public PlayerAction(int playerId, char type, int? number = null, int? targetId = null)
     {
         PlayerId = playerId;
         Type = type;
