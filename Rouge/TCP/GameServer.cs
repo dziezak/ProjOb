@@ -85,7 +85,7 @@ public class GameServer
             if (read == 0) break;
 
             string patrialMessage = Encoding.UTF8.GetString(buffer, 0, read);
-            Console.WriteLine($"Raw recived data: {patrialMessage}");
+            //Console.WriteLine($"Raw recived data: {patrialMessage}"); // nie ma co wyswietlac bo nieczytalne
             recivedMessage.Append(patrialMessage);
 
             if (patrialMessage.Contains("\n"))
@@ -140,7 +140,7 @@ public class GameServer
     
     private void BroadcastGameState()
     {
-        string json = JsonSerializer.Serialize(_gameState);
+        string json = JsonSerializer.Serialize(_gameState) + "\n";
         byte[] data = Encoding.UTF8.GetBytes(json);
         foreach (var client in _clients)
         {

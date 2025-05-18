@@ -50,16 +50,38 @@ public class GameClient
     private void ListenForUpdates()
     {
         byte[] buffer = new byte[1024];
+        StringBuilder receivedMessage = new StringBuilder();
         
         while (!GameState.IsGameOver)
         {
+            Console.WriteLine("Waiting for game update...");
             int read = _stream.Read(buffer, 0, buffer.Length);
             if (read <= 0) continue;
 
-            string message = Encoding.UTF8.GetString(buffer, 0, read);
-            GameState = JsonSerializer.Deserialize<GameState>(message);
+            string partialMessage = Encoding.UTF8.GetString(buffer, 0, read);
+            receivedMessage.Append(partialMessage);
+
+            if (partialMessage.Contains("\n"))
+            {
+                string fullMessage = receivedMessage.ToString().Trim();
+                receivedMessage.Clear();
+
+                try
+                {
+                    GameState = JsonSerializer.Deserialize<GameState>(fullMessage);
+                    Console.Clear();
+
+                    GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
+                    GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
+                    GameDisplay.Instance?.DisplayLog(16, GameState.CurrentRoom.Width);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error message{ex.Message}");
+                }
+            }
         }
-        //_client.Close();
+        _client.Close();
     }
 
     public void HandleClient()

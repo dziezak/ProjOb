@@ -28,6 +28,6 @@ namespace Rouge.Items
         public virtual void Update(Player player){}
         public virtual void Subscribe(Player player) { }
         public virtual void Unsubscribe(Player player){}
-
+        public string typeToSerialize = "";
     }
 }

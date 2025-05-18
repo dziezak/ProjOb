@@ -9,6 +9,7 @@ namespace Rouge.Items
         protected Weapon(string name, int damage) : base(name)
         {
             Damage = damage;
+            typeToSerialize = "Weapon";
         }
 
         public abstract void Accept(IWeaponVisitor visitor, Attack attack);

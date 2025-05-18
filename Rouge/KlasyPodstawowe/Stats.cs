@@ -1,13 +1,26 @@
+using System.Text.Json.Serialization;
+
 namespace Rouge;
 
 public struct Stats
 {
-    public int Power { get; set; }  // Siła
-    public int Agility { get; set; }  // Zręczność
-    public int Health { get; set; }  // Wytrzymałość
-    public int Luck { get; set; }  // Szczęście
-    public int Attack { get; set; }  // Atak
-    public int Wisdom { get; set; }  // Mądrość
+    [JsonPropertyName("power")]
+    public int Power { get; set; }
+
+    [JsonPropertyName("agility")]
+    public int Agility { get; set; }
+
+    [JsonPropertyName("health")]
+    public int Health { get; set; }
+
+    [JsonPropertyName("luck")]
+    public int Luck { get; set; }
+
+    [JsonPropertyName("attack")]
+    public int Attack { get; set; }
+
+    [JsonPropertyName("wisdom")]
+    public int Wisdom { get; set; } 
 
     public Stats(int power, int agility, int health, int luck, int attack, int wisdom)
     {

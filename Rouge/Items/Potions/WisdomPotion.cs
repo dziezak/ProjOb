@@ -2,7 +2,10 @@ namespace Rouge;
 
 internal class WisdomPotion : Potion
 {
-    public WisdomPotion() : base("WisdomPotion", 1, new Stats(0, 0, 0, 0, 0, 20)) { }
+    public WisdomPotion() : base("WisdomPotion", 1, new Stats(0, 0, 0, 0, 0, 20))
+    {
+        typeToSerialize = "WisdomPotion";
+    }
 
     public override void ApplyEffect(Player player)
     {

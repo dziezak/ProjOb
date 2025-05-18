@@ -1,16 +1,24 @@
 using Rouge.ActionHandler;
-
+using System.Text.Json.Serialization;
 namespace Rouge;
 
 public class GameState
 {
+    
+    [JsonPropertyName("Players")]
     public Player[] Players { get; set; }
+    [JsonPropertyName("CurrentRoom")]
     public Room CurrentRoom { get; set; }
+    [JsonPropertyName("TurnQueue")]
     public Queue<int> TurnQueue { get; set; }
+    [JsonPropertyName("IsGameOver")]
     public bool IsGameOver { get; set; }
+    [JsonPropertyName("IsPlayerDead")]
     public bool[] IsPlayerDead { get; set; }
-    private const int MaxNumberOfPlayers = 9;
-    public int NumberOfPlayers;
+    [JsonPropertyName("NumberOfPlayers")]
+    public int NumberOfPlayers {get; set; }
+    
+    private static readonly int MaxNumberOfPlayers = 9;
 
     public GameState(Room room)
     {
@@ -20,6 +28,19 @@ public class GameState
         TurnQueue = new Queue<int>();
         IsGameOver = false;
         IsPlayerDead = new bool[MaxNumberOfPlayers+1];
+        for(int i=0; i<MaxNumberOfPlayers; i++)
+            IsPlayerDead[i] = false;
+    }
+
+    public GameState()
+    {
+        NumberOfPlayers = 0;
+        Players = new Player[MaxNumberOfPlayers];
+        CurrentRoom = new Room(40, 30);
+        TurnQueue = new Queue<int>();
+        IsGameOver = false; 
+        IsPlayerDead = new bool[MaxNumberOfPlayers];
+        
         for(int i=0; i<MaxNumberOfPlayers; i++)
             IsPlayerDead[i] = false;
     }

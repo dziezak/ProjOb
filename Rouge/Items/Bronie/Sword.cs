@@ -12,6 +12,7 @@ namespace Rouge.Items.Bronie
         public Sword(string name, int damage) : base(name, damage)
         {
             name = "Sword";
+            typeToSerialize = "Sword";
         }
         public override void Accept(IWeaponVisitor visitor, Attack attack)
         {

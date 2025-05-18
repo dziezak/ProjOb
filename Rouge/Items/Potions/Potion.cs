@@ -12,6 +12,7 @@ internal class Potion: Item
     {
         Duration = duration;
         EffectStats = effectStats;
+        typeToSerialize = "Potion";
     }
 
     public override Stats GetBuff() => EffectStats;

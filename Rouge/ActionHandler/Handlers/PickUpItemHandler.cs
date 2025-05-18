@@ -13,14 +13,14 @@ public class PickUpItemHandler:ActionHandlerBase
             if (items == null || items.Count == 0)
             {
                 player.WarningMessage = "No items to pick up at this position.";
-                GameDisplay.Instance?.DisplayStats(room, player, false);
+                //GameDisplay.Instance?.DisplayStats(room, player, false);
             }
             else
             {
                 player.lastCharacter = 'p';
                 player.WarningMessage = "There are some items to pick up at this position.";
-                GameDisplay.Instance?.DisplayMovementInformation("pick number of item to pick up", room);
-                UpdateUI(room, player);
+                //GameDisplay.Instance?.DisplayMovementInformation("pick number of item to pick up", room);
+                //UpdateUI(room, player);
             }
         }
         else

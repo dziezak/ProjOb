@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Rouge.Items;
 using Rouge.Items.WeaponInterfaces;
@@ -13,27 +14,58 @@ namespace Rouge
 {
     public class Player
     {
+        [JsonPropertyName("id")]
         public int Id { get; set; }
-        public int X {  get; set; }
-        public int Y {  get; set; }
+
+        [JsonPropertyName("x")]
+        public int X { get; set; }
+
+        [JsonPropertyName("y")]
+        public int Y { get; set; }
+
+        [JsonPropertyName("inventory")]
         public Inventory Inventory { get; set; }
 
+        [JsonPropertyName("baseStats")]
         public Stats BaseStats { get; set; }
+
+        /*
+        [JsonPropertyName("appliedStats")]
         public Stats AppliedStats { get; set; }
-        public List<IItem> AppliedPotions = new List<IItem>();
-        public int Coins {  get; set; }
+        */
+
+        [JsonPropertyName("appliedPotions")]
+        [JsonConverter(typeof(ItemDecoratorConverter))]
+        public List<IItem> AppliedPotions { get; set; } = new List<IItem>();
+
+        [JsonPropertyName("coins")]
+        public int Coins { get; set; }
+
+        [JsonPropertyName("gold")]
         public int Gold { get; set; }
 
-        public List<IItem> ItemsToGetFromRoom = new List<IItem>();
+        [JsonPropertyName("itemsToGetFromRoom")]
+        [JsonConverter(typeof(ItemDecoratorConverter))]
+        public List<IItem> ItemsToGetFromRoom { get; set; } = new List<IItem>();
+
+        [JsonPropertyName("warningMessage")]
+        public string WarningMessage { get; set; } = "";
+
+        [JsonPropertyName("logMessage")]
+        public string LogMessage { get; set; } = "";
+
+        [JsonPropertyName("lastCharacter")]
+        public char lastCharacter { get; set; } = ' ';
+
+        [JsonPropertyName("isSelectingEnemies")]
+        public bool IsSelectingEnemies { get; set; } = false;
+
+        [JsonPropertyName("selectedEnemy")]
+        public Enemy SelectedEnemy { get; set; } = null;
+        
         public ConsoleKeyInfo _itemToPickUp;
         ConsoleKeyInfo _itemToDrop;
         int _handItem;
-        public string WarningMessage = "";
-        public string LogMessage = "";
-        public char lastCharacter = ' ';
-        public bool IsSelectingEnemies = false;
-        public Enemy SelectedEnemy = null;
-
 
         public Player(int x, int y, int p, int a, int h, int l, int attack, int w, int coins, int gold)
         {

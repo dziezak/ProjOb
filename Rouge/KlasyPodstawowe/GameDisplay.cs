@@ -19,8 +19,11 @@ public class GameDisplay
             return _instance;
         }
     }
-    public void RenderLabirynth(Room room, List<Player> players, int myPlayerID, bool[] isPlayerDead)
+    public void RenderLabirynth(GameState gameState, int myPlayerID)//Room room, List<Player> players, int myPlayerID, bool[] isPlayerDead)
     {
+        Room room = gameState.CurrentRoom;
+        List<Player> players = gameState.Players.ToList();
+        bool[] isPlayerDead = gameState.IsPlayerDead;
         Console.SetCursorPosition(0, 0);
         for (int y = 0; y < room.Height; y++)
         {

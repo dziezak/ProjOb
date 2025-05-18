@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Rouge.Items;
 
@@ -9,8 +10,14 @@ namespace Rouge
 {
     public class Inventory
     {
+        [JsonPropertyName("Items")]
+        [JsonConverter(typeof(ItemDecoratorConverter))]
         public List<IItem> Items;
+        [JsonPropertyName("LeftHand")]
+        [JsonConverter(typeof(ItemDecoratorConverter))]
         public IItem? LeftHand { get; set; }
+        [JsonPropertyName("RightHand")]
+        [JsonConverter(typeof(ItemDecoratorConverter))]
         public IItem? RightHand { get; set; }
 
         public Inventory()

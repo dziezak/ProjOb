@@ -9,7 +9,10 @@ namespace Rouge.Items.Bronie
 {
     internal class MagicStuff: Weapon, IMagic
     {
-        public MagicStuff(string name, int damage) : base("MagicStuff", damage){}
+        public MagicStuff(string name, int damage) : base("MagicStuff", damage)
+        {
+            typeToSerialize = "MagicStuff";
+        }
 
         public override void Accept(IWeaponVisitor visitor, Attack attack)
         {

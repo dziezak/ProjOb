@@ -2,7 +2,10 @@ namespace Rouge;
 
 internal class LuckyPotion : Potion
 {
-    public LuckyPotion() : base("LuckyPotion", 5, new Stats(0, 0, 0, 2, 0, 0)) { }
+    public LuckyPotion() : base("LuckyPotion", 5, new Stats(0, 0, 0, 2, 0, 0))
+    {
+        typeToSerialize = "LuckyPotion";
+    }
 
     public override void ApplyEffect(Player player)
     {
