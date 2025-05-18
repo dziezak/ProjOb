@@ -23,32 +23,43 @@ public class GameClient
 
     public void Start()
     {
-        Task.Run(() => ListenForUpdates());
-        Task.Run(() => HandleClient());
+        RecivePlayerId();
+        
+        Task listenTask = Task.Run(() => ListenForUpdates());
+        Task handleTask = Task.Run(() => HandleClient());
+        
+        Task.WaitAll(listenTask, handleTask);
+        Console.WriteLine("Game has finished.");
+    }
+
+    private void RecivePlayerId()
+    {
+        byte[] bytes = new byte[1024];
+        
+        int preRead = _stream.Read(bytes, 0, bytes.Length);
+        string idString = Encoding.UTF8.GetString(bytes, 0, preRead).Trim();
+
+        if (!int.TryParse(idString, out _playerId))
+        {
+            Console.WriteLine("Error: Could not parse player ID ");
+            return;
+        }
+        Console.WriteLine($"Player {_playerId} has been received");
     }
 
     private void ListenForUpdates()
     {
         byte[] buffer = new byte[1024];
-    
-        int preRead = _stream.Read(buffer, 0, buffer.Length);
-        string idString = Encoding.UTF8.GetString(buffer, 0, preRead).Trim();
-
-        if (!int.TryParse(idString, out _playerId))
-        {
-            Console.WriteLine("Error: Could not parse player ID.");
-            return;
-        }
-        Console.WriteLine($"Received player ID: {_playerId}");
-        while (true)
+        
+        while (!GameState.IsGameOver)
         {
             int read = _stream.Read(buffer, 0, buffer.Length);
-            if (read == 0) break; // handle exception
+            if (read <= 0) continue;
 
             string message = Encoding.UTF8.GetString(buffer, 0, read);
             GameState = JsonSerializer.Deserialize<GameState>(message);
         }
-        _client.Close();
+        //_client.Close();
     }
 
     public void HandleClient()
@@ -57,6 +68,7 @@ public class GameClient
         {
             //GameDisplay.Instance?.DisplayAvailableString(_legend, gameState.CurrentRoom.Width);
             //GameDisplay.Instance?.RenderLabirynth(gameState.CurrentRoom, gameState.Players, MyPlayerID, gameState.IsPlayerDead);
+            Console.WriteLine("Dear player please enter smth:");
             char key = Console.ReadKey().KeyChar;
             
             //chain.Handle(key, gameState.CurrentRoom, gameState.Players[MyPlayerID]);
@@ -70,9 +82,12 @@ public class GameClient
     }
     public void SendPlayerAction(PlayerAction action)
     {
-        string json = JsonSerializer.Serialize(action);
+        string json = JsonSerializer.Serialize(action) + "\n";
+        Console.WriteLine("sending JSON: " + json);
         byte[] data = Encoding.UTF8.GetBytes(json);
-        _stream.Write(data);
+        
+        _stream.Write(data, 0, data.Length);
+        _stream.Flush(); // nie wiem czy potrzebne
     }
 }
 

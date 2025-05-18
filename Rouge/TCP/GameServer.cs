@@ -64,34 +64,58 @@ public class GameServer
         //TODO tutuaj jeszcze trzeba podac miejsce dla ludzi aby sie pojawiali w dobrych miejscach
         Player player = new Player(0, _gameState.NumberOfPlayers, 10, 10, 100, 10, 10, 10, 10, 0);
         _gameState.AddPlayer(player);
+        
         ChainBuilder chainBuilder = new ChainBuilder(_gameState.Players[player.Id], _gameState.CurrentRoom);
         director.BuildFilledDungeonWithRooms(chainBuilder);
         chainBuilder.AddHandler(new GuardHandler());
         IActionHandler chain = chainBuilder.GetResult();
+        
         NetworkStream stream = client.GetStream();
         byte[] buffer = new byte[1024];
-        buffer = Encoding.ASCII.GetBytes(player.Id.ToString());
+        
+        buffer = Encoding.ASCII.GetBytes(player.Id.ToString() + "\n");
         stream.Write(buffer, 0, buffer.Length); // wysylamy na starcie ID jakie dostaje jako gracz nasz klient
+        stream.Flush(); // Czy potrzebne?
+        
+        StringBuilder recivedMessage = new StringBuilder();
 
         while (true)
         {
             int read = stream.Read(buffer, 0, buffer.Length);
             if (read == 0) break;
 
-            string message = Encoding.UTF8.GetString(buffer, 0, read);
-            Console.WriteLine($"Received action: {message}, form player {player.Id}");
+            string patrialMessage = Encoding.UTF8.GetString(buffer, 0, read);
+            Console.WriteLine($"Raw recived data: {patrialMessage}");
+            recivedMessage.Append(patrialMessage);
 
-            ProcessPlayerAction(chain, message);
-            BroadcastGameState();
+            if (patrialMessage.Contains("\n"))
+            {
+                string fullMessage = recivedMessage.ToString().Trim();
+                recivedMessage.Clear();
+
+                Console.WriteLine($"Full recived data before parsing: {fullMessage}");
+                
+                try
+                {
+                    PlayerAction action = JsonSerializer.Deserialize<PlayerAction>(fullMessage);
+                    Console.WriteLine($"Received action: {action.Type}, form player {player.Id}");
+
+                    ProcessPlayerAction(chain, action);
+                    BroadcastGameState();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exception here: {ex.Message}");
+                }
+            }
         }
 
         client.Close();
         _clients.Remove(client);
     }
 
-    private void ProcessPlayerAction(IActionHandler chain, string jsonAction)
+    private void ProcessPlayerAction(IActionHandler chain, PlayerAction action)
     {
-        PlayerAction action = JsonSerializer.Deserialize<PlayerAction>(jsonAction);
         Player player = _gameState.Players.FirstOrDefault(p => p.Id == action.PlayerId);
     
         if (player == null) return;

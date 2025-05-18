@@ -23,11 +23,13 @@ public class ActionHandlerBase : IActionHandler
     public static void UpdateUI(Room room, Player player)
     {
         player.ItemsToGetFromRoom = room.GetItemsAt(player.X, player.Y);
-        player.ShowStats(room, player);
         player.WarningMessage = "";
+       /* 
+        player.ShowStats(room, player);
         if (player.LogMessage.Length > 0)
             GameDisplay.Instance?.AddLogMessage(player.LogMessage);
         GameDisplay.Instance?.DisplayLog(16, room.Width);
+        */
         player.LogMessage = "";
         
     }

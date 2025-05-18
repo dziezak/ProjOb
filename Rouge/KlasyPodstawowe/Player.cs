@@ -299,6 +299,7 @@ namespace Rouge
         public int CurrentHealh;
         public int CurrentEnemyHealth;
 
+        //TODO przeniesc do Controlera
         /*
         public void Fight(Room room)
         {
