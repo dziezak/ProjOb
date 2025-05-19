@@ -16,7 +16,8 @@ public class ItemDecoratorConverter : JsonConverter<IItem>
         {
             string itemName = baseItem.GetName();
 
-            return itemName.StartsWith("Lucky_") ? new LuckyItemDecorator(baseItem) :
+            return 
+                itemName.StartsWith("Lucky_") ? new LuckyItemDecorator(baseItem) :
                 itemName.StartsWith("Powerful_") ? new PowerfulItemDecorator(baseItem) :
                 itemName.StartsWith("Pityful_") ? new PitifulItemDecorator(baseItem) :
                 itemName.StartsWith("Heavy_") ? new HeavyItemDecorator(baseItem) :

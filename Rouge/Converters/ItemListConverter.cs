@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Rouge.Items;
+
+namespace Rouge;
 
 public class ItemListConverter : JsonConverter<List<IItem>>
 {
@@ -14,9 +14,8 @@ public class ItemListConverter : JsonConverter<List<IItem>>
         foreach (var itemElement in items)
         {
             string itemJson = itemElement.GetRawText();
-            result.Add(ItemFactory.DeserializeItem(itemJson)); // 📌 Używamy `ItemFactory`
+            result.Add(ItemFactory.DeserializeItem(itemJson)); // ItemFactory
         }
-
         return result;
     }
 

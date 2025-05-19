@@ -68,7 +68,7 @@ public class GameDisplay
                 }
                 else
                 {
-                    Console.Write(room._grid[y, x]);
+                    Console.Write(room._grid[y][x]);
                 }
             } 
             Console.WriteLine();

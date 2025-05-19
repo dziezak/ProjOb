@@ -5,7 +5,7 @@ public abstract class Enemy
    public string Name { get; set; }
    public Stats EnemyStats { get; set; }
    public virtual string GetName() => Name;
-   public virtual string Image { get; set; }
+   public string Image { get; set; }
    public int X { get; set; }
    public int Y { get; set; }
 
@@ -14,6 +14,7 @@ public abstract class Enemy
       Name = name;
       EnemyStats = stats;
    }
+   public Enemy(){}
 
    public abstract Stats GetStats();
    public abstract int GetDefense();

@@ -4,32 +4,73 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Rouge
 {
     public class Room
     {
-        public int Width, Height;
-        public char[,] _grid;
+        [JsonPropertyName("Width")]
+        public int Width;
+        
+        [JsonPropertyName("Height")]
+        public int Height;
+        
+        [JsonPropertyName("grid")]
+        public char[][] _grid; //TODO jak to zmienic poprawnie?
+        
+        [JsonPropertyName("ItemMap")]
+        [JsonConverter(typeof(ItemMapConverter))]
         public Dictionary<(int, int), List<IItem>> _itemMap;
-        private Random _random = new Random();  
+        
+        [JsonPropertyName("EnemiesMap")]
+        [JsonConverter(typeof(EnemyMapConverter))]
         public Dictionary<(int, int), Enemy> _enemiesMap;
 
+        private Random _random = new Random();  
         public Room(int width, int height)
         {
             this.Width = width;
             this.Height = height;
+
             _enemiesMap = new Dictionary<(int, int), Enemy>();
-            _grid = new char[height, width];
             _itemMap = new Dictionary<(int, int), List<IItem>>();
+
+            _grid = new char[height][];
+            for (int y = 0; y < height; y++)
+            {
+                _grid[y] = new char[width];
+                for (int x = 0; x < width; x++)
+                {
+                    _grid[y][x] = ' '; 
+                }
+            }
+        }
+
+        public Room()
+        {
+            this.Width = 40;
+            this.Height = 30;
+            _enemiesMap = new Dictionary<(int, int), Enemy>();
+            _itemMap = new Dictionary<(int, int), List<IItem>>();
+            
+            _grid = new char[Height][];
+            for (int y = 0; y < Height; y++)
+            {
+                _grid[y] = new char[Width];
+                for (int x = 0; x < Width; x++)
+                {
+                    _grid[y][x] = ' ';
+                }
+            }
         }
 
         public void SetGridElement(int y, int x, char value)
         {
             if (x >= 0 && y >= 0 && x < Width && y < Height)
             {
-                _grid[y, x] = value;
+                _grid[y][x] = value;
             }
         }
 
@@ -37,7 +78,7 @@ namespace Rouge
         {
             if (x >= 0 && y >= 0 && x < Width && y < Height)
             {
-                return  _grid[y, x];
+                return  _grid[y][x];
             }
             return '█';
         }
@@ -61,7 +102,7 @@ namespace Rouge
                     item = new Currency("Coin", randomValue);
                 }
 
-                if (_grid[y, x] == ' ')
+                if (_grid[y][x] == ' ')
                     DropItem(x, y, item);
                 else
                     i--;
@@ -123,7 +164,7 @@ namespace Rouge
             {
                 int x = _random.Next(0, Width);
                 int y = _random.Next(0, Height);
-                if (_grid[y, x] == ' ')
+                if (_grid[y][x] == ' ')
                     DropItem(x, y, CreateRandomItem());
                 else
                     i--;
@@ -136,7 +177,7 @@ namespace Rouge
             {
                 int x = _random.Next(0, Width);
                 int y = _random.Next(0, Height);
-                if(_grid[y, x] == ' ')
+                if(_grid[y][x] == ' ')
                     DropItem(x, y, GetRandomDecorator(CreateRandomItem()));
             }
             //HardCode to help Player
@@ -144,9 +185,9 @@ namespace Rouge
             DropItem(0, 0, GetRandomDecorator(CreateRandomItem()));
             DropItem(0, 0, GetRandomDecorator(GetRandomDecorator( CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
             DropItem(0, 0, new LuckyItemDecorator(new PowerfulItemDecorator(CreateRandomItem()))); // tworzymy podwojnie udekorowany przedmiot
-            DropItem(0, 0, new Sword("Sword", 20));
-            DropItem(0, 0, new Knife("Knife", 20));
-            DropItem(0, 0, new MagicStuff("MagicStuff", 20));
+            //DropItem(0, 0, new Sword("Sword", 20));
+            //DropItem(0, 0, new Knife("Knife", 20));
+            //DropItem(0, 0, new MagicStuff("MagicStuff", 20));
         }
         
         IItem CreateRandomPotion()
@@ -182,7 +223,7 @@ namespace Rouge
            {
               int x = _random.Next(0, Width);
               int y = _random.Next(0, Height);
-              if (_grid[y, x] == ' ')
+              if (_grid[y][x] == ' ')
                   DropItem(x, y, CreateRandomPotion());
               else --i;
            }
@@ -214,7 +255,7 @@ namespace Rouge
             {
                 int x = _random.Next(0, Width);
                 int y = _random.Next(0, Height);
-                if (_grid[y, x] == ' ')
+                if (_grid[y][x] == ' ')
                     if (!_enemiesMap.ContainsKey((y, x)))
                     {
                         var enemy = CreateRandomEnemy();
@@ -247,7 +288,7 @@ namespace Rouge
             {
                 return false;
             }
-            if (_grid[y, x] == '█')
+            if (_grid[y][x] == '█')
             {
                 return false;
             }

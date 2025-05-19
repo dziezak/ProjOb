@@ -35,7 +35,7 @@ namespace Rouge
         */
 
         [JsonPropertyName("appliedPotions")]
-        [JsonConverter(typeof(ItemDecoratorConverter))]
+        [JsonConverter(typeof(ItemListConverter))]
         public List<IItem> AppliedPotions { get; set; } = new List<IItem>();
 
         [JsonPropertyName("coins")]
@@ -45,7 +45,7 @@ namespace Rouge
         public int Gold { get; set; }
 
         [JsonPropertyName("itemsToGetFromRoom")]
-        [JsonConverter(typeof(ItemDecoratorConverter))]
+        [JsonConverter(typeof(ItemListConverter))]
         public List<IItem> ItemsToGetFromRoom { get; set; } = new List<IItem>();
 
         [JsonPropertyName("warningMessage")]
