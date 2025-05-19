@@ -13,20 +13,38 @@ public static class ItemFactory
         { "Heavy_", item => new HeavyItemDecorator(item) },
         { "Useless_", item => new UselessItemDecorator(item) }
     };
-
+    
     public static IItem DeserializeItem(string json)
     {
-        IItem baseItem = JsonSerializer.Deserialize<IItem>(json);
-
-        // 📌 Sprawdzamy, czy przedmiot jest dekorowany
-        foreach (var decorator in ItemDecorators)
+        try
         {
-            if (baseItem.GetName().StartsWith(decorator.Key))
+            var jsonObject = JsonDocument.Parse(json).RootElement;
+
+            // 📌 Pobieramy nazwę przedmiotu, aby ustalić jego typ
+            if (jsonObject.TryGetProperty("name", out var nameElement))
             {
-                return decorator.Value(baseItem); // 📌 Tworzymy odpowiedni dekorator
+                string itemName = nameElement.GetString() ?? "";
+
+                // 📌 Sprawdzamy, czy przedmiot pasuje do dekoratora
+                foreach (var decorator in ItemDecorators)
+                {
+                    if (itemName.StartsWith(decorator.Key))
+                    {
+                        var baseItem = JsonSerializer.Deserialize<IItem>(json);
+                        return baseItem != null ? decorator.Value(baseItem) : throw new JsonException("Nie można odczytać przedmiotu.");
+                    }
+                }
+
+                // 📌 Jeśli nie pasuje do dekoratora, używamy domyślnego deserializatora
+                return JsonSerializer.Deserialize<IItem>(json) ?? throw new JsonException("Nie można odczytać przedmiotu.");
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"BŁĄD deserializacji przedmiotu: {ex.Message}");
+        }
 
-        return baseItem; // 📌 Jeśli nie pasuje do żadnego dekoratora, zwracamy podstawowy przedmiot
+        return null!; // 📌 Zwracamy `null`, jeśli deserializacja się nie powiedzie
     }
+
 }

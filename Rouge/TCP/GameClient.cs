@@ -77,7 +77,7 @@ public class GameClient
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error message{ex.Message}");
+                    Console.WriteLine($"Error message in deserialization: {ex.Message}");
                 }
             }
         }

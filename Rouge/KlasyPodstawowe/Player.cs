@@ -67,16 +67,28 @@ namespace Rouge
         ConsoleKeyInfo _itemToDrop;
         int _handItem;
 
-        public Player(int x, int y, int p, int a, int h, int l, int attack, int w, int coins, int gold)
+        [JsonConstructor]
+        public Player(int id, int x, int y, Inventory inventory, Stats baseStats, List<IItem> appliedPotions, 
+            int coins, int gold, List<IItem> itemsToGetFromRoom)
         {
+            Id = id;
             X = x;
             Y = y;
-            Inventory = new Inventory();
-
-            // Inicjalizacja statystyk
-            BaseStats = new Stats(p, a, h, l, attack, w);
+            Inventory = inventory ?? new Inventory();
+            BaseStats = baseStats;
+            AppliedPotions = appliedPotions ?? new List<IItem>();
+            ItemsToGetFromRoom = itemsToGetFromRoom ?? new List<IItem>();
             Coins = coins;
             Gold = gold;
+        }
+ 
+
+        public Player()
+        {
+            Inventory = new Inventory();
+            BaseStats = new Stats();
+            AppliedPotions = new List<IItem>();
+            ItemsToGetFromRoom = new List<IItem>();
         }
         
         public void ShowStats(Room room, Player player)
