@@ -142,7 +142,17 @@ public class GameServer
     
     private void BroadcastGameState()
     {
-        string json = JsonSerializer.Serialize(_gameState) + "\n";
+        if (_gameState == null)
+        {
+            Console.WriteLine("BLAD: Game state is null");
+            return;
+        }
+        
+        GameStateDC gameStateDC = new GameStateDC(_gameState);
+        string json = JsonSerializer.Serialize(gameStateDC) + "\n";
+        
+        Console.WriteLine("JSON wyslany do klientow:\n" + json);
+        
         byte[] data = Encoding.UTF8.GetBytes(json);
         foreach (var client in _clients)
         {

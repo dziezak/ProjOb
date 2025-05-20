@@ -4,18 +4,11 @@ namespace Rouge;
 
 public class GameState
 {
-    
-    [JsonPropertyName("Players")]
     public Player[] Players { get; set; }
-    [JsonPropertyName("CurrentRoom")]
     public Room CurrentRoom { get; set; }
-    [JsonPropertyName("TurnQueue")]
     public Queue<int> TurnQueue { get; set; }
-    [JsonPropertyName("IsGameOver")]
     public bool IsGameOver { get; set; }
-    [JsonPropertyName("IsPlayerDead")]
     public bool[] IsPlayerDead { get; set; }
-    [JsonPropertyName("NumberOfPlayers")]
     public int NumberOfPlayers {get; set; }
     
     private static readonly int MaxNumberOfPlayers = 9;

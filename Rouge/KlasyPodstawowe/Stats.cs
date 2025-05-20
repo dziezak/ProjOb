@@ -4,24 +4,12 @@ namespace Rouge;
 
 public struct Stats
 {
-    [JsonPropertyName("power")]
     public int Power { get; set; }
-
-    [JsonPropertyName("agility")]
     public int Agility { get; set; }
-
-    [JsonPropertyName("health")]
     public int Health { get; set; }
-
-    [JsonPropertyName("luck")]
     public int Luck { get; set; }
-
-    [JsonPropertyName("attack")]
     public int Attack { get; set; }
-
-    [JsonPropertyName("wisdom")]
     public int Wisdom { get; set; } 
-
     public Stats(int power, int agility, int health, int luck, int attack, int wisdom)
     {
         Power = power;

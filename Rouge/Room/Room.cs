@@ -11,23 +11,11 @@ namespace Rouge
 {
     public class Room
     {
-        [JsonPropertyName("Width")]
         public int Width;
-        
-        [JsonPropertyName("Height")]
         public int Height;
-        
-        [JsonPropertyName("grid")]
         public char[][] _grid; //TODO jak to zmienic poprawnie?
-        
-        [JsonPropertyName("ItemMap")]
-        [JsonConverter(typeof(ItemMapConverter))]
         public Dictionary<(int, int), List<IItem>> _itemMap;
-        
-        [JsonPropertyName("EnemiesMap")]
-        [JsonConverter(typeof(EnemyMapConverter))]
         public Dictionary<(int, int), Enemy> _enemiesMap;
-
         private Random _random = new Random();  
         public Room(int width, int height)
         {
@@ -44,24 +32,6 @@ namespace Rouge
                 for (int x = 0; x < width; x++)
                 {
                     _grid[y][x] = ' '; 
-                }
-            }
-        }
-
-        public Room()
-        {
-            this.Width = 40;
-            this.Height = 30;
-            _enemiesMap = new Dictionary<(int, int), Enemy>();
-            _itemMap = new Dictionary<(int, int), List<IItem>>();
-            
-            _grid = new char[Height][];
-            for (int y = 0; y < Height; y++)
-            {
-                _grid[y] = new char[Width];
-                for (int x = 0; x < Width; x++)
-                {
-                    _grid[y][x] = ' ';
                 }
             }
         }

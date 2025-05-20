@@ -14,60 +14,24 @@ namespace Rouge
 {
     public class Player
     {
-        [JsonPropertyName("id")]
         public int Id { get; set; }
-
-        [JsonPropertyName("x")]
         public int X { get; set; }
-
-        [JsonPropertyName("y")]
         public int Y { get; set; }
-
-        [JsonPropertyName("inventory")]
         public Inventory Inventory { get; set; }
-
-        [JsonPropertyName("baseStats")]
         public Stats BaseStats { get; set; }
-
-        /*
-        [JsonPropertyName("appliedStats")]
-        public Stats AppliedStats { get; set; }
-        */
-
-        [JsonPropertyName("appliedPotions")]
-        [JsonConverter(typeof(ItemListConverter))]
         public List<IItem> AppliedPotions { get; set; } = new List<IItem>();
-
-        [JsonPropertyName("coins")]
         public int Coins { get; set; }
-
-        [JsonPropertyName("gold")]
         public int Gold { get; set; }
-
-        [JsonPropertyName("itemsToGetFromRoom")]
-        [JsonConverter(typeof(ItemListConverter))]
         public List<IItem> ItemsToGetFromRoom { get; set; } = new List<IItem>();
-
-        [JsonPropertyName("warningMessage")]
         public string WarningMessage { get; set; } = "";
-
-        [JsonPropertyName("logMessage")]
         public string LogMessage { get; set; } = "";
-
-        [JsonPropertyName("lastCharacter")]
         public char lastCharacter { get; set; } = ' ';
-
-        [JsonPropertyName("isSelectingEnemies")]
         public bool IsSelectingEnemies { get; set; } = false;
-
-        [JsonPropertyName("selectedEnemy")]
         public Enemy SelectedEnemy { get; set; } = null;
-        
         public ConsoleKeyInfo _itemToPickUp;
         ConsoleKeyInfo _itemToDrop;
         int _handItem;
 
-        [JsonConstructor]
         public Player(int id, int x, int y, Inventory inventory, Stats baseStats, List<IItem> appliedPotions, 
             int coins, int gold, List<IItem> itemsToGetFromRoom)
         {
