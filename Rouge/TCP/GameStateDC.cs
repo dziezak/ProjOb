@@ -24,8 +24,11 @@ public class GameStateDC
     
     [JsonPropertyName("MaxNumberOfPlayers")]
     public int MaxNumberOfPlayers { get; set; }
+    
+    [JsonPropertyName("logQueue")]
+    public List<string> LogQueue { get; set; }
 
-    public GameStateDC(GameState gameState)
+    public GameStateDC(GameState gameState, GameDisplay gameDisplay)
     {
         //TODO: tutaj serializacja nie dziala Player
         NumberOfPlayers = gameState.NumberOfPlayers;
@@ -41,12 +44,13 @@ public class GameStateDC
         CurrentRoom = new RoomDC(gameState.CurrentRoom);
         IsGameOver = gameState.IsGameOver;
         IsPlayerDead = gameState.IsPlayerDead; 
-        TurnQueue = gameState.TurnQueue.ToList(); 
+        TurnQueue = gameState.TurnQueue.ToList();
+        LogQueue = gameDisplay._logQueue.ToList(); // NEW
     }
 
     [JsonConstructor]
     public GameStateDC(int numberOfPlayers, int maxNumberOfPlayers, PlayerDC[] players, RoomDC currentRoom,
-        bool isGameOver, bool[] isPlayerDead, List<int> turnQueue)
+        bool isGameOver, bool[] isPlayerDead, List<int> turnQueue, List<string> logQueue)
     {
         NumberOfPlayers = numberOfPlayers;
         MaxNumberOfPlayers = maxNumberOfPlayers;
@@ -55,6 +59,7 @@ public class GameStateDC
         IsGameOver = isGameOver;
         IsPlayerDead = isPlayerDead;
         TurnQueue = turnQueue;
+        LogQueue = logQueue;
     }
 }
 
@@ -293,4 +298,5 @@ public class InventoryDC
         Items = items;
     }
 }
+
 

@@ -87,10 +87,8 @@ public class GameClient
                         Console.WriteLine("Error: GameDisplay is null."); 
                     }
                     GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
-                    /*
-                    GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
+                    //GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
                     GameDisplay.Instance?.DisplayLog(16, GameState.CurrentRoom.Width);
-                    */
                 }
                 
                 catch (Exception ex)
@@ -108,7 +106,7 @@ public class GameClient
     {
         while (!GameState.IsGameOver)
         {
-            Console.WriteLine("Dear player please enter smth:");
+            //Console.WriteLine("Dear player please enter smth:");
             char key = Console.ReadKey().KeyChar;
             
             PlayerAction playerAction = new PlayerAction(_playerId, key);
@@ -122,7 +120,7 @@ public class GameClient
     public void SendPlayerAction(PlayerAction action)
     {
         string json = JsonSerializer.Serialize(action) + "\n";
-        Console.WriteLine("sending JSON: " + json);
+        //Console.WriteLine("sending JSON: " + json);
         byte[] data = Encoding.UTF8.GetBytes(json);
         
         _stream.Write(data, 0, data.Length);
@@ -142,6 +140,7 @@ public class GameClient
         newState.IsGameOver = dc.IsGameOver;
         newState.IsPlayerDead = dc.IsPlayerDead;
         newState.TurnQueue = new Queue<int>(dc.TurnQueue);
+        GameDisplay.Instance._logQueue = new Queue<string>(dc.LogQueue);
         return newState;
     }
     
@@ -210,7 +209,6 @@ public class GameClient
             }
         }
         
-        // Konwersja enemiesMap: Dictionary<string, EnemyDC> -> Dictionary<(int, int), Enemy>
         if (rdc.EnemiesMap != null)
         {
             room._enemiesMap = new Dictionary<(int, int), Enemy>();
@@ -222,8 +220,6 @@ public class GameClient
                     int.TryParse(keyParts[1], out int y))
                 {
                     (int, int) position = (x, y);
-                    // Konwertujemy EnemyDC na Enemy.
-                    // Funkcję ConvertEnemyDCToEnemy należy zaimplementować zgodnie z Twoją logiką.
                     Enemy enemy = ConvertEnemyDCToEnemy(kv.Value);
                     room._enemiesMap.Add(position, enemy);
                 }

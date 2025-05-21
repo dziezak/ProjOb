@@ -95,13 +95,14 @@ public class GameServer
                 string fullMessage = recivedMessage.ToString().Trim();
                 recivedMessage.Clear();
 
-                Console.WriteLine($"Full recived data before parsing: {fullMessage}");
+                //Console.WriteLine($"Full recived data before parsing: {fullMessage}");
                 
                 try
                 {
                     PlayerAction action = JsonSerializer.Deserialize<PlayerAction>(fullMessage);
-                    Console.WriteLine($"Received action: {action.Type}, form player {player.Id}");
+                    //Console.WriteLine($"Received action: {action.Type}, form player {player.Id}");
 
+                    
                     ProcessPlayerAction(chain, action);
                     BroadcastGameState();
                 }
@@ -148,7 +149,7 @@ public class GameServer
             return;
         }
         
-        GameStateDC gameStateDC = new GameStateDC(_gameState);
+        GameStateDC gameStateDC = new GameStateDC(_gameState, GameDisplay.Instance);
         string json = JsonSerializer.Serialize(gameStateDC) + "\n";
         
         Console.WriteLine("JSON wyslany do klientow:\n" + json);

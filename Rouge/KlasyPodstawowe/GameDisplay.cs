@@ -5,7 +5,7 @@ namespace Rouge;
 public class GameDisplay
 {
     public string CriticalInfo = "";
-    private Queue<string> _logQueue = new Queue<string>(); //Log gracza do wyswietlenia
+    public Queue<string> _logQueue = new Queue<string>(); //Log gracza do wyswietlenia
     private static GameDisplay? _instance; // bedzie jedyna instancja tej klasy
     private GameDisplay(){}
     public static GameDisplay? Instance
