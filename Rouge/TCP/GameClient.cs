@@ -4,6 +4,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Rouge;
+using Rouge.Items;
+using Rouge.TCP;
 
 public class GameClient
 {
@@ -51,7 +53,7 @@ public class GameClient
     {
         byte[] buffer = new byte[1024];
         StringBuilder receivedMessage = new StringBuilder();
-        
+     
         while (!GameState.IsGameOver)
         {
             Console.WriteLine("Waiting for game update...");
@@ -68,9 +70,18 @@ public class GameClient
 
                 try
                 {
-                    GameState = JsonSerializer.Deserialize<GameState>(fullMessage);
-                    Console.Clear();
+                    // Najpierw deserializujemy JSON do GameStateDC
+                    GameStateDC gameStateDC = JsonSerializer.Deserialize<GameStateDC>(fullMessage);
+                    if(gameStateDC == null)
+                    {
+                        Console.WriteLine("Error: Deserialized GameStateDC is null.");
+                        continue;
+                    }
+                
+                    // Następnie konwertujemy GameStateDC do pełnego GameState
+                    GameState = ConvertGameStateDCToGameState(gameStateDC);
 
+                    Console.Clear();
                     GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
                     GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
                     GameDisplay.Instance?.DisplayLog(16, GameState.CurrentRoom.Width);
@@ -83,7 +94,9 @@ public class GameClient
         }
         _client.Close();
     }
-
+    
+    
+    
     public void HandleClient()
     {
         while (!GameState.IsGameOver)
@@ -111,5 +124,109 @@ public class GameClient
         _stream.Write(data, 0, data.Length);
         _stream.Flush(); // nie wiem czy potrzebne
     }
+    
+    private GameState ConvertGameStateDCToGameState(GameStateDC dc)
+    {
+        GameState newState = new GameState();
+        newState.NumberOfPlayers = dc.NumberOfPlayers;
+        newState.Players = new Player[newState.MaxNumberOfPlayers];
+        for (int i = 0; i < dc.NumberOfPlayers; i++)
+        {
+            newState.Players[i] = ConvertPlayerDCToPlayer(dc.Players[i]);
+        }
+        newState.CurrentRoom = ConvertRoomDCToRoom(dc.CurrentRoom);
+        newState.IsGameOver = dc.IsGameOver;
+        newState.IsPlayerDead = dc.IsPlayerDead;
+        newState.TurnQueue = new Queue<int>(dc.TurnQueue);
+        return newState;
+    }
+    
+    private Player ConvertPlayerDCToPlayer(PlayerDC pdc)
+    {
+        Player p = new Player(); 
+        p.Id = pdc.Id;
+        p.X = pdc.X;
+        p.Y = pdc.Y;
+        p.BaseStats = ConvertStatsDCToStats(pdc.BaseStats);
+        p.Inventory = ConvertInventoryDCToInventory(pdc.Inventory);
+        return p;
+    }
+    
+    private Inventory ConvertInventoryDCToInventory(InventoryDC idc)
+    {
+        Inventory inv = new Inventory();
+        if (idc.LeftHand != null)
+            inv.LeftHand = new Item(idc.LeftHand.Name);
+        if (idc.RightHand != null)
+            inv.RightHand = new Item(idc.RightHand.Name);
+        if (idc.Items != null)
+        {
+            inv.Items = new List<IItem>();
+            foreach (var itemDC in idc.Items)
+            {
+                inv.Items.Add(new Item(itemDC.Name));
+            }
+        }
+        return inv;
+    }
+
+    private Stats ConvertStatsDCToStats(StatsDC sdc)
+    {
+        return new Stats(sdc.Power, sdc.Agility, sdc.Health, sdc.Luck, sdc.Attack, sdc.Wisdom);
+    }
+
+    
+    private Room ConvertRoomDCToRoom(RoomDC rdc)
+    {
+        Room room = new Room(rdc.Width, rdc.Height);
+
+        room._grid = rdc.Grid; 
+
+        if (rdc.ItemMap != null)
+        {
+            room._itemMap = new Dictionary<(int, int), List<IItem>>();
+            foreach (var kv in rdc.ItemMap)
+            {
+                string[] keyParts = kv.Key.Split(',');
+                if (keyParts.Length == 2 &&
+                    int.TryParse(keyParts[0], out int x) &&
+                    int.TryParse(keyParts[1], out int y))
+                {
+                    (int, int) position = (x, y);
+                    List<IItem> items = new List<IItem>();
+                    foreach (var itemDC in kv.Value)
+                    {
+                        // Konwersja pojedynczego ItemDC do IItem.
+                        // Funkcję ConvertItemDCToIItem należy zaimplementować zgodnie z Twoją logiką.
+                        IItem item = ConvertItemDCToItem(itemDC);
+                        items.Add(item);
+                    }
+                    room._itemMap.Add(position, items);
+                }
+            }
+        }
+        
+        // Konwersja enemiesMap: Dictionary<string, EnemyDC> -> Dictionary<(int, int), Enemy>
+        if (rdc.EnemiesMap != null)
+        {
+            room._enemiesMap = new Dictionary<(int, int), Enemy>();
+            foreach (var kv in rdc.EnemiesMap)
+            {
+                string[] keyParts = kv.Key.Split(',');
+                if (keyParts.Length == 2 &&
+                    int.TryParse(keyParts[0], out int x) &&
+                    int.TryParse(keyParts[1], out int y))
+                {
+                    (int, int) position = (x, y);
+                    // Konwertujemy EnemyDC na Enemy.
+                    // Funkcję ConvertEnemyDCToEnemy należy zaimplementować zgodnie z Twoją logiką.
+                    Enemy enemy = ConvertEnemyDCToEnemy(kv.Value);
+                    room._enemiesMap.Add(position, enemy);
+                }
+            }
+        }
+        return room;
+    }
+
 }
 

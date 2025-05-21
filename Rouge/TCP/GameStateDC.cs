@@ -1,10 +1,14 @@
+using Rouge.Items;
+
 namespace Rouge.TCP;
 using System.Text.Json.Serialization;
 
 public class GameStateDC
 {
+    [JsonPropertyName("NumberOfPlayers")]
+    public int NumberOfPlayers { get; set; }
     [JsonPropertyName("players")]
-    public List<PlayerDC> Players { get; set; } = new List<PlayerDC>();
+    public PlayerDC[] Players { get; set; }
     
     [JsonPropertyName("CurrentRoom")]
     public RoomDC CurrentRoom { get; set; }
@@ -12,22 +16,30 @@ public class GameStateDC
     [JsonPropertyName("isGameOver")]
     public bool IsGameOver { get; set; }
     
-    [JsonPropertyName("enemiesNearby")]
-    public List<EnemyDC> EnemiesNearby { get; set; } = new List<EnemyDC>(); // 📌 Teraz tylko nazwy i pozycje wrogów
-    
     [JsonPropertyName("isPlayerDead")]
-    public bool[] IsPlayerDead { get; set; } // 📌 Status żywotności graczy
+    public bool[] IsPlayerDead { get; set; }
 
     [JsonPropertyName("turnQueue")]
-    public List<int> TurnQueue { get; set; } // 📌 Konwersja `Queue<int>` na `List<int>` dla JSON
+    public List<int> TurnQueue { get; set; } 
+    
+    [JsonPropertyName("MaxNumberOfPlayers")]
+    public int MaxNumberOfPlayers { get; set; }
 
     public GameStateDC(GameState gameState)
     {
         //TODO: tutaj serializacja nie dziala Player
-        Players = gameState.Players.Select(p => new PlayerDC(p)).ToList(); 
+        NumberOfPlayers = gameState.NumberOfPlayers;
+        MaxNumberOfPlayers = 9;
+        
+        Players = new PlayerDC[MaxNumberOfPlayers];
+
+        for (int i = 0; i < NumberOfPlayers; i++)
+        {
+            Players[i] = new PlayerDC(gameState.Players[i]);
+        }
+        
         CurrentRoom = new RoomDC(gameState.CurrentRoom);
         IsGameOver = gameState.IsGameOver;
-        EnemiesNearby = gameState.CurrentRoom._enemiesMap.Select(e => new EnemyDC(e.Value)).ToList();
         IsPlayerDead = gameState.IsPlayerDead; 
         TurnQueue = gameState.TurnQueue.ToList(); 
     }
@@ -43,12 +55,9 @@ public class PlayerDC
 
     [JsonPropertyName("y")]
     public int Y { get; set; }
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; } // 📌 Klient potrzebuje tylko nazwy gracza
     
-    [JsonPropertyName("items")]
-    public List<string> Items { get; set; } // 📌 Teraz przesyłamy tylko nazwy przedmiotów
+    [JsonPropertyName("inventory")]
+    public InventoryDC Inventory { get; set; } // 📌 Teraz przesyłamy tylko nazwy przedmiotów
     
     [JsonPropertyName("stats")]
     public StatsDC BaseStats { get; set; }
@@ -58,6 +67,8 @@ public class PlayerDC
         Id = player.Id;
         X = player.X;
         Y = player.Y;
+        BaseStats = new StatsDC(player.GetCurrentStats());
+        Inventory = new InventoryDC(player.Inventory);
     }
 
     public PlayerDC()
@@ -65,7 +76,8 @@ public class PlayerDC
         Id = -1;
         X = -1;
         Y = -1;
-        Name = "Unknown";
+        BaseStats = null;
+        Inventory = null;
     }
 }
 
@@ -91,6 +103,7 @@ public class EnemyDC
         Name = enemy.Name;
         X = enemy.X;
         Y = enemy.Y;
+        BaseStats = new StatsDC(enemy.GetStats());
         Image = enemy.Image;
     }
 }
@@ -135,16 +148,83 @@ public class RoomDC
     [JsonPropertyName("height")]
     public int Height { get; set; }
 
-
     [JsonPropertyName("grid")]
     public char[][] Grid { get; set; }
+    [JsonPropertyName("itemMap")]
+    public Dictionary<string, List<ItemDC>> ItemMap { get; set; }
+
+    [JsonPropertyName("enemiesMap")]
+    public Dictionary<string, EnemyDC> EnemiesMap { get; set; }
 
     public RoomDC(Room room)
     {
         Width = room.Width;
         Height = room.Height;
         Grid = room._grid; 
+        if(room._itemMap != null)
+        {
+            ItemMap = new Dictionary<string, List<ItemDC>>();
+            foreach (var kv in room._itemMap)
+            {
+                string key = $"{kv.Key.Item1},{kv.Key.Item2}";
+                List<ItemDC> items = new List<ItemDC>();
+                foreach(var item in kv.Value)
+                {
+                    items.Add(new ItemDC(item));
+                }
+                ItemMap.Add(key, items);
+            }
+        }
+        else
+        {
+            ItemMap = new Dictionary<string, List<ItemDC>>();
+        }
+
+        if (room._enemiesMap != null)
+        {
+            EnemiesMap = new Dictionary<string, EnemyDC>();
+            foreach (var kv in room._enemiesMap)
+            {
+                string key = $"{kv.Key.Item1},{kv.Key.Item2}";
+                EnemiesMap.Add(key, new EnemyDC(kv.Value)); 
+            }
+        }
+        else
+        {
+            EnemiesMap = new Dictionary<string, EnemyDC>();
+        }
     }
 }
 
+public class ItemDC
+{
+    [JsonPropertyName("Name")]
+    public string Name { get; set; }
+    public ItemDC(IItem item) ///TODO to check if ok?
+    {
+        Name = item.GetName();
+    }
+}
+
+public class InventoryDC
+{
+    [JsonPropertyName("LeftHand")]
+    public ItemDC LeftHand { get; set; }
+    
+    [JsonPropertyName("RightHand")]
+    public ItemDC RightHand { get; set; }
+    
+    [JsonPropertyName("Items")]
+    public List<ItemDC> Items { get; set; }
+
+    public InventoryDC(Inventory inventory)
+    {
+        if (inventory.LeftHand != null) LeftHand = new ItemDC(inventory.LeftHand);
+        if (inventory.RightHand != null) RightHand = new ItemDC(inventory.RightHand);
+        foreach (var item in inventory.Items)
+        {
+            Items?.Add(new ItemDC(item));
+        }
+    }
+}
 

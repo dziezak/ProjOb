@@ -11,7 +11,7 @@ public class GameState
     public bool[] IsPlayerDead { get; set; }
     public int NumberOfPlayers {get; set; }
     
-    private static readonly int MaxNumberOfPlayers = 9;
+    public readonly int MaxNumberOfPlayers = 9;
 
     public GameState(Room room)
     {
