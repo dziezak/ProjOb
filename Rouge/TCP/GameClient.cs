@@ -56,7 +56,7 @@ public class GameClient
      
         while (!GameState.IsGameOver)
         {
-            Console.WriteLine("Waiting for game update...");
+            //Console.WriteLine("Waiting for game update...");
             int read = _stream.Read(buffer, 0, buffer.Length);
             if (read <= 0) continue;
 
@@ -81,11 +81,18 @@ public class GameClient
                     // Następnie konwertujemy GameStateDC do pełnego GameState
                     GameState = ConvertGameStateDCToGameState(gameStateDC);
 
-                    Console.Clear();
+                    //Console.Clear();
+                    if (GameDisplay.Instance == null)
+                    {
+                        Console.WriteLine("Error: GameDisplay is null."); 
+                    }
                     GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
+                    /*
                     GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
                     GameDisplay.Instance?.DisplayLog(16, GameState.CurrentRoom.Width);
+                    */
                 }
+                
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error message in deserialization: {ex.Message}");
@@ -101,12 +108,9 @@ public class GameClient
     {
         while (!GameState.IsGameOver)
         {
-            //GameDisplay.Instance?.DisplayAvailableString(_legend, gameState.CurrentRoom.Width);
-            //GameDisplay.Instance?.RenderLabirynth(gameState.CurrentRoom, gameState.Players, MyPlayerID, gameState.IsPlayerDead);
             Console.WriteLine("Dear player please enter smth:");
             char key = Console.ReadKey().KeyChar;
             
-            //chain.Handle(key, gameState.CurrentRoom, gameState.Players[MyPlayerID]);
             PlayerAction playerAction = new PlayerAction(_playerId, key);
             SendPlayerAction(playerAction);
             if (key == 'v')
@@ -198,7 +202,7 @@ public class GameClient
                     {
                         // Konwersja pojedynczego ItemDC do IItem.
                         // Funkcję ConvertItemDCToIItem należy zaimplementować zgodnie z Twoją logiką.
-                        IItem item = ConvertItemDCToItem(itemDC);
+                        Item item = new Item(itemDC.Name);
                         items.Add(item);
                     }
                     room._itemMap.Add(position, items);
@@ -226,6 +230,26 @@ public class GameClient
             }
         }
         return room;
+    }
+
+    public Enemy ConvertEnemyDCToEnemy(EnemyDC enemydc)
+    {
+        string name = enemydc.Name;
+        Stats stats = ConvertStatsDCToStats(enemydc.BaseStats);
+        Enemy retEnemy;
+        switch (name)
+        {
+            case "Minion":
+                retEnemy = new Minion();
+                break;
+            case "Xenomorph":
+                retEnemy = new Xenomorph();
+                break;
+            default:
+                retEnemy = new Zombie();
+                break;
+        }
+        return retEnemy;
     }
 
 }

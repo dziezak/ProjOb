@@ -30,8 +30,9 @@ public class GameDisplay
             for(int x = 0; x < room.Width; x++)
             {
                 bool isPlayerHere = false;
-                foreach (var player in players)
+                for(int i = 0; i < gameState.NumberOfPlayers; i++)
                 {
+                    var player = players[i];
                     if (player.X == x && player.Y == y)
                     {
                         isPlayerHere = true;

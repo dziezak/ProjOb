@@ -43,6 +43,19 @@ public class GameStateDC
         IsPlayerDead = gameState.IsPlayerDead; 
         TurnQueue = gameState.TurnQueue.ToList(); 
     }
+
+    [JsonConstructor]
+    public GameStateDC(int numberOfPlayers, int maxNumberOfPlayers, PlayerDC[] players, RoomDC currentRoom,
+        bool isGameOver, bool[] isPlayerDead, List<int> turnQueue)
+    {
+        NumberOfPlayers = numberOfPlayers;
+        MaxNumberOfPlayers = maxNumberOfPlayers;
+        Players = players;
+        CurrentRoom = currentRoom;
+        IsGameOver = isGameOver;
+        IsPlayerDead = isPlayerDead;
+        TurnQueue = turnQueue;
+    }
 }
 
 public class PlayerDC
@@ -71,13 +84,14 @@ public class PlayerDC
         Inventory = new InventoryDC(player.Inventory);
     }
 
-    public PlayerDC()
+    [JsonConstructor]
+    public PlayerDC(int id, int x, int y, InventoryDC inventory, StatsDC baseStats)
     {
-        Id = -1;
-        X = -1;
-        Y = -1;
-        BaseStats = null;
-        Inventory = null;
+        Id = id;
+        X = x;
+        Y = y;
+        Inventory = inventory;
+        BaseStats = baseStats;
     }
 }
 
@@ -105,6 +119,16 @@ public class EnemyDC
         Y = enemy.Y;
         BaseStats = new StatsDC(enemy.GetStats());
         Image = enemy.Image;
+    }
+
+    [JsonConstructor]
+    public EnemyDC(string name, int x, int y, StatsDC baseStats, string image)
+    {
+        Name = name;
+        X = x;
+        Y = y;
+        BaseStats = baseStats;
+        Image = image;
     }
 }
 
@@ -136,6 +160,17 @@ public class StatsDC
         Luck = stats.Luck;
         Attack = stats.Attack;
         Wisdom = stats.Wisdom;
+    }
+
+    [JsonConstructor]
+    public StatsDC(int power, int agility, int health, int luck, int attack, int wisdom)
+    {
+        Power = power;
+        Agility = agility;
+        Health = health;
+        Luck = luck;
+        Attack = attack;
+        Wisdom = wisdom;
     }
 }
 
@@ -194,6 +229,23 @@ public class RoomDC
             EnemiesMap = new Dictionary<string, EnemyDC>();
         }
     }
+
+    [JsonConstructor]
+    public RoomDC(int width, int height ,char[][] grid, Dictionary<string, List<ItemDC>> itemMap, Dictionary<string, EnemyDC> enemiesMap)
+    {
+        Width = width;
+        Height = height;
+        Grid = grid;
+        if(itemMap != null)
+            ItemMap = itemMap;
+        else
+            ItemMap = new Dictionary<string, List<ItemDC>>();
+
+        if (enemiesMap != null)
+            EnemiesMap = enemiesMap;
+        else
+            EnemiesMap = new Dictionary<string, EnemyDC>();
+    }
 }
 
 public class ItemDC
@@ -203,6 +255,12 @@ public class ItemDC
     public ItemDC(IItem item) ///TODO to check if ok?
     {
         Name = item.GetName();
+    }
+
+    [JsonConstructor]
+    public ItemDC(string name)
+    {
+        Name = name;
     }
 }
 
@@ -225,6 +283,14 @@ public class InventoryDC
         {
             Items?.Add(new ItemDC(item));
         }
+    }
+
+    [JsonConstructor]
+    public InventoryDC(ItemDC leftHand, ItemDC rightHand, List<ItemDC> items)
+    {
+        LeftHand = leftHand;
+        RightHand = rightHand;
+        Items = items;
     }
 }
 
