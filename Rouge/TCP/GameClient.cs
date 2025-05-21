@@ -12,6 +12,8 @@ public class GameClient
     private TcpClient _client;
     private NetworkStream _stream;
     private int _playerId;
+    public string _instrIuction;
+    public string _legend;
     public GameState GameState { get; private set; }
     public PlayerAction PlayerAction { get; private set; }
 
@@ -26,6 +28,21 @@ public class GameClient
     public void Start()
     {
         RecivePlayerId();
+        InstructionBuilder instructionBuilder = new InstructionBuilder();
+        LegendBuilder legendBuilder = new LegendBuilder();
+        DungeonBuilder dungeonBuilder = new DungeonBuilder(40, 30);
+
+        var director = new DungeonDirector();
+        director.BuildFilledDungeonWithRooms(dungeonBuilder); //opcja 2: labirynt ze wszystkim mozliwym
+        director.BuildFilledDungeonWithRooms(instructionBuilder); //opcja 2: labirynt ze wszystkim mozliwym
+        director.BuildFilledDungeonWithRooms(legendBuilder);// opcja 2: labirynt ze wszystkim mozliwym
+
+        _instrIuction = instructionBuilder.GetResult();
+        _legend = legendBuilder.GetResult();
+        
+        GameDisplay.Instance?.DisplayAvailableString(_instrIuction, 40);
+        
+        char key = Console.ReadKey().KeyChar; // wcisjij cos aby zaczac gre
         
         Task listenTask = Task.Run(() => ListenForUpdates());
         Task handleTask = Task.Run(() => HandleClient());
@@ -53,7 +70,8 @@ public class GameClient
     {
         byte[] buffer = new byte[1024];
         StringBuilder receivedMessage = new StringBuilder();
-     
+
+        Console.Clear();
         while (!GameState.IsGameOver)
         {
             //Console.WriteLine("Waiting for game update...");
@@ -81,13 +99,14 @@ public class GameClient
                     // Następnie konwertujemy GameStateDC do pełnego GameState
                     GameState = ConvertGameStateDCToGameState(gameStateDC);
 
-                    //Console.Clear();
                     if (GameDisplay.Instance == null)
                     {
                         Console.WriteLine("Error: GameDisplay is null."); 
                     }
+                    //GameState.Players[_playerId].ItemsToGetFromRoom = GameState.
                     GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
-                    //GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
+                    GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
+                    GameDisplay.Instance?.DisplayAvailableString(_legend, 40);
                     GameDisplay.Instance?.DisplayLog(16, GameState.CurrentRoom.Width);
                 }
                 
@@ -146,12 +165,7 @@ public class GameClient
     
     private Player ConvertPlayerDCToPlayer(PlayerDC pdc)
     {
-        Player p = new Player(); 
-        p.Id = pdc.Id;
-        p.X = pdc.X;
-        p.Y = pdc.Y;
-        p.BaseStats = ConvertStatsDCToStats(pdc.BaseStats);
-        p.Inventory = ConvertInventoryDCToInventory(pdc.Inventory);
+        Player p = new Player(pdc.Id, pdc.X, pdc.Y, ConvertInventoryDCToInventory(pdc.Inventory), ConvertStatsDCToStats(pdc.BaseStats), null, 0, 0, null); 
         return p;
     }
     
@@ -168,6 +182,7 @@ public class GameClient
             foreach (var itemDC in idc.Items)
             {
                 inv.Items.Add(new Item(itemDC.Name));
+                Console.WriteLine(itemDC.Name);//TODO USUN TO 
             }
         }
         return inv;
