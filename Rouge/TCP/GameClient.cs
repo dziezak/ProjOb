@@ -165,10 +165,30 @@ public class GameClient
     
     private Player ConvertPlayerDCToPlayer(PlayerDC pdc)
     {
-        Player p = new Player(pdc.Id, pdc.X, pdc.Y, ConvertInventoryDCToInventory(pdc.Inventory), ConvertStatsDCToStats(pdc.BaseStats), null, 0, 0, null); 
+        Player p = new Player(
+            pdc.Id, 
+            pdc.X, 
+            pdc.Y, 
+            ConvertInventoryDCToInventory(pdc.Inventory), 
+            ConvertStatsDCToStats(pdc.BaseStats),
+            null,
+            0,
+            0,
+            null); 
+        
+        p.ItemsToGetFromRoom = pdc.ItemsToGetFromRoom.Select(itemDC => ConvertItemDCToIItem(itemDC)).ToList();
+        //Console.WriteLine($"Player {p.Id} has been received");
+        foreach (IItem item in pdc.ItemsToGetFromRoom)
+        {
+            Console.WriteLine(item.GetType().Name);
+        }
+        //char debug = Console.ReadKey().KeyChar; // TODO: usun
+        
+        
         return p;
     }
     
+    /*
     private Inventory ConvertInventoryDCToInventory(InventoryDC idc)
     {
         Inventory inv = new Inventory();
@@ -185,6 +205,29 @@ public class GameClient
                 Console.WriteLine(itemDC.Name);//TODO USUN TO 
             }
         }
+        return inv;
+    }
+    */
+
+    private Inventory ConvertInventoryDCToInventory(InventoryDC idc)
+    {
+        Inventory inv = new Inventory();
+
+        if (idc.LeftHand != null)
+            inv.LeftHand = ConvertItemDCToIItem(idc.LeftHand);
+
+        if (idc.RightHand != null)
+            inv.RightHand = ConvertItemDCToIItem(idc.RightHand);
+
+        if (idc.Items != null)
+        {
+            inv.Items = new List<IItem>();
+            foreach (var itemDC in idc.Items)
+            {
+                inv.Items.Add(ConvertItemDCToIItem(itemDC));
+            }
+        }
+
         return inv;
     }
 
@@ -262,6 +305,15 @@ public class GameClient
         }
         return retEnemy;
     }
+    
+    private IItem ConvertItemDCToIItem(ItemDC itemDC)
+    {
+        if (itemDC == null)
+            return null;
+
+        return new Item(itemDC.Name);
+    }
+
 
 }
 

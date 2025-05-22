@@ -75,10 +75,13 @@ public class PlayerDC
     public int Y { get; set; }
     
     [JsonPropertyName("inventory")]
-    public InventoryDC Inventory { get; set; } // 📌 Teraz przesyłamy tylko nazwy przedmiotów
+    public InventoryDC Inventory { get; set; }
     
     [JsonPropertyName("stats")]
     public StatsDC BaseStats { get; set; }
+    
+    [JsonPropertyName("itemsToGetFromRoom")]
+    public List<ItemDC> ItemsToGetFromRoom { get; set; }
     
     public PlayerDC(Player player)
     {
@@ -87,16 +90,18 @@ public class PlayerDC
         Y = player.Y;
         BaseStats = new StatsDC(player.GetCurrentStats());
         Inventory = new InventoryDC(player.Inventory);
+        ItemsToGetFromRoom = new List<ItemDC>();
     }
 
     [JsonConstructor]
-    public PlayerDC(int id, int x, int y, InventoryDC inventory, StatsDC baseStats)
+    public PlayerDC(int id, int x, int y, InventoryDC inventory, StatsDC baseStats, List<ItemDC> itemsToGetFromRoom)
     {
         Id = id;
         X = x;
         Y = y;
         Inventory = inventory;
         BaseStats = baseStats;
+        ItemsToGetFromRoom = itemsToGetFromRoom;
     }
 }
 
