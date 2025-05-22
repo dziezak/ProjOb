@@ -129,7 +129,17 @@ public class GameDisplay
 
             if(player.Inventory.Items.Count == 0 || player.Inventory == null)
             {
-                //AddText("Empty");
+                string AdditionalInfo;
+                if (player.Inventory == null)
+                {
+                    AdditionalInfo = "null";
+                }
+                else
+                {
+                    AdditionalInfo = "0";
+                }
+                AddText("Empty" + " " + AdditionalInfo);
+                
             }
             else
             {

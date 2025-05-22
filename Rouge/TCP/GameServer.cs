@@ -63,7 +63,7 @@ public class GameServer
     {
         //TODO tutuaj jeszcze trzeba podac miejsce dla ludzi aby sie pojawiali w dobrych miejscach oraz id
         Player player = new Player(_gameState.NumberOfPlayers, 0, _gameState.NumberOfPlayers,
-            null, new Stats(10, 10, 100, 10, 10, 10), null,
+            new Inventory(), new Stats(10, 10, 100, 10, 10, 10), null,
             0, 0, null);
         _gameState.AddPlayer(player);
         
@@ -152,7 +152,7 @@ public class GameServer
         GameStateDC gameStateDC = new GameStateDC(_gameState, GameDisplay.Instance);
         string json = JsonSerializer.Serialize(gameStateDC) + "\n";
         
-        Console.WriteLine("JSON wyslany do klientow:\n" + json);
+        //Console.WriteLine("JSON wyslany do klientow:\n" + json);
         
         byte[] data = Encoding.UTF8.GetBytes(json);
         foreach (var client in _clients)

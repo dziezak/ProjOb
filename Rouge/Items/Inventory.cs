@@ -10,16 +10,10 @@ namespace Rouge
 {
     public class Inventory
     {
-        [JsonPropertyName("Items")]
-        [JsonConverter(typeof(ItemListConverter))]
         public List<IItem> Items { get; set; }
         
-        [JsonPropertyName("LeftHand")]
-        [JsonConverter(typeof(ItemDecoratorConverter))]
         public IItem? LeftHand { get; set; }
         
-        [JsonPropertyName("RightHand")]
-        [JsonConverter(typeof(ItemDecoratorConverter))]
         public IItem? RightHand { get; set; }
 
         public Inventory()

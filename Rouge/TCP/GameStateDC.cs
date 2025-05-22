@@ -45,7 +45,7 @@ public class GameStateDC
         IsGameOver = gameState.IsGameOver;
         IsPlayerDead = gameState.IsPlayerDead; 
         TurnQueue = gameState.TurnQueue.ToList();
-        LogQueue = gameDisplay._logQueue.ToList(); // NEW
+        LogQueue = gameDisplay._logQueue.ToList();
     }
 
     [JsonConstructor]
@@ -289,9 +289,10 @@ public class InventoryDC
     {
         if (inventory.LeftHand != null) LeftHand = new ItemDC(inventory.LeftHand);
         if (inventory.RightHand != null) RightHand = new ItemDC(inventory.RightHand);
+        this.Items = new List<ItemDC>();
         foreach (var item in inventory.Items)
         {
-            Items?.Add(new ItemDC(item));
+            Items.Add(new ItemDC(item));
         }
     }
 
