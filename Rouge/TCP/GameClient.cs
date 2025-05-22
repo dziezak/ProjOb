@@ -176,15 +176,11 @@ public class GameClient
             0,
             null); 
         
-        p.ItemsToGetFromRoom = pdc.ItemsToGetFromRoom.Select(itemDC => ConvertItemDCToIItem(itemDC)).ToList();
-        //Console.WriteLine($"Player {p.Id} has been received");
-        foreach (IItem item in pdc.ItemsToGetFromRoom)
+        //p.ItemsToGetFromRoom = pdc.ItemsToGetFromRoom.Select(itemDC => ConvertItemDCToIItem(itemDC)).ToList();
+        foreach (ItemDC itemDC in pdc.ItemsToGetFromRoom)
         {
-            Console.WriteLine(item.GetType().Name);
+            p.ItemsToGetFromRoom.Add(ConvertItemDCToIItem(itemDC));
         }
-        //char debug = Console.ReadKey().KeyChar; // TODO: usun
-        
-        
         return p;
     }
     
