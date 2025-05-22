@@ -74,7 +74,6 @@ public class GameClient
         Console.Clear();
         while (!GameState.IsGameOver)
         {
-            //Console.WriteLine("Waiting for game update...");
             int read = _stream.Read(buffer, 0, buffer.Length);
             if (read <= 0) continue;
 
@@ -88,7 +87,6 @@ public class GameClient
 
                 try
                 {
-                    // Najpierw deserializujemy JSON do GameStateDC
                     GameStateDC gameStateDC = JsonSerializer.Deserialize<GameStateDC>(fullMessage);
                     if(gameStateDC == null)
                     {
@@ -96,14 +94,12 @@ public class GameClient
                         continue;
                     }
                 
-                    // Następnie konwertujemy GameStateDC do pełnego GameState
                     GameState = ConvertGameStateDCToGameState(gameStateDC);
 
                     if (GameDisplay.Instance == null)
                     {
                         Console.WriteLine("Error: GameDisplay is null."); 
                     }
-                    //GameState.Players[_playerId].ItemsToGetFromRoom = GameState.
                     GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
                     GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
                     GameDisplay.Instance?.DisplayAvailableString(_legend, 40);
@@ -125,7 +121,6 @@ public class GameClient
     {
         while (!GameState.IsGameOver)
         {
-            //Console.WriteLine("Dear player please enter smth:");
             char key = Console.ReadKey().KeyChar;
             
             PlayerAction playerAction = new PlayerAction(_playerId, key);

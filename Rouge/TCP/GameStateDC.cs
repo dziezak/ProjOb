@@ -30,7 +30,6 @@ public class GameStateDC
 
     public GameStateDC(GameState gameState, GameDisplay gameDisplay)
     {
-        //TODO: tutaj serializacja nie dziala Player
         NumberOfPlayers = gameState.NumberOfPlayers;
         MaxNumberOfPlayers = 9;
         
@@ -39,6 +38,7 @@ public class GameStateDC
         for (int i = 0; i < NumberOfPlayers; i++)
         {
             Players[i] = new PlayerDC(gameState.Players[i]);
+            Players[i].BaseStats = new StatsDC(gameState.Players[i].GetCurrentStats()); // NEW
         }
         
         CurrentRoom = new RoomDC(gameState.CurrentRoom);
