@@ -266,15 +266,20 @@ public class ItemDC
 {
     [JsonPropertyName("Name")]
     public string Name { get; set; }
+
+    [JsonPropertyName("GetAttackValue")] 
+    public int GetAttackValue { get; set; }
     public ItemDC(IItem item) ///TODO to check if ok?
     {
         Name = item.GetName();
+        GetAttackValue = item.GetAttack();
     }
 
     [JsonConstructor]
-    public ItemDC(string name)
+    public ItemDC(string name, int getAttackValue)
     {
         Name = name;
+        GetAttackValue = getAttackValue;
     }
 }
 

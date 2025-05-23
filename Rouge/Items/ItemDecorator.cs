@@ -26,6 +26,8 @@ namespace Rouge.Items
         public virtual void Update(Player player) => DecoratedItem.Update(player);
         public virtual void Subscribe(Player player) => DecoratedItem.Subscribe(player);
         public virtual void Unsubscribe(Player player) => DecoratedItem.Unsubscribe(player);
+        public int DeserializedAttackValue() => DecoratedItem.DeserializedAttackValue();
+        
         public string typeToSerialize = "";
 
         //do visitor

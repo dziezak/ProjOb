@@ -7,6 +7,7 @@ namespace Rouge.Items
         public string Name { get; set; }
         public virtual bool TwoHanded() => false;
         public virtual bool Equipable() => true;
+        public int GetAttackValue { get; set; } // to serialization
 
         public Item(string name)
         {
@@ -16,6 +17,8 @@ namespace Rouge.Items
         {
             throw new NotImplementedException();
         }
+
+        public int DeserializedAttackValue() => GetAttackValue;
         public virtual string GetName() => Name;
         public virtual int GetAttack() => 0;
         public virtual int GetLuck() => 0;

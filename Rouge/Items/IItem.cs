@@ -16,6 +16,7 @@ namespace Rouge.Items
         Stats GetBuff();
         public bool IsActive(int currentActionCounter);
         bool IsConsumable();
+        public int DeserializedAttackValue();
 
         //do potionow
         public void Update(Player player);
