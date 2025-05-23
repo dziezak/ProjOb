@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Rouge;
 using Rouge.Items;
+using Rouge.Items.WeaponInterfaces;
 using Rouge.TCP;
 
 public class GameClient
@@ -14,6 +15,7 @@ public class GameClient
     private int _playerId;
     public string _instrIuction;
     public string _legend;
+    public bool isFighting;
     public GameState GameState { get; private set; }
     public PlayerAction PlayerAction { get; private set; }
 
@@ -23,6 +25,7 @@ public class GameClient
         _client = new TcpClient(address, port);
         _stream = _client.GetStream();
         GameState = new GameState(new Room(40, 30));
+        isFighting = false;
     }
 
     public void Start()
@@ -100,10 +103,14 @@ public class GameClient
                     {
                         Console.WriteLine("Error: GameDisplay is null."); 
                     }
-                    GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
-                    GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
-                    GameDisplay.Instance?.DisplayAvailableString(_legend, 40);
-                    GameDisplay.Instance?.DisplayLog(16, GameState.CurrentRoom.Width);
+
+                    if (!isFighting)
+                    {
+                        GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
+                        GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
+                        GameDisplay.Instance?.DisplayAvailableString(_legend, 40);
+                        GameDisplay.Instance?.DisplayLog(16, GameState.CurrentRoom.Width);
+                    }
                 }
                 
                 catch (Exception ex)
@@ -127,8 +134,28 @@ public class GameClient
             SendPlayerAction(playerAction);
             if (key == 'v')
             {
-                GameState.IsGameOver = true;
-            } 
+                GameState.IsPlayerDead[_playerId] = true;
+            }
+            else if (key == 'x')
+            {
+                key = Console.ReadKey().KeyChar;
+                int x = GameState.Players[_playerId].X;
+                int y = GameState.Players[_playerId].Y;
+                var Enemies = GameState.CurrentRoom.GetEnemiesNearBy(y, x);
+                int number = int.Parse(key.ToString());
+                while (number > Enemies.Count || Enemies[number] == null)
+                {
+                    key = Console.ReadKey().KeyChar;
+                    if (char.IsDigit(key)) {
+                        number = int.Parse(key.ToString()); // lub: number = key - '0';
+                    } else {
+                        Console.SetCursorPosition(0, 45);
+                        Console.WriteLine($"Dear Player put valid input {number}");
+                    }
+                }
+                GameState.Players[_playerId].SelectedEnemy = Enemies[number];
+                Fight(GameState.CurrentRoom, GameState, GameState.Players[_playerId]); 
+            }
         }
     }
     public void SendPlayerAction(PlayerAction action)
@@ -193,7 +220,7 @@ public class GameClient
             foreach (var itemDC in idc.Items)
             {
                 inv.Items.Add(new Item(itemDC.Name));
-                Console.WriteLine(itemDC.Name);//TODO USUN TO 
+                Console.WriteLine(itemDC.Name);
             }
         }
         return inv;
@@ -304,6 +331,101 @@ public class GameClient
 
         return new Item(itemDC.Name);
     }
+    
+    
+        public int CurrentHealh;
+        public int CurrentEnemyHealth;
+
+        //TODO: popraw dzialanie tego bo jeszcze nie ma dobrego wykorzystania wzorca strategii
+        public void Fight(Room room, GameState gameState, Player player) 
+        {
+            Console.Clear();
+            Console.SetCursorPosition(0, Console.CursorTop);
+            
+            var playerStats = player.GetCurrentStats();
+            CurrentHealh = playerStats.Health;
+            CurrentEnemyHealth = player.SelectedEnemy.EnemyStats.Health;
+            
+            GameDisplay.Instance?.RenderBattleUI(player);
+            GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
+            GameDisplay.Instance?.DisplayAvailableString(player.SelectedEnemy.GetImage(), 0);
+            GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth,player.SelectedEnemy.EnemyStats.Health ,player.SelectedEnemy.GetName(), false);
+            GameDisplay.Instance?.DisplayLog(0, 70);
+            
+            while (CurrentHealh > 0 && CurrentEnemyHealth > 0)
+            {
+                GameDisplay.Instance?.DisplayAvailableAttacks(player);
+                GameDisplay.Instance?.DisplayLog(0, 70);
+                char input = Console.ReadKey(true).KeyChar;
+                AttackType attackType = GetAttackType(input);
+
+                int baseLeftDamage = player.Inventory.LeftHand?.GetAttack() ?? 0;
+                int baseRightDamage = player.Inventory.RightHand?.GetAttack() ?? 0;
+                
+                Attack attackLeft = new Attack(attackType, baseLeftDamage, player);
+                Attack attackRight = new Attack(attackType, baseRightDamage, player);
+                
+                if (player.Inventory.RightHand != null)
+                {
+                    attackRight.Apply((IWeapon)player.Inventory.RightHand);
+                }
+
+                if (player.Inventory.LeftHand != null)
+                {
+                    attackLeft.Apply((IWeapon)player.Inventory.LeftHand);
+                }
+                
+                int totalDamage = attackRight.Damage + attackLeft.Damage;
+                CurrentEnemyHealth -= totalDamage;
+                
+                GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
+                GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, player.SelectedEnemy.EnemyStats.Health, player.SelectedEnemy.GetName(), false);
+                if (CurrentEnemyHealth <= 0)
+                {
+                    var key = (player.SelectedEnemy.Y, player.SelectedEnemy.X);
+                    if (room._enemiesMap.ContainsKey(key))
+                    {
+                        room._enemiesMap.Remove(key);
+                    }
+                    else
+                    {
+                        GameDisplay.Instance?.AddLogMessage($"There is no enemy on {player.SelectedEnemy.Y}, {player.SelectedEnemy.X}");
+                    }
+                    //GameDisplay.Instance?.RenderLabirynth(room, this); // tutaj usuniete pytanie czy bylo potrzebne?
+                    GameDisplay.Instance?.AddLogMessage($"{player.SelectedEnemy.GetName()} is defeated!");
+                    isFighting = false;
+                    break;
+                }
+
+                int playerDefense = attackLeft.Defense + attackRight.Defense;
+                int enemyAttackDamage = Math.Max(0,  player.SelectedEnemy.EnemyStats.Power - playerDefense);
+                GameDisplay.Instance?.AddLogMessage($"Player got attacked {player.SelectedEnemy.EnemyStats.Power}, but blocked {playerDefense} damage!");
+                CurrentHealh -= enemyAttackDamage;
+                GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
+                if (CurrentHealh <= 0)
+                {
+                    gameState.IsPlayerDead[player.Id] = true;
+                    GameDisplay.Instance?.GameOverDisplay();
+                    isFighting = false;
+                    break;
+                }
+
+            }
+            
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Clear();
+        }
+        
+        private AttackType GetAttackType(char input)
+        {
+            return input switch
+            {
+                '1' => AttackType.Heavy,
+                '2' => AttackType.Stealth,
+                '3' => AttackType.Magic,
+                _ => AttackType.Heavy
+            };
+        }
 
 
 }
