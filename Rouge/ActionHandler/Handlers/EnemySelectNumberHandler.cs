@@ -18,7 +18,7 @@ public class EnemySelectNumberHandler :ActionHandlerBase
         {
             GameDisplay.Instance?.AddLogMessage($"Player chose attack number {whichAttack}");
             player.lastCharacter = whichAttack;
-            GameDisplay.Instance?.AddLogMessage($"FUNCTION CHARACTER");
+            ///GameDisplay.Instance?.AddLogMessage($"FUNCTION CHARACTER");
             player.Fight(room, player, whichAttack);
             UpdateUI(room, player);
         }

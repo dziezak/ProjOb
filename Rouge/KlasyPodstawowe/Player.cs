@@ -317,13 +317,15 @@ namespace Rouge
         }
 
 
-        //TODO: popraw dzialanie tego bo jeszcze nie ma dobrego wykorzystania wzorca strategii
         public void Fight(Room room, Player player, char input) 
         {
-            if(IsFighting == false){
-                CurrentHealh = player.GetCurrentStats().Health;
-                IsFighting = true;
+            if(player.IsFighting == false){
+                player.CurrentHealh = player.GetCurrentStats().Health;
+                player.IsFighting = true;
             }
+
+            //room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)];
+            
             
             /*
             GameDisplay.Instance?.RenderBattleUI(player);
@@ -333,13 +335,13 @@ namespace Rouge
             GameDisplay.Instance?.DisplayLog(0, 70);
             */
             
-            if (CurrentHealh > 0 && SelectedEnemy.EnemyStats.Health > 0)
+            if (player.CurrentHealh > 0 && room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].EnemyStats.Health > 0)
             {
                 /*
                 GameDisplay.Instance?.DisplayAvailableAttacks(player);
                 GameDisplay.Instance?.DisplayLog(0, 70);
                 */
-                AvailableAttacks = GetAvailableAttacks(this);
+                player.AvailableAttacks = GetAvailableAttacks(player);
                 AttackType attackType = GetAttackType(input);
 
                 int baseLeftDamage = player.Inventory.LeftHand?.GetAttack() ?? 0;
@@ -359,32 +361,29 @@ namespace Rouge
                 }
                 
                 int totalDamage = attackRight.Damage + attackLeft.Damage;
-                SelectedEnemy.EnemyStats = SelectedEnemy.EnemyStats with
-                {
-                    Health = SelectedEnemy.EnemyStats.Health - totalDamage
-                };
+                room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].CurrentHealth -= totalDamage;
                 
                 GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
                 //GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, player.SelectedEnemy.EnemyStats.Health, player.SelectedEnemy.GetName(), false);
-                if (SelectedEnemy.EnemyStats.Health <= 0)
+                if (room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].CurrentHealth <= 0)
                 {
-                    var key = (player.SelectedEnemy.Y, player.SelectedEnemy.X);
+                    var key = (room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].Y, room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].X);
                     if (room._enemiesMap.ContainsKey(key))
                     {
                         room._enemiesMap.Remove(key);
                     }
                     else
                     {
-                        GameDisplay.Instance?.AddLogMessage($"There is no enemy on {player.SelectedEnemy.Y}, {player.SelectedEnemy.X}");
+                        GameDisplay.Instance?.AddLogMessage($"There is no enemy on {room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].Y}, {room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].X}");
                         WarningMessage = "There is no enemy on {player.SelectedEnemy.Y}, {player.SelectedEnemy.X}";
                     }
-                    GameDisplay.Instance?.AddLogMessage($"{player.SelectedEnemy.GetName()} is defeated!");
+                    GameDisplay.Instance?.AddLogMessage($"{room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].GetName()} is defeated!");
                     IsFighting = false;
                 }
 
                 int playerDefense = attackLeft.Defense + attackRight.Defense;
-                int enemyAttackDamage = Math.Max(0,  player.SelectedEnemy.EnemyStats.Power - playerDefense);
-                GameDisplay.Instance?.AddLogMessage($"Player got attacked {player.SelectedEnemy.EnemyStats.Power}, but blocked {playerDefense} damage!");
+                int enemyAttackDamage = Math.Max(0, room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].EnemyStats.Power - playerDefense);
+                GameDisplay.Instance?.AddLogMessage($"Player got attacked {room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].EnemyStats.Power}, but blocked {playerDefense} damage!");
                 CurrentHealh -= enemyAttackDamage;
                 //GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
                 if (CurrentHealh <= 0)
