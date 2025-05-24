@@ -64,7 +64,7 @@ public class GameServer
         //TODO tutuaj jeszcze trzeba podac miejsce dla ludzi aby sie pojawiali w dobrych miejscach oraz id
         Player player = new Player(_gameState.NumberOfPlayers, 0, _gameState.NumberOfPlayers,
             new Inventory(), new Stats(10, 10, 100, 10, 10, 10), null,
-            0, 0, null);
+            0, 0, null, false, 100, null, "");
         _gameState.AddPlayer(player);
         
         ChainBuilder chainBuilder = new ChainBuilder(_gameState.Players[player.Id], _gameState.CurrentRoom);

@@ -11,8 +11,9 @@ public class EnemySelectHandler: ActionHandlerBase
             if (enemiesNearBy.Count > 0)
             {
                 //GameDisplay.Instance?.DisplayMovementInformation("pick number of item to pick up", room);
-                GameDisplay.Instance?.DisplayMovementInformation($"Enemies detected! Choose one to fight.", room);
+                //GameDisplay.Instance?.DisplayMovementInformation($"Enemies detected! Choose one to fight.", room);
                 player.IsSelectingEnemies = true;
+                GameDisplay.Instance?.AddLogMessage($"Player {player.Id} attacked {enemiesNearBy.Count}!!!");
             }
             else
             {

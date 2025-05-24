@@ -136,26 +136,6 @@ public class GameClient
             {
                 GameState.IsPlayerDead[_playerId] = true;
             }
-            else if (key == 'x')
-            {
-                key = Console.ReadKey().KeyChar;
-                int x = GameState.Players[_playerId].X;
-                int y = GameState.Players[_playerId].Y;
-                var Enemies = GameState.CurrentRoom.GetEnemiesNearBy(y, x);
-                int number = int.Parse(key.ToString());
-                while (number > Enemies.Count || Enemies[number] == null)
-                {
-                    key = Console.ReadKey().KeyChar;
-                    if (char.IsDigit(key)) {
-                        number = int.Parse(key.ToString()); // lub: number = key - '0';
-                    } else {
-                        Console.SetCursorPosition(0, 45);
-                        Console.WriteLine($"Dear Player put valid input {number}");
-                    }
-                }
-                GameState.Players[_playerId].SelectedEnemy = Enemies[number];
-                Fight(GameState.CurrentRoom, GameState, GameState.Players[_playerId]); 
-            }
         }
     }
     public void SendPlayerAction(PlayerAction action)
@@ -188,15 +168,20 @@ public class GameClient
     private Player ConvertPlayerDCToPlayer(PlayerDC pdc)
     {
         Player p = new Player(
-            pdc.Id, 
-            pdc.X, 
-            pdc.Y, 
-            ConvertInventoryDCToInventory(pdc.Inventory), 
+            pdc.Id,
+            pdc.X,
+            pdc.Y,
+            ConvertInventoryDCToInventory(pdc.Inventory),
             ConvertStatsDCToStats(pdc.BaseStats),
             null,
             0,
             0,
-            null); 
+            null,
+            pdc.IsFighting,
+            pdc.CurrentHealth,
+            ConvertEnemyDCToEnemy(pdc.SelectedEnemy),
+            pdc.AvailableAttacks
+            ); 
         
         //p.ItemsToGetFromRoom = pdc.ItemsToGetFromRoom.Select(itemDC => ConvertItemDCToIItem(itemDC)).ToList();
         foreach (ItemDC itemDC in pdc.ItemsToGetFromRoom)
@@ -321,6 +306,7 @@ public class GameClient
                 retEnemy = new Zombie();
                 break;
         }
+
         return retEnemy;
     }
     
@@ -331,102 +317,5 @@ public class GameClient
 
         return new Item(itemDC.Name);
     }
-    
-    
-        public int CurrentHealh;
-        public int CurrentEnemyHealth;
-
-        //TODO: popraw dzialanie tego bo jeszcze nie ma dobrego wykorzystania wzorca strategii
-        public void Fight(Room room, GameState gameState, Player player) 
-        {
-            Console.Clear();
-            Console.SetCursorPosition(0, Console.CursorTop);
-            
-            var playerStats = player.GetCurrentStats();
-            CurrentHealh = playerStats.Health;
-            CurrentEnemyHealth = player.SelectedEnemy.EnemyStats.Health;
-            
-            GameDisplay.Instance?.RenderBattleUI(player);
-            GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
-            GameDisplay.Instance?.DisplayAvailableString(player.SelectedEnemy.GetImage(), 0);
-            GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth,player.SelectedEnemy.EnemyStats.Health ,player.SelectedEnemy.GetName(), false);
-            GameDisplay.Instance?.DisplayLog(0, 70);
-            
-            while (CurrentHealh > 0 && CurrentEnemyHealth > 0)
-            {
-                GameDisplay.Instance?.DisplayAvailableAttacks(player);
-                GameDisplay.Instance?.DisplayLog(0, 70);
-                char input = Console.ReadKey(true).KeyChar;
-                AttackType attackType = GetAttackType(input);
-
-                int baseLeftDamage = player.Inventory.LeftHand?.GetAttack() ?? 0;
-                int baseRightDamage = player.Inventory.RightHand?.GetAttack() ?? 0;
-                
-                Attack attackLeft = new Attack(attackType, baseLeftDamage, player);
-                Attack attackRight = new Attack(attackType, baseRightDamage, player);
-                
-                if (player.Inventory.RightHand != null)
-                {
-                    attackRight.Apply((IWeapon)player.Inventory.RightHand);
-                }
-
-                if (player.Inventory.LeftHand != null)
-                {
-                    attackLeft.Apply((IWeapon)player.Inventory.LeftHand);
-                }
-                
-                int totalDamage = attackRight.Damage + attackLeft.Damage;
-                CurrentEnemyHealth -= totalDamage;
-                
-                GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
-                GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, player.SelectedEnemy.EnemyStats.Health, player.SelectedEnemy.GetName(), false);
-                if (CurrentEnemyHealth <= 0)
-                {
-                    var key = (player.SelectedEnemy.Y, player.SelectedEnemy.X);
-                    if (room._enemiesMap.ContainsKey(key))
-                    {
-                        room._enemiesMap.Remove(key);
-                    }
-                    else
-                    {
-                        GameDisplay.Instance?.AddLogMessage($"There is no enemy on {player.SelectedEnemy.Y}, {player.SelectedEnemy.X}");
-                    }
-                    //GameDisplay.Instance?.RenderLabirynth(room, this); // tutaj usuniete pytanie czy bylo potrzebne?
-                    GameDisplay.Instance?.AddLogMessage($"{player.SelectedEnemy.GetName()} is defeated!");
-                    isFighting = false;
-                    break;
-                }
-
-                int playerDefense = attackLeft.Defense + attackRight.Defense;
-                int enemyAttackDamage = Math.Max(0,  player.SelectedEnemy.EnemyStats.Power - playerDefense);
-                GameDisplay.Instance?.AddLogMessage($"Player got attacked {player.SelectedEnemy.EnemyStats.Power}, but blocked {playerDefense} damage!");
-                CurrentHealh -= enemyAttackDamage;
-                GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
-                if (CurrentHealh <= 0)
-                {
-                    gameState.IsPlayerDead[player.Id] = true;
-                    GameDisplay.Instance?.GameOverDisplay();
-                    isFighting = false;
-                    break;
-                }
-
-            }
-            
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Clear();
-        }
-        
-        private AttackType GetAttackType(char input)
-        {
-            return input switch
-            {
-                '1' => AttackType.Heavy,
-                '2' => AttackType.Stealth,
-                '3' => AttackType.Magic,
-                _ => AttackType.Heavy
-            };
-        }
-
-
 }
 

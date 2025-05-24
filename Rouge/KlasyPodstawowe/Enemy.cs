@@ -8,11 +8,14 @@ public abstract class Enemy
    public string Image { get; set; }
    public int X { get; set; }
    public int Y { get; set; }
+   
+   public int CurrentHealth { get; set; }
 
-   public Enemy(string name, Stats stats)
+   public Enemy(string name, Stats stats, int currentHealth ) // powtorka specjalnie aby konstruktor dla JSON dzialal
    {
       Name = name;
       EnemyStats = stats;
+      CurrentHealth = currentHealth;
    }
    public Enemy(){}
 
@@ -25,7 +28,7 @@ public class Minion : Enemy
 {
    static Stats stats = new Stats(15, 30, 50, 0, 10, 20 );
 
-   public Minion() : base("Minion", stats)
+   public Minion() : base("Minion", stats, stats.Health)
    {
     Image = @"
                                                            
@@ -70,7 +73,7 @@ public class Zombie : Enemy
 {
    static Stats stats = new Stats(30, 5, 100, 0, 10, 5 );
 
-   public Zombie() : base("Zombie", stats)
+   public Zombie() : base("Zombie", stats, stats.Health)
    {
       Image = @"
       @      @@                                
@@ -129,7 +132,7 @@ public class Xenomorph : Enemy
 {
    static Stats stats = new Stats(50, 30, 200, 10, 10, 10 );
 
-   public Xenomorph() : base("Xenomorph", stats)
+   public Xenomorph() : base("Xenomorph", stats, stats.Health)
    {
     Image = @"
 

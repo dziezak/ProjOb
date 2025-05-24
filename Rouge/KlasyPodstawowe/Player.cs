@@ -31,9 +31,17 @@ namespace Rouge
         public ConsoleKeyInfo _itemToPickUp;
         ConsoleKeyInfo _itemToDrop;
         int _handItem;
+        
+        //Things for Fight:
+        public bool IsFighting { get; set; } = false;
+        public int CurrentHealh { get; set; } = 0;
+        
+        public string AvailableAttacks { get; set; } = "";
+        
 
         public Player(int id, int x, int y, Inventory inventory, Stats baseStats, List<IItem> appliedPotions, 
-            int coins, int gold, List<IItem> itemsToGetFromRoom)
+            int coins, int gold, List<IItem> itemsToGetFromRoom, bool isFighting, int currentHealh, Enemy selectedEnemy, 
+            string availableAttacks)
         {
             Id = id;
             X = x;
@@ -44,6 +52,10 @@ namespace Rouge
             ItemsToGetFromRoom = itemsToGetFromRoom ?? new List<IItem>();
             Coins = coins;
             Gold = gold;
+            IsFighting = isFighting;
+            CurrentHealh = currentHealh;
+            SelectedEnemy = selectedEnemy;
+            AvailableAttacks = availableAttacks;
         }
  
 
@@ -304,7 +316,138 @@ namespace Rouge
             AppliedPotions.Clear();
         }
 
+
+        //TODO: popraw dzialanie tego bo jeszcze nie ma dobrego wykorzystania wzorca strategii
+        public void Fight(Room room, Player player, char input) 
+        {
+            if(IsFighting == false){
+                CurrentHealh = player.GetCurrentStats().Health;
+                IsFighting = true;
+            }
+            
+            /*
+            GameDisplay.Instance?.RenderBattleUI(player);
+            GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
+            GameDisplay.Instance?.DisplayAvailableString(player.SelectedEnemy.GetImage(), 0);
+            GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth,player.SelectedEnemy.EnemyStats.Health ,player.SelectedEnemy.GetName(), false);
+            GameDisplay.Instance?.DisplayLog(0, 70);
+            */
+            
+            if (CurrentHealh > 0 && SelectedEnemy.EnemyStats.Health > 0)
+            {
+                /*
+                GameDisplay.Instance?.DisplayAvailableAttacks(player);
+                GameDisplay.Instance?.DisplayLog(0, 70);
+                */
+                AvailableAttacks = GetAvailableAttacks(this);
+                AttackType attackType = GetAttackType(input);
+
+                int baseLeftDamage = player.Inventory.LeftHand?.GetAttack() ?? 0;
+                int baseRightDamage = player.Inventory.RightHand?.GetAttack() ?? 0;
+                
+                Attack attackLeft = new Attack(attackType, baseLeftDamage, player);
+                Attack attackRight = new Attack(attackType, baseRightDamage, player);
+                
+                if (player.Inventory.RightHand != null)
+                {
+                    attackRight.Apply((IWeapon)player.Inventory.RightHand);
+                }
+
+                if (player.Inventory.LeftHand != null)
+                {
+                    attackLeft.Apply((IWeapon)player.Inventory.LeftHand);
+                }
+                
+                int totalDamage = attackRight.Damage + attackLeft.Damage;
+                SelectedEnemy.EnemyStats = SelectedEnemy.EnemyStats with
+                {
+                    Health = SelectedEnemy.EnemyStats.Health - totalDamage
+                };
+                
+                GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
+                //GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, player.SelectedEnemy.EnemyStats.Health, player.SelectedEnemy.GetName(), false);
+                if (SelectedEnemy.EnemyStats.Health <= 0)
+                {
+                    var key = (player.SelectedEnemy.Y, player.SelectedEnemy.X);
+                    if (room._enemiesMap.ContainsKey(key))
+                    {
+                        room._enemiesMap.Remove(key);
+                    }
+                    else
+                    {
+                        GameDisplay.Instance?.AddLogMessage($"There is no enemy on {player.SelectedEnemy.Y}, {player.SelectedEnemy.X}");
+                        WarningMessage = "There is no enemy on {player.SelectedEnemy.Y}, {player.SelectedEnemy.X}";
+                    }
+                    GameDisplay.Instance?.AddLogMessage($"{player.SelectedEnemy.GetName()} is defeated!");
+                    IsFighting = false;
+                }
+
+                int playerDefense = attackLeft.Defense + attackRight.Defense;
+                int enemyAttackDamage = Math.Max(0,  player.SelectedEnemy.EnemyStats.Power - playerDefense);
+                GameDisplay.Instance?.AddLogMessage($"Player got attacked {player.SelectedEnemy.EnemyStats.Power}, but blocked {playerDefense} damage!");
+                CurrentHealh -= enemyAttackDamage;
+                //GameDisplay.Instance?.RenderHeathBar(CurrentHealh, playerStats.Health, "witcher", true);
+                if (CurrentHealh <= 0)
+                {
+                    //GameDisplay.Instance?.GameOverDisplay();
+                    IsFighting = false;
+                }
+            }
+            //Console.SetCursorPosition(0, Console.CursorTop);
+            //Console.Clear();
+        }
         
+        private AttackType GetAttackType(char input)
+        {
+            return input switch
+            {
+                '1' => AttackType.Heavy,
+                '2' => AttackType.Stealth,
+                '3' => AttackType.Magic,
+                _ => AttackType.Heavy
+            };
+        }
+        
+        public string GetAvailableAttacks(Player player)
+        {
+            if (player == null || player.Inventory == null)
+                return "No available attacks.";
+
+            StringBuilder ret = new StringBuilder("\nAvailable Attacks:\n");
+
+            string format = "{0,-15} | Damage: {1,3} | Defense: {2,3}\n";
+    
+            int leftBase = player.Inventory.LeftHand?.GetAttack() ?? 0;
+            int rightBase = player.Inventory.RightHand?.GetAttack() ?? 0;
+
+            Attack normalLeft = new Attack(AttackType.Heavy, leftBase, player);
+            Attack normalRight = new Attack(AttackType.Heavy, rightBase, player);
+            Attack stealthLeft = new Attack(AttackType.Stealth, leftBase, player);
+            Attack stealthRight = new Attack(AttackType.Stealth, rightBase, player);
+            Attack magicLeft = new Attack(AttackType.Magic, leftBase, player);
+            Attack magicRight = new Attack(AttackType.Magic, rightBase, player);
+
+            if (player.Inventory.LeftHand is IWeapon leftWeapon)
+            {
+                normalLeft.Apply(leftWeapon);
+                stealthLeft.Apply(leftWeapon);
+                magicLeft.Apply(leftWeapon);
+            }
+
+            if (player.Inventory.RightHand is IWeapon rightWeapon)
+            {
+                normalRight.Apply(rightWeapon);
+                stealthRight.Apply(rightWeapon);
+                magicRight.Apply(rightWeapon);
+            }
+
+            ret.AppendFormat(format, "1 - Normal", normalLeft.Damage + normalRight.Damage, normalLeft.Defense + normalRight.Defense);
+            ret.AppendFormat(format, "2 - Stealth", stealthLeft.Damage + stealthRight.Damage, stealthLeft.Defense + stealthRight.Defense);
+            ret.AppendFormat(format, "3 - Magic", magicLeft.Damage + magicRight.Damage, magicLeft.Defense + magicRight.Defense);
+
+            return ret.ToString();
+        }
+ 
 
     }
 

@@ -83,6 +83,18 @@ public class PlayerDC
     [JsonPropertyName("itemsToGetFromRoom")]
     public List<ItemDC> ItemsToGetFromRoom { get; set; }
     
+    [JsonPropertyName("IsFighting")]
+    public bool IsFighting { get; set; }
+    
+    [JsonPropertyName("selectedEnemy")]
+    public EnemyDC SelectedEnemy { get; set; }
+    
+    [JsonPropertyName("AvailableAttacks")]
+    public string AvailableAttacks { get; set; } = "";
+    
+    [JsonPropertyName("CurrentHealth")]
+    public int CurrentHealth { get; set; }
+    
     public PlayerDC(Player player)
     {
         Id = player.Id;
@@ -95,10 +107,25 @@ public class PlayerDC
         {
             ItemsToGetFromRoom.Add(new ItemDC(item));
         }
+
+        CurrentHealth = player.CurrentHealh;
+        IsFighting = player.IsFighting;
+        if (player.SelectedEnemy != null)
+        {
+            SelectedEnemy = new EnemyDC(player.SelectedEnemy);
+        }
+        else
+        {
+            var enemy = new Minion();
+            SelectedEnemy = new EnemyDC(enemy.Name, enemy.X, enemy.Y, new StatsDC(enemy.EnemyStats), 
+                enemy.Image, enemy.CurrentHealth );
+        }
+        AvailableAttacks = player.AvailableAttacks;
     }
 
     [JsonConstructor]
-    public PlayerDC(int id, int x, int y, InventoryDC inventory, StatsDC baseStats, List<ItemDC> itemsToGetFromRoom)
+    public PlayerDC(int id, int x, int y, InventoryDC inventory, StatsDC baseStats, List<ItemDC> itemsToGetFromRoom,
+        bool isFighting, EnemyDC selectedEnemy, string availableAttacks, int currentHealth)
     {
         Id = id;
         X = x;
@@ -106,6 +133,11 @@ public class PlayerDC
         Inventory = inventory;
         BaseStats = baseStats;
         ItemsToGetFromRoom = itemsToGetFromRoom;
+        IsFighting = isFighting;
+        SelectedEnemy = selectedEnemy;
+
+        AvailableAttacks = availableAttacks;
+        CurrentHealth = currentHealth;
     }
 }
 
@@ -126,6 +158,9 @@ public class EnemyDC
     
     [JsonPropertyName("image")]
     public string Image { get; set; }
+
+    [JsonPropertyName("CurrentHealth")] 
+    public int CurrentHealth { get; set; }
     public EnemyDC(Enemy enemy)
     {
         Name = enemy.Name;
@@ -133,16 +168,18 @@ public class EnemyDC
         Y = enemy.Y;
         BaseStats = new StatsDC(enemy.GetStats());
         Image = enemy.Image;
+        CurrentHealth = enemy.CurrentHealth;
     }
 
     [JsonConstructor]
-    public EnemyDC(string name, int x, int y, StatsDC baseStats, string image)
+    public EnemyDC(string name, int x, int y, StatsDC baseStats, string image, int currentHealth)
     {
         Name = name;
         X = x;
         Y = y;
         BaseStats = baseStats;
         Image = image;
+        CurrentHealth = currentHealth;
     }
 }
 
