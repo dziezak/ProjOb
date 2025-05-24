@@ -76,6 +76,7 @@ public class ChainBuilder : IDungeonBuilder<IActionHandler>
     {
         AddHandler(new EnemySelectHandler());
         AddHandler(new ChooseEnemyHandler());
+        AddHandler(new EnemySelectNumberHandler());
     }
 
     public IActionHandler GetResult()

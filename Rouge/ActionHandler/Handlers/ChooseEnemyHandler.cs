@@ -11,13 +11,13 @@ public class ChooseEnemyHandler : ActionHandlerBase
 
             if (enemyIndex >= 0 & enemyIndex < enemiesNearBy.Count)
             {
-                player.lastCharacter = input;
+                player.lastCharacter = '@';
                 var selectedEnemy = enemiesNearBy[enemyIndex];
                 GameDisplay.Instance?.AddLogMessage($"Witcher decided to fight {selectedEnemy.GetName()}");
                 player.SelectedEnemy = selectedEnemy;
                 player.IsSelectingEnemies = false;
                 //TODO: do napisania poprawnie
-                //player.Fight(room); 
+                //player.Fight(room, player, input); 
             }
             else
             {

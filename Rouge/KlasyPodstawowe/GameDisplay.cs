@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Rouge.Items;
 using Rouge.Items.WeaponInterfaces;
 
@@ -170,7 +171,7 @@ public class GameDisplay
                string name = item.GetName();
                Stats stats = item.GetStats();
                int defence = item.GetDefense();
-               AddText($"{name} Attack:{stats.Attack}, Health:{stats.Health}, Defence: {defence}");
+               AddText($"{name} Attack:{stats.Attack}, Health:{item.CurrentHealth}, Defence: {defence}");
             }
             AddText("====================================================");
             if (!string.IsNullOrEmpty(player.WarningMessage))
