@@ -9,7 +9,7 @@ public static class Timer
     private static List<IItem> _activePotions { get; set; } = new List<IItem>();
     //public static event Action? OnNextTurn;
     
-    public static void NextTurn(Player player)
+    public static void NextTurn(Player player, Room room)
     {
         ActionCounter++;
 
@@ -23,6 +23,25 @@ public static class Timer
                 player.RemovePotion(potion);
             }
         }
+        
+        int px = player.X;
+        int py = player.Y;
+        int odl = 3;
+
+        for (int y = py - odl; y <= py + odl; y++)
+        {
+            for (int x = px - odl; x <= px + odl; x++)
+            {
+                var key = (y, x);
+
+                if (room._enemiesMap.TryGetValue(key, out Enemy enemy))
+                {
+                    enemy.Behavior.Move(enemy, player, room);
+                    enemy.Behavior.Act(enemy, player);
+                }
+            }
+        }
+        
     }
 
     public static void ClearPotions(Player player)

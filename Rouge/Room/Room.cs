@@ -282,6 +282,19 @@ namespace Rouge
         {
             return _itemMap.ContainsKey((x, y)) ? _itemMap[(x, y)] : new List<IItem>();
         }
+        
+        public void MoveEnemy(Enemy enemy, int newX, int newY)
+        {
+            var oldKey = (enemy.Y, enemy.X);
+            _enemiesMap.Remove(oldKey);
+
+            enemy.X = newX;
+            enemy.Y = newY;
+
+            var newKey = (newY, newX);
+            _enemiesMap[newKey] = enemy;
+        }
+
 
        
     }
