@@ -335,7 +335,7 @@ namespace Rouge
             GameDisplay.Instance?.DisplayLog(0, 70);
             */
             
-            if (player.CurrentHealh > 0 && room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].EnemyStats.Health > 0)
+            if (player.CurrentHealh > 0 && room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].CurrentHealth > 0)
             {
                 /*
                 GameDisplay.Instance?.DisplayAvailableAttacks(player);

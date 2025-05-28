@@ -9,9 +9,11 @@ public abstract class Enemy
    public int X { get; set; }
    public int Y { get; set; }
    
+   public IEnemyBehavior Behavior { get; set; }
+   
    public int CurrentHealth { get; set; }
 
-   public Enemy(string name, Stats stats, int currentHealth ) // powtorka specjalnie aby konstruktor dla JSON dzialal
+   public Enemy(string name, Stats stats, int currentHealth) // powtorka specjalnie aby konstruktor dla JSON dzialal
    {
       Name = name;
       EnemyStats = stats;
@@ -22,6 +24,18 @@ public abstract class Enemy
    public abstract Stats GetStats();
    public abstract int GetDefense();
    public abstract string GetImage();
+
+   //Enemy movement:
+   public void SetBehavior(IEnemyBehavior newBehavior)
+   {
+    Behavior = newBehavior;
+   }
+
+   public void Update(Player player, Room room)
+   { 
+    Behavior.Move(this, player, room);
+    Behavior.Act(this, player);
+   }
 }
 
 public class Minion : Enemy
@@ -61,6 +75,7 @@ public class Minion : Enemy
        **%%%%#*+                                           
          *#%#*+                                                                                          
 ";
+    Behavior = new FearfulBehavior();
    }
    public override string GetName() => "Minion";
    public override Stats GetStats() => stats;
@@ -118,6 +133,7 @@ public class Zombie : Enemy
                           @%%@@@@@@@@@@@@ @@@  
                               @@@@@@@@@        
       ";
+      Behavior = new AggressiveBehavior();
    }
    public override string GetName() => "Zombie";
    public override Stats GetStats() => stats;
@@ -174,6 +190,7 @@ public class Xenomorph : Enemy
                           ..-===:                          
                                                                                    
 ";
+    Behavior = new CalmBehavior();
    }
    public override string GetName() => "Xenomorph";
    public override Stats GetStats() => stats;

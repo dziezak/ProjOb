@@ -104,7 +104,7 @@ public class GameClient
                         Console.WriteLine("Error: GameDisplay is null."); 
                     }
 
-                    if (!isFighting)
+                    if (true) //TODO CHANGE WITH RENDERING BATLE UI
                     {
                         GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
                         GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
