@@ -21,7 +21,6 @@ public class AggressiveBehavior : IEnemyBehavior
         int dx = player.X - enemy.X;
         int dy = player.Y - enemy.Y;
 
-        // Prosty algorytm – najpierw próbuj w osi X
         int newX = enemy.X;
         int newY = enemy.Y;
 
@@ -32,9 +31,9 @@ public class AggressiveBehavior : IEnemyBehavior
 
         if (room.IsWalkable(newX, newY))
         {
-            room.MoveEnemy(enemy, newX, newY);
+            if(!(newX == player.X && newY == player.Y))
+                room.MoveEnemy(enemy, newX, newY);
         }
-        // W przeciwnym razie – nie rusza się
     }
 
     public void Act(Enemy enemy, Player player)
@@ -57,10 +56,10 @@ public class FearfulBehavior : IEnemyBehavior
     {
         var directions = new (int dx, int dy)[]
         {
-            (0, -1), // góra
-            (0, 1),  // dół
-            (-1, 0), // lewo
-            (1, 0),  // prawo
+            (0, -1), 
+            (0, 1),  
+            (-1, 0), 
+            (1, 0), 
         };
 
         int maxDist = Manhattan(enemy.X, enemy.Y, player.X, player.Y);

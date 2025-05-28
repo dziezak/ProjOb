@@ -210,6 +210,7 @@ namespace Rouge
                 Y = newY;
                 Timer.NextTurn(this, room);
             }
+            IsFighting = false;
         }
 
         public void MoveLeft(Room room)
@@ -222,6 +223,7 @@ namespace Rouge
                 Y = newY;
                 Timer.NextTurn(this, room);
             }
+            IsFighting = false;
         }
 
         public void MoveDown(Room room)
@@ -234,6 +236,7 @@ namespace Rouge
                 Y = newY;
                 Timer.NextTurn(this, room);
             }
+            IsFighting = false;
         }
 
         public void MoveUp(Room room)
@@ -246,6 +249,7 @@ namespace Rouge
                 Y = newY;
                 Timer.NextTurn(this, room);
             }
+            IsFighting = false;
         }
 
         public void ApplyEffect(IItem item)

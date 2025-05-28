@@ -28,6 +28,7 @@ public static class Timer
         int py = player.Y;
         int odl = 3;
 
+        List<Enemy> toUpdate = new();
         for (int y = py - odl; y <= py + odl; y++)
         {
             for (int x = px - odl; x <= px + odl; x++)
@@ -36,10 +37,15 @@ public static class Timer
 
                 if (room._enemiesMap.TryGetValue(key, out Enemy enemy))
                 {
-                    enemy.Behavior.Move(enemy, player, room);
-                    enemy.Behavior.Act(enemy, player);
+                    toUpdate.Add(enemy);
                 }
             }
+        }
+
+        foreach (var enemy in toUpdate)
+        {
+            enemy.Behavior.Move(enemy, player, room);
+            enemy.Behavior.Act(enemy, player);
         }
         
     }

@@ -31,11 +31,6 @@ public abstract class Enemy
     Behavior = newBehavior;
    }
 
-   public void Update(Player player, Room room)
-   { 
-    Behavior.Move(this, player, room);
-    Behavior.Act(this, player);
-   }
 }
 
 public class Minion : Enemy
