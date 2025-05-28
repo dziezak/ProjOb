@@ -362,6 +362,13 @@ namespace Rouge
                 
                 int totalDamage = attackRight.Damage + attackLeft.Damage;
                 room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].CurrentHealth -= totalDamage;
+                if (room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].CurrentHealth /
+                    room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].EnemyStats.Health <= 0.2)
+                {
+                    room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].Behavior = new FearfulBehavior();
+                    GameDisplay.Instance?.AddLogMessage(
+                        $"{room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].Name} is running away");
+                }
                 
                 GameDisplay.Instance?.AddLogMessage($"Player attacked with {attackType}, dealing {totalDamage} damage!");
                 //GameDisplay.Instance?.RenderHeathBar(CurrentEnemyHealth, player.SelectedEnemy.EnemyStats.Health, player.SelectedEnemy.GetName(), false);

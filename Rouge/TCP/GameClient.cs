@@ -298,12 +298,15 @@ public class GameClient
         {
             case "Minion":
                 retEnemy = new Minion();
+                retEnemy.CurrentHealth = enemydc.CurrentHealth;
                 break;
             case "Xenomorph":
                 retEnemy = new Xenomorph();
+                retEnemy.CurrentHealth = enemydc.CurrentHealth;
                 break;
             default:
                 retEnemy = new Zombie();
+                retEnemy.CurrentHealth = enemydc.CurrentHealth;
                 break;
         }
 
