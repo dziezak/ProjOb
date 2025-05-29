@@ -44,7 +44,7 @@ public class AggressiveBehavior : IEnemyBehavior
         {
             GameDisplay.Instance?.AddLogMessage($"{enemy.Name} jumped attacked Player {player.Id}!");
             player.IsFighting = true;
-            player.CurrentHealh -= player.BaseStats.Health - enemy.EnemyStats.Power; // przykładowo
+            player.CurrentHealh -= enemy.EnemyStats.Power; // przykładowo
         }
     }
 }

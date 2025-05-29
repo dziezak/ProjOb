@@ -104,12 +104,14 @@ public class GameClient
                         Console.WriteLine("Error: GameDisplay is null."); 
                     }
 
-                    if (true) //TODO CHANGE WITH RENDERING BATLE UI
+                    if (true)
                     {
                         GameDisplay.Instance?.RenderLabirynth(GameState, _playerId);
                         GameDisplay.Instance?.DisplayStats(GameState.CurrentRoom, GameState.Players[_playerId], false);
                         GameDisplay.Instance?.DisplayAvailableString(_legend, 40);
                         GameDisplay.Instance?.DisplayLog(16, GameState.CurrentRoom.Width);
+                        GameDisplay.Instance?.Erase(50, 40, 55, 60);
+                        GameDisplay.Instance?.DisplayAvailableString(GameState.Players[_playerId].AvailableAttacks, 40, 50);
                     }
                 }
                 
@@ -124,6 +126,8 @@ public class GameClient
     
     
     
+    
+    
     public void HandleClient()
     {
         while (!GameState.IsGameOver)
@@ -134,8 +138,10 @@ public class GameClient
             SendPlayerAction(playerAction);
             if (key == 'v')
             {
+                GameDisplay.Instance?.GameOverDisplay();
                 GameState.IsPlayerDead[_playerId] = true;
             }
+
         }
     }
     public void SendPlayerAction(PlayerAction action)

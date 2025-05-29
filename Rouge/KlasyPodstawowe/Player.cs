@@ -324,7 +324,6 @@ namespace Rouge
         public void Fight(Room room, Player player, char input) 
         {
             if(player.IsFighting == false){
-                player.CurrentHealh = player.GetCurrentStats().Health;
                 player.IsFighting = true;
             }
 
@@ -390,9 +389,11 @@ namespace Rouge
                     }
                     GameDisplay.Instance?.AddLogMessage($"{room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].GetName()} is defeated!");
                     IsFighting = false;
+                    player.CurrentHealh = player.GetCurrentStats().Health;
                 }
 
                 int playerDefense = attackLeft.Defense + attackRight.Defense;
+                if(playerDefense < 0) playerDefense = 0;
                 int enemyAttackDamage = Math.Max(0, room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].EnemyStats.Power - playerDefense);
                 GameDisplay.Instance?.AddLogMessage($"Player got attacked {room._enemiesMap[(player.SelectedEnemy.Y, player.SelectedEnemy.X)].EnemyStats.Power}, but blocked {playerDefense} damage!");
                 CurrentHealh -= enemyAttackDamage;

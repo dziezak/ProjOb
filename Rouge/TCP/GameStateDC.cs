@@ -102,7 +102,7 @@ public class PlayerDC
         Y = player.Y;
         BaseStats = new StatsDC(player.GetCurrentStats());
         Inventory = new InventoryDC(player.Inventory);
-        ItemsToGetFromRoom = new List<ItemDC>(); //TUTAJ
+        ItemsToGetFromRoom = new List<ItemDC>();
         foreach (var item in player.ItemsToGetFromRoom)
         {
             ItemsToGetFromRoom.Add(new ItemDC(item));

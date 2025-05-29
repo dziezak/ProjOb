@@ -20,6 +20,18 @@ public class GameDisplay
             return _instance;
         }
     }
+
+    public void Erase(int a, int b, int c, int d)
+    {
+        for (int i = a; i <= b; i++)
+        {
+            for (int j = c; j <= d; j++)
+            {
+                Console.SetCursorPosition(i, j);
+                Console.Write(' ');
+            }
+        }
+    }
     public void RenderLabirynth(GameState gameState, int myPlayerID)//Room room, List<Player> players, int myPlayerID, bool[] isPlayerDead)
     {
         Room room = gameState.CurrentRoom;
@@ -113,7 +125,7 @@ public class GameDisplay
         AddText("Witchers Attributes:");
         AddText($"Power: {displatyStats.Power + attackCounter}");
         AddText($"Agility: {displatyStats.Agility}");
-        AddText($"Health: {displatyStats.Health}");
+        AddText($"Health: {player.CurrentHealh}");//Change
         AddText($"Luck: {displatyStats.Luck + luckCounter}");
         AddText($"Aggression: {displatyStats.Attack}");
         AddText($"Wisdom: {displatyStats.Wisdom}");
@@ -203,10 +215,10 @@ public class GameDisplay
             Console.Write(line);
         }
     }
-    public void DisplayAvailableString(string input, int mapWidth)
+    public void DisplayAvailableString(string input, int mapWidth, int top = 0)
     {
         int startColumn = mapWidth + 65;
-        int cursorTop = 0;
+        int cursorTop = top;
         string[] lines = input.Split('\n');
 
         Console.SetCursorPosition(startColumn, cursorTop);
